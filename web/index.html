@@ -1,0 +1,580 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>RXDSEC — Cybersecurity Analyst · VAPT &amp; AI Red Teaming</title>
+<meta name="description" content="rxdsec — cybersecurity practitioner in offensive security: VAPT, web application penetration testing and AI red teaming. Live cybercrime forensics, responsible disclosure, Python security tooling. Creator of REX.">
+<meta name="author" content="rxdsec">
+<meta name="theme-color" content="#0b0b0c">
+
+<meta property="og:type" content="profile">
+<meta property="og:title" content="RXDSEC — Cybersecurity Analyst">
+<meta property="og:description" content="VAPT, web application penetration testing and AI red teaming. Creator of REX, an agentic AI desktop application for offensive security.">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="assets/img/mark.svg" type="image/svg+xml">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/theme.css">
+
+<script>
+/* Set the theme before first paint so the page never flashes the wrong one. */
+(function(){try{var m=localStorage.getItem("rxdsec.theme");
+document.documentElement.setAttribute("data-theme", m||"dark");}
+catch(e){document.documentElement.setAttribute("data-theme","dark");}})();
+</script>
+
+<noscript><style>
+  /* Without JS nothing adds .in — make sure the page is still whole. */
+  .reveal, [data-split] .sp { opacity: 1 !important; transform: none !important; }
+  .preloader { display: none !important; }
+  .meter i { width: 68% !important; }
+</style></noscript>
+</head>
+<body>
+<script src="assets/js/icons.js"></script>
+
+<!-- preloader -->
+<div class="preloader">
+  <div class="pre-mark">RXD<span>SEC</span></div>
+  <div class="pre-row"><span>Loading</span><span><span class="pre-pct">0</span>%</span></div>
+  <div class="pre-bar"><i></i></div>
+</div>
+
+<canvas id="gl" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+<div class="cursor" aria-hidden="true"><div class="cursor-ring"></div><div class="cursor-dot"></div></div>
+<div class="scroll-progress" aria-hidden="true"><i></i></div>
+<div class="curtain" aria-hidden="true"></div>
+
+<!-- ============================= NAV ============================= -->
+<nav class="site-nav">
+  <div class="wrap">
+    <a class="brand" href="index.html" aria-label="RXDSEC home"><b>RXD</b><i>SEC</i></a>
+    <span class="brand-sub">Cybersecurity Analyst</span>
+
+    <div class="nav-links">
+      <a href="#about">About</a>
+      <a href="#work">Work</a>
+      <a href="#rex">REX</a>
+      <a href="#arsenal">Arsenal</a>
+      <a href="#contact">Contact</a>
+      <a href="downloads.html">Downloads</a>
+      <a href="pricing.html">Plans</a>
+    </div>
+
+    <div class="nav-tools">
+      <button class="icon-btn theme-btn" data-theme-toggle aria-label="Switch theme">
+        <svg class="icon sun" width="16" height="16"><use href="#i-sun"/></svg>
+        <svg class="icon moon" width="16" height="16"><use href="#i-moon"/></svg>
+      </button>
+      <!-- Sign in / account. Replaces the PWA-install icon, which was a
+           low-value control sitting in the most valuable slot in the nav. -->
+      <a class="btn btn-sm btn-primary nav-auth" href="account.html" data-auth-cta>
+        <svg class="icon" width="14" height="14"><use href="#i-key"/></svg>
+        <span data-auth-label>Login</span>
+      </a>
+      <button class="icon-btn nav-toggle" aria-expanded="false" aria-label="Menu">
+        <svg class="icon" width="17" height="17"><use href="#i-menu"/></svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<main>
+
+<!-- ============================= HERO ============================= -->
+<header class="hero" data-power="0.55" data-figure="assets/img/figure.webp" data-figure-until="#about">
+  <div class="wrap hero-inner">
+
+    <div class="hero-top">
+      <div style="width:100%">
+        <div class="hero-kicker">
+          <span class="label">[ 00 ] &nbsp;Index</span>
+          <span class="label">VAPT · Red Teaming · AI Security</span>
+        </div>
+
+        <div class="hero-name">
+          <h1 class="display" data-split="chars" data-split-fast>
+            RXDSEC<span class="l2 outline-text">/ENGINEER</span>
+          </h1>
+        </div>
+
+        <div class="hero-sub">
+          <p class="lede reveal d1">
+            Cybersecurity practitioner working in offensive security — VAPT, web
+            application penetration testing, and AI red teaming. I build the
+            tools that break things, then the tooling that makes breaking them
+            repeatable.
+          </p>
+          <div class="hero-actions reveal d2">
+            <a class="btn btn-primary" href="#work"><span>See the work</span></a>
+            <a class="btn" href="#contact"><span>Get in touch</span></a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-foot">
+      <span class="live"><i></i> Available for work</span>
+      <span class="spacer"></span>
+      <span>6 public repos</span>
+      <span>MIT by default</span>
+      <span class="scroll-hint"><i></i> Scroll</span>
+    </div>
+
+  </div>
+</header>
+
+<!-- ============================= MARQUEE ============================= -->
+<div class="marquee-strip" aria-hidden="true">
+  <div class="marquee">
+    <div class="marquee-track">
+      <span>Penetration testing</span>
+      <span>Agent infrastructure</span>
+      <span>Taint analysis</span>
+      <span>Desktop software</span>
+      <span>Protocol fingerprinting</span>
+      <span>LLM tool design</span>
+      <span>Wireless research</span>
+      <span>Permission systems</span>
+      <span>Open source</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============================= STATS ============================= -->
+<section class="section" data-power="0.3" style="padding-block:clamp(44px,6vh,80px)">
+  <div class="wrap">
+    <div class="stats reveal">
+      <div class="stat">
+        <div class="stat-n"><span data-count="5">0</span></div>
+        <div class="stat-l">Years in security</div>
+      </div>
+      <div class="stat">
+        <div class="stat-n"><span data-count="42">0</span></div>
+        <div class="stat-l">Tools shipped in REX</div>
+      </div>
+      <div class="stat">
+        <div class="stat-n"><span data-count="23">0</span></div>
+        <div class="stat-l">Model providers wired</div>
+      </div>
+      <div class="stat">
+        <div class="stat-n">3<sup>OS</sup></div>
+        <div class="stat-l">Platforms targeted</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================= ABOUT ============================= -->
+<section class="section" id="about" data-power="0.35">
+  <div class="wrap">
+    <div class="shead">
+      <div class="shead-rule draw reveal"></div>
+      <div class="shead-idx">[ 01 ]</div>
+      <div class="shead-main">
+        <h2 class="h2" data-split="words">Introduction</h2>
+      </div>
+    </div>
+
+    <div class="grid grid-2">
+      <div class="panel" data-tilt="3">
+        <span class="panel-n">Who</span>
+        <p style="font-size:17px; line-height:1.6">
+          I'm <b style="color:var(--ink)">rxdsec</b> — a cybersecurity
+          practitioner specialising in offensive security. Vulnerability
+          assessment and penetration testing, web application security, and
+          AI red teaming, grounded in the OWASP Top 10 including the one
+          written for large language models.
+        </p>
+        <p style="margin-top:16px">
+          The work runs across three things that keep turning out to be the
+          same thing: breaking applications, investigating what happened after
+          someone else broke one, and building the tooling that makes both
+          repeatable instead of heroic.
+        </p>
+      </div>
+
+      <div class="panel" data-tilt="3">
+        <span class="panel-n">How that plays out</span>
+        <p>
+          Two-plus years of it: digital forensics on live investigations —
+          evidence extraction, triage and reporting. Responsible disclosure of
+          XSS, SQL injection and CSRF against production targets. Web
+          application security testing end to end. And, currently, stress-testing
+          LLM prompts and outputs across GPT, Claude and Gemini so unsafe model
+          behaviour gets caught before it reaches production.
+        </p>
+        <div class="proj-stack" style="margin-top:18px">
+          <span class="tag">2+ years in security</span>
+          <span class="tag">OWASP Top 10</span>
+          <span class="tag">OWASP Top 10 for LLMs</span>
+          <span class="tag">Open to work</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats reveal" style="margin-top:40px">
+      <div class="stat">
+        <div class="stat-n">2<sup>+</sup></div>
+        <div class="stat-l">Years in security</div>
+      </div>
+      <div class="stat">
+        <div class="stat-n"><span data-count="6">0</span></div>
+        <div class="stat-l">Public repos</div>
+      </div>
+      <div class="stat">
+        <div class="stat-n"><span data-count="3">0</span></div>
+        <div class="stat-l">Vuln classes disclosed</div>
+      </div>
+      <div class="stat">
+        <div class="stat-n"><span data-count="42">0</span></div>
+        <div class="stat-l">Tools shipped in REX</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================= WORK ============================= -->
+<section class="section section-line" id="work" data-power="0.25">
+  <div class="wrap">
+    <div class="shead">
+      <div class="shead-rule draw reveal"></div>
+      <div class="shead-idx">[ 02 ]</div>
+      <div class="shead-main">
+        <h2 class="h2" data-split="words">Selected work</h2>
+        <p class="body reveal d1" style="max-width:52ch">
+          Six public repositories and one flagship. Stars, licences and dates are
+          straight off the GitHub profile — the descriptions are mine, because
+          GitHub's are empty.
+        </p>
+      </div>
+    </div>
+
+    <div class="ilist">
+
+      <a class="irow" href="rex.html">
+        <span class="irow-n">001</span>
+        <span>
+          <span class="irow-t">REX</span>
+          <span class="irow-tags">
+            <span>Offensive agent</span><span>Electron</span><span>TypeScript</span><span>MIT</span><span>Flagship</span>
+          </span>
+        </span>
+        <span class="irow-d irow-meta-cell">
+          An agentic AI desktop application for offensive security — assisting
+          pentesting, SOC triage and VAPT workflows. 42 tools, 23 model
+          providers, and a permission gate that cannot be talked out of a denial.
+        </span>
+        <span class="irow-go"><svg class="icon" width="17" height="17"><use href="#i-arrowUpRight"/></svg></span>
+      </a>
+
+      <a class="irow" href="https://github.com/rxdsec634/AiPentestFramework" target="_blank" rel="noopener">
+        <span class="irow-n">002</span>
+        <span>
+          <span class="irow-t">AiPentestFramework</span>
+          <span class="irow-tags"><span>★ 3</span><span>MIT</span><span>Mar 2025</span></span>
+        </span>
+        <span class="irow-d irow-meta-cell">
+          Chains AI models with Nmap, Burp Suite and OWASP ZAP to automate
+          reconnaissance and vulnerability assessment across web targets.
+        </span>
+        <span class="irow-go"><svg class="icon" width="17" height="17"><use href="#i-arrowUpRight"/></svg></span>
+      </a>
+
+      <a class="irow" href="https://github.com/rxdsec634/RXDSEC-CLI" target="_blank" rel="noopener">
+        <span class="irow-n">003</span>
+        <span>
+          <span class="irow-t">RXDSEC-CLI</span>
+          <span class="irow-tags"><span>Python</span><span>★ 1</span><span>Dec 2025</span></span>
+        </span>
+        <span class="irow-d irow-meta-cell">
+          The command-line side of the toolkit — one entry point instead of a
+          folder of scripts.
+        </span>
+        <span class="irow-go"><svg class="icon" width="17" height="17"><use href="#i-arrowUpRight"/></svg></span>
+      </a>
+
+      <a class="irow" href="https://github.com/rxdsec634/Bluedos" target="_blank" rel="noopener">
+        <span class="irow-n">004</span>
+        <span>
+          <span class="irow-t">Bluedos</span>
+          <span class="irow-tags"><span>★ 2</span><span>MIT</span><span>Mar 2025</span></span>
+        </span>
+        <span class="irow-d irow-meta-cell">
+          BlueSec — Bluetooth attack-surface auditing for authorised security
+          research and lab use.
+        </span>
+        <span class="irow-go"><svg class="icon" width="17" height="17"><use href="#i-arrowUpRight"/></svg></span>
+      </a>
+
+      <a class="irow" href="https://github.com/rxdsec634/rootmaster" target="_blank" rel="noopener">
+        <span class="irow-n">005</span>
+        <span>
+          <span class="irow-t">rootmaster</span>
+          <span class="irow-tags"><span>★ 1</span><span>1 fork</span><span>MIT</span></span>
+        </span>
+        <span class="irow-d irow-meta-cell">
+          Privilege and root-access tooling. The only repo on the profile that
+          someone else has forked.
+        </span>
+        <span class="irow-go"><svg class="icon" width="17" height="17"><use href="#i-arrowUpRight"/></svg></span>
+      </a>
+
+      <a class="irow" href="https://github.com/rxdsec634/airmobile" target="_blank" rel="noopener">
+        <span class="irow-n">006</span>
+        <span>
+          <span class="irow-t">airmobile</span>
+          <span class="irow-tags"><span>★ 1</span><span>MIT</span><span>Jan 2026</span></span>
+        </span>
+        <span class="irow-d irow-meta-cell">
+          AirMobile — Wi-Fi attack-surface auditing, extending the wireless toolkit
+          past Bluetooth.
+        </span>
+        <span class="irow-go"><svg class="icon" width="17" height="17"><use href="#i-arrowUpRight"/></svg></span>
+      </a>
+
+      <a class="irow" href="https://github.com/rxdsec634/simplebtcbot" target="_blank" rel="noopener">
+        <span class="irow-n">007</span>
+        <span>
+          <span class="irow-t">simplebtcbot</span>
+          <span class="irow-tags"><span>★ 1</span><span>Jun 2026</span></span>
+        </span>
+        <span class="irow-d irow-meta-cell">
+          A small automation bot, and the most recent push on the profile.
+        </span>
+        <span class="irow-go"><svg class="icon" width="17" height="17"><use href="#i-arrowUpRight"/></svg></span>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================= REX FEATURE (inverted) ============================= -->
+<section class="section invert" id="rex" data-power="0.55">
+  <div class="wrap">
+    <div class="shead">
+      <div class="shead-rule draw reveal"></div>
+      <div class="shead-idx">[ 03 ]</div>
+      <div class="shead-main">
+        <h2 class="h2" data-split="words">The flagship</h2>
+      </div>
+    </div>
+
+    <h3 class="h1" data-split="chars" data-split-fast style="margin-bottom:28px">REX</h3>
+
+    <div class="grid grid-2" style="margin-bottom:34px">
+      <div class="panel" data-tilt="3">
+        <span class="panel-n">What it is</span>
+        <p style="font-size:16px">
+          An offensive-security agent that also happens to be an excellent
+          engineer. It fingerprints the stack, traces tainted input from source to
+          dangerous sink, builds and encodes the payload, drives a real browser to
+          prove it, then writes the patch and runs the test that closes it.
+        </p>
+      </div>
+      <div class="panel" data-tilt="3">
+        <span class="panel-n">Why it matters</span>
+        <p style="font-size:16px">
+          Nothing leaves the machine that you didn't send. Keys live in the OS
+          credential store, sessions are append-only files on disk, and the hard
+          safety denylist sits <em>above</em> the rule engine — so no setting and
+          no persuasive prompt gets underneath it.
+        </p>
+      </div>
+    </div>
+
+    <dl class="spec reveal">
+      <div class="spec-row"><dt>Discipline</dt><dd>Offensive security and software engineering, in one loop</dd></div>
+      <div class="spec-row"><dt>Tools</dt><dd>42 executors across recon, exploitation, files, shell, network, browser and desktop control</dd></div>
+      <div class="spec-row"><dt>Providers</dt><dd>23 — Anthropic, OpenAI, Gemini, Groq, DeepSeek, Ollama, LM Studio, llama.cpp and any OpenAI-compatible endpoint</dd></div>
+      <div class="spec-row"><dt>Stack</dt><dd>Electron · React · TypeScript monorepo, agent core in the main process</dd></div>
+      <div class="spec-row"><dt>Platforms</dt><dd>Windows · Linux · macOS</dd></div>
+      <div class="spec-row"><dt>Telemetry</dt><dd>None</dd></div>
+      <div class="spec-row"><dt>Licence</dt><dd>MIT</dd></div>
+    </dl>
+
+    <div class="hero-actions reveal d1" style="margin-top:32px">
+      <a class="btn btn-acid" href="downloads.html"><span>Download REX</span></a>
+      <a class="btn" href="rex.html"><span>Read the whole story</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================= ARSENAL ============================= -->
+<section class="section" id="arsenal" data-power="0.28">
+  <div class="wrap">
+    <div class="shead">
+      <div class="shead-rule draw reveal"></div>
+      <div class="shead-idx">[ 04 ]</div>
+      <div class="shead-main">
+        <h2 class="h2" data-split="words">What I actually do</h2>
+        <p class="body reveal d1" style="max-width:56ch">
+          Offensive security — VAPT, web application penetration testing, and AI
+          red teaming — grounded in the OWASP Top 10, including the one for LLMs.
+          Finding a bug is the short part. The long part is the tooling that
+          finds the next hundred.
+        </p>
+      </div>
+    </div>
+
+    <div class="grid grid-3" style="margin-bottom:56px">
+      <article class="panel" data-tilt="4">
+        <svg class="icon panel-ico" width="26" height="26"><use href="#i-bug"/></svg>
+        <span class="panel-n">01 / Offensive</span>
+        <h3 class="h3">Break it on purpose</h3>
+        <p>Web application penetration testing and VAPT against the OWASP Top 10. Responsibly disclosed XSS, SQL injection and CSRF in live production applications through coordinated disclosure programmes.</p>
+      </article>
+
+      <article class="panel" data-tilt="4">
+        <svg class="icon panel-ico" width="26" height="26"><use href="#i-cpu"/></svg>
+        <span class="panel-n">02 / AI security</span>
+        <h3 class="h3">Red teaming the models</h3>
+        <p>Jailbreak and prompt-injection testing, adversarial evaluation, and model security against the OWASP Top 10 for LLMs — plus the evaluation frameworks that catch unsafe output before it reaches production.</p>
+      </article>
+
+      <article class="panel" data-tilt="4">
+        <svg class="icon panel-ico" width="26" height="26"><use href="#i-search"/></svg>
+        <span class="panel-n">03 / Forensics</span>
+        <h3 class="h3">Evidence, not guesses</h3>
+        <p>Digital evidence extraction and forensic analysis across live cybercrime investigations — evidence triage, log analysis, and email investigation down to SPF, DKIM and DMARC.</p>
+      </article>
+    </div>
+
+    <div class="skills">
+      <div class="reveal">
+        <h4 class="skill-h">Offensive security</h4>
+        <div class="proj-stack">
+          <span class="tag">Penetration Testing</span><span class="tag">VAPT</span>
+          <span class="tag">Web App Security Testing</span><span class="tag">OWASP Top 10</span>
+          <span class="tag">Bug Bounty</span><span class="tag">Vulnerability Research</span>
+        </div>
+      </div>
+
+      <div class="reveal d1">
+        <h4 class="skill-h">Tools</h4>
+        <div class="proj-stack">
+          <span class="tag">Burp Suite</span><span class="tag">OWASP ZAP</span><span class="tag">Nmap</span>
+          <span class="tag">Wireshark</span><span class="tag">Metasploit</span>
+          <span class="tag">CodeQL</span><span class="tag">Semgrep</span>
+        </div>
+      </div>
+
+      <div class="reveal d2">
+        <h4 class="skill-h">AI security</h4>
+        <div class="proj-stack">
+          <span class="tag">AI Red Teaming</span><span class="tag">Prompt Injection</span>
+          <span class="tag">Jailbreak Testing</span><span class="tag">Adversarial Testing</span>
+          <span class="tag">OWASP Top 10 for LLMs</span><span class="tag">AI Governance</span>
+        </div>
+      </div>
+
+      <div class="reveal d3">
+        <h4 class="skill-h">Forensics &amp; defence</h4>
+        <div class="proj-stack">
+          <span class="tag">Digital Forensics</span><span class="tag">Evidence Triage</span>
+          <span class="tag">Log Analysis</span><span class="tag">SPF / DKIM / DMARC</span>
+          <span class="tag">Phishing Detection</span>
+        </div>
+      </div>
+
+      <div class="reveal d4">
+        <h4 class="skill-h">Scripting &amp; platform</h4>
+        <div class="proj-stack">
+          <span class="tag">Python</span><span class="tag">Bash</span><span class="tag">Linux</span>
+          <span class="tag">SQL</span><span class="tag">REST APIs</span>
+          <span class="tag">GitHub Actions</span><span class="tag">Docker</span><span class="tag">AWS</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================= CONTACT ============================= -->
+<section class="section" id="contact" data-power="0.6">
+  <div class="wrap">
+    <div class="shead">
+      <div class="shead-rule draw reveal"></div>
+      <div class="shead-idx">[ 05 ]</div>
+      <div class="shead-main">
+        <h2 class="h2" data-split="words">Find me</h2>
+        <p class="body reveal d1" style="max-width:46ch">
+          The bio says it best — I may be slow to respond, but I do respond.
+        </p>
+      </div>
+    </div>
+
+    <div class="contact-grid reveal">
+      <a class="contact-card" href="https://github.com/rxdsec634" target="_blank" rel="noopener">
+        <svg class="icon ci" width="24" height="24"><use href="#i-github"/></svg>
+        <span><b>GitHub</b><span>rxdsec634</span></span>
+      </a>
+      <a class="contact-card" href="https://www.youtube.com/@RXDSEC" target="_blank" rel="noopener">
+        <svg class="icon ci" width="24" height="24"><use href="#i-youtube"/></svg>
+        <span><b>YouTube</b><span>@RXDSEC</span></span>
+      </a>
+      <a class="contact-card" href="https://www.linkedin.com/in/redweb-sec-2a4077240/" target="_blank" rel="noopener">
+        <svg class="icon ci" width="24" height="24"><use href="#i-linkedin"/></svg>
+        <span><b>LinkedIn</b><span>redweb-sec</span></span>
+      </a>
+      <a class="contact-card" href="https://www.instagram.com/rxdsec/" target="_blank" rel="noopener">
+        <svg class="icon ci" width="24" height="24"><use href="#i-instagram"/></svg>
+        <span><b>Instagram</b><span>@rxdsec</span></span>
+      </a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============================= FOOTER ============================= -->
+<footer class="site-foot">
+  <div class="wrap">
+    <div class="foot-huge" data-split="chars" data-split-fast>RXDSEC</div>
+
+    <div class="foot-cols">
+      <div>
+        <h5>Site</h5>
+        <a href="#about">About</a>
+        <a href="#work">Work</a>
+        <a href="#arsenal">Arsenal</a>
+        <a href="#contact">Contact</a>
+      </div>
+      <div>
+        <h5>REX</h5>
+        <a href="rex.html">Overview</a>
+        <a href="rex.html#tools">Tools</a>
+        <a href="downloads.html">Downloads</a>
+      </div>
+      <div>
+        <h5>Elsewhere</h5>
+        <a href="https://github.com/rxdsec634" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.youtube.com/@RXDSEC" target="_blank" rel="noopener">YouTube</a>
+        <a href="https://www.linkedin.com/in/redweb-sec-2a4077240/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://www.instagram.com/rxdsec/" target="_blank" rel="noopener">Instagram</a>
+      </div>
+      <div>
+        <h5>Colophon</h5>
+        <p class="small" style="max-width:26ch">
+          Space Grotesk &amp; JetBrains Mono. Background is a raymarched
+          volumetric aura — one fragment shader, no geometry.
+        </p>
+      </div>
+    </div>
+
+    <div class="foot-end">
+      <span>© <span data-year>2026</span> rxdsec</span>
+      <span>All tooling for authorised testing only</span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/scene.js"></script>
+<script src="assets/js/fx.js"></script>
+<script src="assets/js/account.js"></script>
+</body>
+</html>

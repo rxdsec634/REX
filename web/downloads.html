@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Downloads · RXDSEC</title>
+<meta name="description" content="Download REX 0.2.4 for Windows and Linux with SHA-256 checksums and install commands, plus other releases by rxdsec.">
+<meta name="author" content="rxdsec">
+<meta name="theme-color" content="#0b0b0c">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Downloads · RXDSEC">
+<meta property="og:description" content="REX 0.2.4 for Windows and Linux, with checksums. Plus other releases by rxdsec.">
+
+<link rel="icon" href="assets/img/mark.svg" type="image/svg+xml">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/theme.css">
+
+<script>
+(function(){try{var m=localStorage.getItem("rxdsec.theme");
+document.documentElement.setAttribute("data-theme", m||"dark");}
+catch(e){document.documentElement.setAttribute("data-theme","dark");}})();
+</script>
+
+<noscript><style>
+  .reveal, [data-split] .sp { opacity: 1 !important; transform: none !important; }
+  .preloader { display: none !important; }
+</style></noscript>
+</head>
+<body>
+<script src="assets/js/icons.js"></script>
+
+<div class="preloader">
+  <div class="pre-mark">RXD<span>SEC</span></div>
+  <div class="pre-row"><span>Downloads</span><span><span class="pre-pct">0</span>%</span></div>
+  <div class="pre-bar"><i></i></div>
+</div>
+
+<canvas id="gl" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+<div class="cursor" aria-hidden="true"><div class="cursor-ring"></div><div class="cursor-dot"></div></div>
+<div class="scroll-progress" aria-hidden="true"><i></i></div>
+<div class="curtain" aria-hidden="true"></div>
+
+<!-- ============================= NAV ============================= -->
+<nav class="site-nav">
+  <div class="wrap">
+    <a class="brand" href="index.html" aria-label="RXDSEC home"><b>RXD</b><i>SEC</i></a>
+    <span class="brand-sub">Downloads</span>
+
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="rex.html">REX</a>
+      <a href="#builds">Builds</a>
+      <a href="#first-run">First run</a>
+      <a href="#releases">Releases</a>
+      <a href="pricing.html">Plans</a>
+      <a href="index.html#contact">Contact</a>
+    </div>
+
+    <div class="nav-tools">
+      <button class="icon-btn theme-btn" data-theme-toggle aria-label="Switch theme">
+        <svg class="icon sun" width="16" height="16"><use href="#i-sun"/></svg>
+        <svg class="icon moon" width="16" height="16"><use href="#i-moon"/></svg>
+      </button>
+      <!-- Sign in / account. Replaces the PWA-install icon, which was a
+           low-value control sitting in the most valuable slot in the nav. -->
+      <a class="btn btn-sm btn-primary nav-auth" href="account.html" data-auth-cta>
+        <svg class="icon" width="14" height="14"><use href="#i-key"/></svg>
+        <span data-auth-label>Login</span>
+      </a>
+      <button class="icon-btn nav-toggle" aria-expanded="false" aria-label="Menu">
+        <svg class="icon" width="17" height="17"><use href="#i-menu"/></svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<main>
+
+<!-- ============================= HEADER ============================= -->
+<header class="section" data-power="0.5" style="padding-top:calc(var(--nav-h) + clamp(56px,10vh,120px))">
+  <div class="wrap">
+    <div class="hero-kicker">
+      <span class="label">[ Downloads ]</span>
+      <span class="label">MIT · 14 days free · sign-in required</span>
+    </div>
+
+    <h1 class="h1" data-split="words" style="max-width:16ch; margin-bottom:22px">Get REX, and everything else I've shipped.</h1>
+
+    <p class="lede reveal d1" style="max-width:56ch">
+      Every build lists its SHA-256 — check it before you run it. That's true of
+      software from anyone, including me.
+    </p>
+
+    <div class="hero-kicker reveal d2" id="dl-release" style="margin-top:26px"></div>
+  </div>
+</header>
+
+<!-- ============================= BUILDS ============================= -->
+<section class="section section-line" id="builds" data-power="0.25" style="padding-top:clamp(40px,6vh,70px)">
+  <div class="wrap">
+    <div class="shead">
+      <div class="shead-rule draw reveal"></div>
+      <div class="shead-idx">[ 01 ]</div>
+      <div class="shead-main">
+        <h2 class="h2" data-split="words">Builds</h2>
+      </div>
+    </div>
+
+    <div id="dl-tabs" class="os-tabs" role="tablist" aria-label="Platform"></div>
+
+    <div id="dl-list" class="dl-list">
+      <div class="slot"><b>Loading builds…</b>Reading the release manifest.</div>
+    </div>
+
+    <div class="grid grid-2" style="margin-top:44px">
+      <article class="panel">
+        <span class="panel-n">Verify</span>
+        <h3 class="h3">Check what you downloaded</h3>
+        <p style="margin-bottom:16px">Compare the printed hash with the one on the build. If they differ, don't run it.</p>
+        <div class="code"><span class="c"># Windows</span>
+certutil -hashfile "REX Setup 0.2.4.exe" SHA256
+
+<span class="c"># Linux / macOS</span>
+sha256sum rex_0.2.4_amd64.deb</div>
+      </article>
+
+      <article class="panel">
+        <span class="panel-n">Kali</span>
+        <h3 class="h3">Installing on Debian family</h3>
+        <p style="margin-bottom:16px">
+          Use <code class="mono">apt</code>, not <code class="mono">dpkg -i</code> — it pulls the
+          dependencies. As root the launcher adds <code class="mono">--no-sandbox</code> for you;
+          as a normal user it runs fully sandboxed.
+        </p>
+        <div class="code">sudo apt install ./rex_0.2.4_amd64.deb
+rex
+
+<span class="c"># desktop_* tools need xdotool (X11)</span>
+<span class="c"># or ydotool under Wayland</span></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================= FIRST RUN ============================= -->
+<section class="section" id="first-run" data-power="0.25">
+  <div class="wrap">
+    <div class="shead">
+      <div class="shead-rule draw reveal"></div>
+      <div class="shead-idx">[ 02 ]</div>
+      <div class="shead-main">
+        <h2 class="h2" data-split="words">Three steps and you're working</h2>
+      </div>
+    </div>
+
+    <div class="steps">
+      <div class="step reveal">
+        <div class="step-w">STEP 01</div>
+        <div>
+          <h4 class="h4">Add a provider</h4>
+          <p>Settings → Providers. Paste an API key — it's encrypted into the OS credential store, not a dotfile. Or skip it entirely: if Ollama is running locally, REX finds it on its own.</p>
+        </div>
+      </div>
+      <div class="step reveal d1">
+        <div class="step-w">STEP 02</div>
+        <div>
+          <h4 class="h4">Open a project</h4>
+          <p>New session, then pick a folder. Every file and shell operation is scoped to it, and the status bar shows you which folder is live.</p>
+        </div>
+      </div>
+      <div class="step reveal d2">
+        <div class="step-w">STEP 03</div>
+        <div>
+          <h4 class="h4">Ask for something real</h4>
+          <p>"Find where we verify JWTs and fix anything unsafe." REX greps, reads, proposes a diff, and waits for you before it writes a byte.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================= RELEASES ============================= -->
+<section class="section section-line" id="releases" data-power="0.28">
+  <div class="wrap">
+    <div class="shead">
+      <div class="shead-rule draw reveal"></div>
+      <div class="shead-idx">[ 03 ]</div>
+      <div class="shead-main">
+        <h2 class="h2" data-split="words">Releases</h2>
+        <p class="body reveal d1" style="max-width:54ch">
+          Driven by the manifest at <code class="mono">web/data/downloads.json</code>. Drop a file
+          into <code class="mono">web/files/</code>, add an entry, and it appears here — no HTML to edit.
+        </p>
+      </div>
+    </div>
+
+    <div class="ilist" id="dl-projects"></div>
+    <div class="slot" id="dl-slot" style="margin-top:24px"></div>
+  </div>
+</section>
+
+<!-- ============================= SOURCE ============================= -->
+<section class="section invert" data-power="0.6">
+  <div class="wrap" style="text-align:center">
+    <span class="label">Or build it yourself</span>
+    <h2 class="h1" data-split="words" style="margin:20px auto 22px; max-width:14ch">It's all on GitHub.</h2>
+    <p class="lede reveal d1" style="margin:0 auto 30px">
+      Node 20+, one <code class="mono">npm install</code>, and <code class="mono">npm start</code>
+      builds and launches the app.
+    </p>
+    <div class="hero-actions reveal d2" style="justify-content:center">
+      <a class="btn btn-acid" href="https://github.com/rxdsec634" target="_blank" rel="noopener"><span>github.com/rxdsec634</span></a>
+      <a class="btn" href="index.html#work"><span>More by rxdsec</span></a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-foot">
+  <div class="wrap">
+    <div class="foot-huge" data-split="chars" data-split-fast>DOWNLOAD</div>
+    <div class="foot-cols">
+      <div>
+        <h5>Downloads</h5>
+        <a href="#builds">All builds</a>
+        <a href="#first-run">First run</a>
+        <a href="#releases">Releases</a>
+      </div>
+      <div>
+        <h5>REX</h5>
+        <a href="rex.html">Overview</a>
+        <a href="rex.html#tools">Tools</a>
+        <a href="rex.html#permissions">Permissions</a>
+      </div>
+      <div>
+        <h5>RXDSEC</h5>
+        <a href="index.html">Home</a>
+        <a href="index.html#work">Work</a>
+        <a href="index.html#contact">Contact</a>
+      </div>
+      <div>
+        <h5>Elsewhere</h5>
+        <a href="https://github.com/rxdsec634" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.youtube.com/@RXDSEC" target="_blank" rel="noopener">YouTube</a>
+        <a href="https://www.linkedin.com/in/redweb-sec-2a4077240/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://www.instagram.com/rxdsec/" target="_blank" rel="noopener">Instagram</a>
+      </div>
+    </div>
+    <div class="foot-end">
+      <span>© <span data-year>2026</span> rxdsec · MIT licence</span>
+      <span>Always verify the checksum</span>
+    </div>
+  </div>
+</footer>
+
+<!-- Inline copy of data/downloads.json so the page also works over file://,
+     where fetch() of a local file is blocked. Keep the two in sync. -->
+<script id="dl-fallback">
+window.__DOWNLOADS__ = {
+  "$comment": "Edit this file to publish a new build or add one of your own projects. downloads.html renders entirely from here — no HTML editing needed. See web/README.md.",
+  "release": {
+    "product": "REX",
+    "version": "0.2.4",
+    "date": "2026-09-09",
+    "license": "MIT",
+    "repo": "https://github.com/rxdsec634",
+    "highlights": [
+      "Offensive-security loop: fingerprint, taint-trace, payload, prove, patch",
+      "Agentic loop with streaming, native tool calling and append-only session history",
+      "23 model providers — cloud, local and fully custom OpenAI-compatible endpoints",
+      "Permission gate with a hard safety denylist that no rule can override",
+      "Desktop control, browser automation and a managed local GGUF engine"
+    ]
+  },
+  "builds": [
+    {
+      "id": "win32-portable",
+      "os": "windows",
+      "osLabel": "Windows",
+      "title": "REX 0.2.4.exe",
+      "subtitle": "Portable single file. No install, no registry writes — run it from a USB stick.",
+      "icon": "power",
+      "size": 90269315,
+      "sha256": "b0718a5465747ea0b0b774c0898b7b509e2e46077188dd5d639955c52a07dac9",
+      "url": "../dist-installer/REX%200.2.4.exe",
+      "tags": [
+        "x64",
+        "portable"
+      ],
+      "verify": "certutil -hashfile \"REX 0.2.4.exe\" SHA256"
+    },
+    {
+      "id": "win32-installer",
+      "os": "windows",
+      "osLabel": "Windows",
+      "title": "REX Setup 0.2.4.exe",
+      "subtitle": "NSIS installer — Windows 10/11, x64. Adds a Start-menu entry and file associations.",
+      "icon": "window",
+      "primary": true,
+      "size": 90496200,
+      "sha256": "8bc958c8b2beba6241e49b3d4a0f7f1fcc3096cc88bfd533712241c3154e7b7a",
+      "url": "../dist-installer/REX%20Setup%200.2.4.exe",
+      "tags": [
+        "x64",
+        "recommended"
+      ],
+      "verify": "certutil -hashfile \"REX Setup 0.2.4.exe\" SHA256"
+    },
+    {
+      "id": "linux-tarball",
+      "os": "linux",
+      "osLabel": "Linux",
+      "title": "rex-0.2.4-linux-x64.tar.gz",
+      "subtitle": "Distro-agnostic tarball. Extract anywhere and run ./rex — no package manager involved.",
+      "icon": "archive",
+      "size": 121990343,
+      "sha256": "9ae123906514c4aef28520d3bfbd8fd1e36bc3ec9ddd9ce976ec3bf241493392",
+      "url": "../dist-installer/rex-0.2.4-linux-x64.tar.gz",
+      "tags": [
+        "x64",
+        "no-root"
+      ],
+      "install": "tar -xzf rex-0.2.4-linux-x64.tar.gz && ./rex/rex",
+      "verify": "sha256sum rex-0.2.4-linux-x64.tar.gz"
+    },
+    {
+      "id": "linux-deb",
+      "os": "linux",
+      "osLabel": "Linux",
+      "title": "rex_0.2.4_amd64.deb",
+      "subtitle": "Debian / Ubuntu / Kali. Installs to /opt/REX, puts rex on your PATH, registers a desktop entry.",
+      "icon": "terminal",
+      "primary": true,
+      "size": 122005876,
+      "sha256": "93a8d30e999c3bcac040811cea3bc38843f19c502882db25226bac54c32fad3a",
+      "url": "../dist-installer/rex_0.2.4_amd64.deb",
+      "tags": [
+        "amd64",
+        "kali-ready"
+      ],
+      "install": "sudo apt install ./rex_0.2.4_amd64.deb",
+      "verify": "sha256sum rex_0.2.4_amd64.deb"
+    },
+    {
+      "id": "macos",
+      "os": "macos",
+      "osLabel": "macOS",
+      "title": "REX-0.2.4.dmg",
+      "subtitle": "Apple silicon and Intel. Build target is configured; a signed artifact has not been published yet.",
+      "icon": "monitor",
+      "size": 0,
+      "status": "pending",
+      "tags": [
+        "arm64",
+        "x64",
+        "not yet published"
+      ],
+      "install": "npm run package:mac",
+      "note": "Packaging is wired up in package.json — build it yourself on a Mac until a notarised DMG ships here."
+    },
+    {
+      "id": "source",
+      "os": "source",
+      "osLabel": "Source",
+      "title": "Build from source",
+      "subtitle": "Clone the monorepo and run it in dev mode with a hot-reloaded renderer.",
+      "icon": "code",
+      "size": 0,
+      "status": "repo",
+      "url": "https://github.com/rxdsec634",
+      "tags": [
+        "node 20+",
+        "electron",
+        "typescript"
+      ],
+      "install": "git clone https://github.com/rxdsec634/rex.git\ncd rex\nnpm install\nnpm start"
+    }
+  ],
+  "projects": [
+    {
+      "name": "REX Agent",
+      "blurb": "The full local-first offensive-security and engineering agent — recon, taint analysis, payload construction, agentic loop, 23 providers, permission gate, desktop control, browser automation. This is the flagship; the builds above are its releases.",
+      "kind": "Desktop app",
+      "icon": "cpu",
+      "tags": [
+        "Electron",
+        "React",
+        "TypeScript",
+        "MIT"
+      ],
+      "url": "#builds",
+      "repo": "https://github.com/rxdsec634",
+      "featured": true
+    }
+  ]
+};
+</script>
+
+<script src="assets/js/scene.js"></script>
+<script src="assets/js/fx.js"></script>
+<script src="assets/js/account.js"></script>
+<script src="assets/js/downloads.js"></script>
+</body>
+</html>

@@ -1,0 +1,571 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>REX — an offensive-security agent that runs on your machine · RXDSEC</title>
+<meta name="description" content="REX by rxdsec: a local-first offensive-security and engineering agent. Recon, taint analysis, payload construction, browser and desktop control, 42 tools, 23 model providers, and a permission gate that cannot be talked out of a denial.">
+<meta name="author" content="rxdsec">
+<meta name="theme-color" content="#0b0b0c">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="REX — an offensive-security agent that runs on your machine">
+<meta property="og:description" content="Breaks it, then fixes it. 42 tools. 23 providers. Local-first. Built by rxdsec.">
+
+<link rel="icon" href="assets/img/mark.svg" type="image/svg+xml">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/theme.css">
+
+<script>
+(function(){try{var m=localStorage.getItem("rxdsec.theme");
+document.documentElement.setAttribute("data-theme", m||"dark");}
+catch(e){document.documentElement.setAttribute("data-theme","dark");}})();
+</script>
+
+<noscript><style>
+  .reveal, [data-split] .sp { opacity: 1 !important; transform: none !important; }
+  .preloader { display: none !important; }
+</style></noscript>
+</head>
+<body>
+<script src="assets/js/icons.js"></script>
+
+<div class="preloader">
+  <div class="pre-mark">RXD<span>SEC</span></div>
+  <div class="pre-row"><span>REX</span><span><span class="pre-pct">0</span>%</span></div>
+  <div class="pre-bar"><i></i></div>
+</div>
+
+<canvas id="gl" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+<div class="cursor" aria-hidden="true"><div class="cursor-ring"></div><div class="cursor-dot"></div></div>
+<div class="scroll-progress" aria-hidden="true"><i></i></div>
+<div class="curtain" aria-hidden="true"></div>
+
+<!-- ============================= NAV ============================= -->
+<nav class="site-nav">
+  <div class="wrap">
+    <a class="brand" href="index.html" aria-label="RXDSEC home"><b>RXD</b><i>SEC</i></a>
+    <span class="brand-sub">Project · REX</span>
+
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="#what">What it is</a>
+      <a href="#interface">Interface</a>
+      <a href="#tools">Tools</a>
+      <a href="#permissions">Permissions</a>
+      <a href="#build">Architecture</a>
+      <a href="downloads.html">Downloads</a>
+      <a href="pricing.html">Plans</a>
+    </div>
+
+    <div class="nav-tools">
+      <button class="icon-btn theme-btn" data-theme-toggle aria-label="Switch theme">
+        <svg class="icon sun" width="16" height="16"><use href="#i-sun"/></svg>
+        <svg class="icon moon" width="16" height="16"><use href="#i-moon"/></svg>
+      </button>
+      <!-- Sign in / account. Replaces the PWA-install icon, which was a
+           low-value control sitting in the most valuable slot in the nav. -->
+      <a class="btn btn-sm btn-primary nav-auth" href="account.html" data-auth-cta>
+        <svg class="icon" width="14" height="14"><use href="#i-key"/></svg>
+        <span data-auth-label>Login</span>
+      </a>
+      <button class="icon-btn nav-toggle" aria-expanded="false" aria-label="Menu">
+        <svg class="icon" width="17" height="17"><use href="#i-menu"/></svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<main>
+
+<!-- ============================= HERO ============================= -->
+<header class="hero" data-power="0.55" data-figure="assets/img/figure.webp" data-figure-until="#what">
+  <div class="wrap hero-inner">
+    <div class="hero-top">
+      <div style="width:100%">
+        <div class="hero-kicker">
+          <span class="label">[ Project 001 ]</span>
+          <span class="label">Offensive-security agent · v0.1.0 · MIT</span>
+        </div>
+
+        <div class="rex-lockup reveal">
+          <svg class="rex-sigil" viewBox="0 0 100 100" fill="none" aria-hidden="true">
+            <path d="M50 5 L88 27 L88 73 L50 95 L12 73 L12 27 Z" stroke="currentColor" stroke-width="4"/>
+            <path d="M56 20 L38 50 L50 50 L44 78 L62 48 L50 48 Z" fill="currentColor"/>
+            <rect x="28" y="84" width="44" height="5" fill="currentColor" opacity="0.55"/>
+          </svg>
+          <h1 class="display" data-split="chars" data-split-fast>REX</h1>
+        </div>
+
+        <div class="hero-sub">
+          <p class="lede reveal d1">
+            An offensive-security agent that runs on your machine. It recons,
+            finds the flaw, proves it, then writes the fix — and stops at every
+            point where a mistake would cost you something.
+          </p>
+          <div class="hero-actions reveal d2">
+            <a class="btn btn-primary" href="downloads.html"><span>Download</span></a>
+            <a class="btn" href="#what"><span>What it does</span></a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-foot">
+      <span>42 tools</span>
+      <span>23 providers</span>
+      <span>0 telemetry</span>
+      <span class="spacer"></span>
+      <span class="scroll-hint"><i></i> Scroll</span>
+    </div>
+  </div>
+</header>
+
+<!-- ============================= WHAT IT IS ============================= -->
+<section class="section section-line" id="what" data-power="0.28">
+  <div class="wrap">
+    <div class="shead">
+      <div class="shead-rule draw reveal"></div>
+      <div class="shead-idx">[ 01 ]</div>
+      <div class="shead-main">
+        <h2 class="h2" data-split="words">It breaks it, then it fixes it</h2>
+        <p class="body reveal d1" style="max-width:54ch">
+          Most agents stop at writing code. REX runs the loop an operator runs:
+          fingerprint the target, trace the tainted path, build the payload, prove
+          the finding in a real browser, patch it, and run the test that proves the
+          patch holds.
+        </p>
+      </div>
+    </div>
+
+    <div class="grid grid-3">
+      <article class="panel" data-tilt="4">
+        <svg class="icon panel-ico" width="26" height="26"><use href="#i-bug"/></svg>
+        <span class="panel-n">01 / Offence</span>
+        <h3 class="h3">Recon to proof-of-concept</h3>
+        <p><code class="mono">protocol_fingerprint</code> identifies the stack. <code class="mono">taint_analyze</code> traces attacker-controlled input from source to dangerous sink and rates each path. <code class="mono">payload</code> encodes and chains the transform. <code class="mono">honeypot_check</code> tells you when the target is bait.</p>
+      </article>
+
+      <article class="panel" data-tilt="4">
+        <svg class="icon panel-ico" width="26" height="26"><use href="#i-refresh"/></svg>
+        <span class="panel-n">02 / Loop</span>
+        <h3 class="h3">Agentic, not conversational</h3>
+        <p>Streaming responses, native tool calling, automatic context compaction when the window fills, and append-only JSONL session history under <code class="mono">~/.rex/sessions/</code>.</p>
+      </article>
+
+      <article class="panel" data-tilt="4">
+        <svg class="icon panel-ico" width="26" height="26"><use href="#i-pencil"/></svg>
+        <span class="panel-n">03 / Writes</span>
+        <h3 class="h3">Edit, review, then approve</h3>
+        <p>File writes are atomic and arrive as a diff you can edit <em>before</em> approving. Conflict detection catches a file that changed underneath, and every write drops a checkpoint you can roll back to.</p>
+      </article>
+
+      <article class="panel" data-tilt="4">
+        <svg class="icon panel-ico" width="26" height="26"><use href="#i-key"/></svg>
+        <span class="panel-n">04 / Secrets</span>
+        <h3 class="h3">Keys never leave the OS</h3>
+        <p>API keys are encrypted with the platform credential store — DPAPI on Windows — rather than dropped in a dotfile. Environment variables still work as a fallback.</p>
+      </article>
+
+      <article class="panel" data-tilt="4">
+        <svg class="icon panel-ico" width="26" height="26"><use href="#i-monitor"/></svg>
+        <span class="panel-n">05 / Desktop</span>
+        <h3 class="h3">It can use the computer</h3>
+        <p>Screenshot, click, type and send keystrokes, with native backends per OS — Win32/PowerShell, AppleScript/cliclick, xdotool/ydotool/AT-SPI2. Never auto-allowed: every action asks, every time.</p>
+      </article>
+
+      <article class="panel" data-tilt="4">
+        <svg class="icon panel-ico" width="26" height="26"><use href="#i-browser"/></svg>
+        <span class="panel-n">06 / Browser</span>
+        <h3 class="h3">A browser it actually drives</h3>
+        <p>A real browser view composited into the window: navigate, snapshot the accessibility tree, click by reference, type, evaluate JavaScript, screenshot. You watch it happen.</p>
+      </article>
+
+      <article class="panel" data-tilt="4">
+        <svg class="icon panel-ico" width="26" height="26"><use href="#i-database"/></svg>
+        <span class="panel-n">07 / Memory</span>
+        <h3 class="h3">Conventions survive restarts</h3>
+        <p>A <code class="mono">REX.md</code> at the project root is read into every session, so what you explain once outlives the session, the restart and the model switch.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================= INTERFACE ============================= -->
+<section class="section section-line" id="interface" data-power="0.25">
+  <div class="wrap">
+    <div class="shead">
+      <div class="shead-rule draw reveal"></div>
+      <div class="shead-idx">[ 02 ]</div>
+      <div class="shead-main">
+        <h2 class="h2" data-split="words">Three panes, no chrome to fight</h2>
+        <p class="body reveal d1" style="max-width:54ch">
+          Sessions on the left, the transcript in the middle, the detail pane on
+          the right. Machine text is always mono, colour only ever carries state,
+          and hierarchy comes from weight and spacing rather than boxes inside
+          boxes.
+        </p>
+      </div>
+    </div>
+
+    <div class="reveal">
+      <div class="gui" role="img" aria-label="The REX interface: session list, transcript with tool cards and a pending approval, and a detail pane">
+
+        <div class="gui-bar">
+          <span class="gui-brand"><i></i>REX</span>
+          <span class="gui-crumb">api-gateway <span style="opacity:.45">/</span> <b>Audit the auth service</b></span>
+          <span class="gui-acts">
+            <svg class="icon" width="14" height="14"><use href="#i-globe"/></svg>
+            <svg class="icon" width="14" height="14"><use href="#i-search"/></svg>
+            <svg class="icon" width="14" height="14"><use href="#i-sliders"/></svg>
+          </span>
+        </div>
+
+        <div class="gui-body">
+
+          <aside class="gui-side">
+            <div class="gui-new"><svg class="icon" width="13" height="13"><use href="#i-plus"/></svg> New session</div>
+            <div class="gui-find"><svg class="icon" width="12" height="12"><use href="#i-search"/></svg> Search sessions</div>
+            <div class="gui-grp"><svg class="icon" width="11" height="11"><use href="#i-folder"/></svg> api-gateway</div>
+            <div class="gui-sess on">Audit the auth service<span>2m ago</span></div>
+            <div class="gui-sess">Rate-limit middleware<span>1h ago</span></div>
+            <div class="gui-sess">Migrate to pnpm<span>yesterday</span></div>
+            <div class="gui-grp"><svg class="icon" width="11" height="11"><use href="#i-folder"/></svg> scanner-cli</div>
+            <div class="gui-sess">TLS fingerprint parse<span>Tue</span></div>
+          </aside>
+
+          <div class="gui-chat">
+            <div class="gui-user">Audit how we verify JWTs and fix anything unsafe.</div>
+
+            <div class="gui-think"><i></i> Thinking &middot; tracing tainted input to sinks</div>
+
+            <div class="gui-tool">
+              <div class="gui-th">
+                <svg class="icon" width="13" height="13"><use href="#i-layers"/></svg>
+                <b>protocol_fingerprint</b><span>api-gateway :8443</span><em>0.6s</em>
+              </div>
+              <div class="gui-tb">node 20 &middot; express 4.19 &middot; jsonwebtoken 9.0.0</div>
+            </div>
+
+            <div class="gui-tool">
+              <div class="gui-th">
+                <svg class="icon" width="13" height="13"><use href="#i-bug"/></svg>
+                <b>taint_analyze</b><span>src/auth/token.ts</span><em>0.9s</em>
+              </div>
+              <div class="gui-tb">
+                HIGH&nbsp;&nbsp;req.headers.authorization &rarr; jwt.verify()<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;no algorithm allowlist &mdash; alg:none accepted
+              </div>
+            </div>
+
+            <div class="gui-say">
+              <code>token.ts:41</code> verifies without pinning an algorithm, so a token
+              signed <code>alg:none</code> is accepted unsigned.
+            </div>
+
+            <div class="gui-tool risk">
+              <div class="gui-th">
+                <svg class="icon" width="13" height="13"><use href="#i-pencil"/></svg>
+                <b>edit</b><span>src/auth/token.ts</span><em>needs approval</em>
+              </div>
+              <div class="gui-tb gui-diff">
+                <span class="del">- jwt.verify(token, secret)</span>
+                <span class="add">+ jwt.verify(token, secret, { algorithms: ["HS256"] })</span>
+              </div>
+              <div class="gui-appr">
+                <b>Approve</b><i>Edit diff</i><i>Deny</i><em>Y / N</em>
+              </div>
+            </div>
+
+            <div class="gui-comp">
+              <span>Ask REX, or @mention a file&hellip;</span>
+              <div class="r">
+                <svg class="icon" width="12" height="12"><use href="#i-paperclip"/></svg>
+                <span>claude-opus-5</span>
+                <span class="sp"></span>
+                <span>default mode</span>
+                <svg class="icon" width="12" height="12"><use href="#i-arrowUp"/></svg>
+              </div>
+            </div>
+          </div>
+
+          <aside class="gui-det">
+            <h5>Session</h5>
+            <div class="gui-kv"><span>model</span><b>claude-opus-5</b></div>
+            <div class="gui-kv"><span>mode</span><b>default</b></div>
+            <div class="gui-kv"><span>tools run</span><b>9</b></div>
+            <h5 style="margin-top:5px">Context</h5>
+            <div class="gui-meter"><i style="width:38%"></i></div>
+            <div class="gui-kv"><span>76k / 200k</span><b>38%</b></div>
+            <h5 style="margin-top:5px">Checkpoints</h5>
+            <div class="gui-kv"><span>token.ts</span><b>restore</b></div>
+            <div class="gui-kv"><span>guard.ts</span><b>restore</b></div>
+            <h5 style="margin-top:5px">Findings</h5>
+            <div class="gui-kv"><span>high</span><b>1</b></div>
+            <div class="gui-kv"><span>medium</span><b>2</b></div>
+          </aside>
+
+        </div>
+
+        <div class="gui-status">
+          <span class="dot"></span><span>working &middot; edit</span>
+          <span class="sp"></span>
+          <span>&uarr;12.4k &darr;3.1k</span><span>ollama: online</span><span>~/src/api-gateway</span>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="grid grid-3" style="margin-top:22px">
+      <article class="panel"><span class="panel-n">Composer</span><h3 class="h3">@-mention any file</h3><p>Type <code class="mono">@</code> to pull a file straight into context. Paste an image and it goes in as an attachment.</p></article>
+      <article class="panel"><span class="panel-n">Transcript</span><h3 class="h3">Highlight to ask</h3><p>Select any text and a toolbar offers to explain it, quote it back, or start a follow-up from it.</p></article>
+      <article class="panel"><span class="panel-n">Everywhere</span><h3 class="h3">Command palette</h3><p><span class="kbd">Ctrl</span> <span class="kbd">K</span> switches model, session, settings, or the browser pane.</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================= PROVIDERS ============================= -->
+<div class="marquee-strip" aria-hidden="true">
+  <div class="marquee">
+    <div class="marquee-track">
+      <span>Anthropic</span><span>OpenAI</span><span>OpenRouter</span><span>Ollama</span>
+      <span>LM Studio</span><span>llama.cpp</span><span>Groq</span><span>GitHub Models</span>
+      <span>Google Gemini</span><span>xAI</span><span>DeepSeek</span><span>Mistral</span>
+      <span>Cerebras</span><span>Together AI</span><span>Fireworks</span><span>Perplexity</span>
+      <span>NVIDIA NIM</span><span>Cloudflare Workers AI</span><span>Puter</span>
+      <span>OpenCode Zen</span><span>Kilo Code</span><span>Any OpenAI-compatible endpoint</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============================= TOOLS ============================= -->
+<section class="section" id="tools" data-power="0.22">
+  <div class="wrap">
+    <div class="shead">
+      <div class="shead-rule draw reveal"></div>
+      <div class="shead-idx">[ 03 ]</div>
+      <div class="shead-main">
+        <h2 class="h2" data-split="words">42 tools, grouped by what they can cost you</h2>
+        <p class="body reveal d1" style="max-width:54ch">
+          Reads run freely. Writes show a diff. Anything that touches your machine,
+          your screen or the network asks first — and the riskiest ask every single
+          time, whatever rules you've set.
+        </p>
+      </div>
+    </div>
+
+    <div class="reveal">
+      <div class="skill-h">Files &amp; search — free to run</div>
+      <div class="toolwall" style="margin-bottom:34px">
+        <div class="toolcell"><b>read</b><em>files into context</em></div>
+        <div class="toolcell"><b>glob</b><em>match by pattern</em></div>
+        <div class="toolcell"><b>grep</b><em>bundled ripgrep</em></div>
+        <div class="toolcell"><b>codebase_search</b><em>semantic lookup</em></div>
+        <div class="toolcell"><b>update_plan</b><em>visible task list</em></div>
+        <div class="toolcell"><b>ask_user</b><em>ask instead of guess</em></div>
+      </div>
+
+      <div class="skill-h">Writes — diff first, then approve</div>
+      <div class="toolwall" style="margin-bottom:34px">
+        <div class="toolcell"><b>write</b><em>atomic create</em></div>
+        <div class="toolcell"><b>edit</b><em>editable diff</em></div>
+        <div class="toolcell"><b>git</b><em>scoped subcommands</em></div>
+        <div class="toolcell"><b>create_artifact</b><em>build a document</em></div>
+        <div class="toolcell"><b>update_artifact</b><em>revise it</em></div>
+        <div class="toolcell"><b>memory_write</b><em>persist a fact</em></div>
+        <div class="toolcell"><b>memory_read</b><em>recall it later</em></div>
+        <div class="toolcell"><b>memory_delete</b><em>forget it</em></div>
+      </div>
+
+      <div class="skill-h">Execution — denylist checked before any rule</div>
+      <div class="toolwall" style="margin-bottom:34px">
+        <div class="toolcell"><b>shell</b><em>run a command</em></div>
+        <div class="toolcell"><b>check_process</b><em>poll a background job</em></div>
+        <div class="toolcell"><b>send_input</b><em>feed a running proc</em></div>
+        <div class="toolcell"><b>kill_process</b><em>stop it</em></div>
+        <div class="toolcell"><b>skill</b><em>run a packaged workflow</em></div>
+      </div>
+
+      <div class="skill-h">Network — SSRF guard on every fetch</div>
+      <div class="toolwall" style="margin-bottom:34px">
+        <div class="toolcell"><b>web_fetch</b><em>read a page</em></div>
+        <div class="toolcell"><b>web_search</b><em>search the web</em></div>
+        <div class="toolcell"><b>http_request</b><em>any verb, any header</em></div>
+      </div>
+
+      <div class="skill-h">Browser — a real view you can watch</div>
+      <div class="toolwall" style="margin-bottom:34px">
+        <div class="toolcell"><b>browser_start</b><em>launch it</em></div>
+        <div class="toolcell"><b>browser_navigate</b><em>go somewhere</em></div>
+        <div class="toolcell"><b>browser_snapshot</b><em>read the a11y tree</em></div>
+        <div class="toolcell"><b>browser_click</b><em>click by ref</em></div>
+        <div class="toolcell"><b>browser_type</b><em>fill a field</em></div>
+        <div class="toolcell"><b>browser_screenshot</b><em>capture it</em></div>
+        <div class="toolcell"><b>browser_eval</b><em>run JS in page</em></div>
+        <div class="toolcell"><b>browser_close</b><em>shut it down</em></div>
+      </div>
+
+      <div class="skill-h">Desktop control — never auto-allowed</div>
+      <div class="toolwall" style="margin-bottom:34px">
+        <div class="toolcell"><b>desktop_screenshot</b><em>see the screen</em></div>
+        <div class="toolcell"><b>desktop_click</b><em>click a point</em></div>
+        <div class="toolcell"><b>desktop_type</b><em>type text</em></div>
+        <div class="toolcell"><b>desktop_key</b><em>send a shortcut</em></div>
+        <div class="toolcell"><b>desktop_windows</b><em>list windows</em></div>
+        <div class="toolcell"><b>desktop_focus_window</b><em>bring to front</em></div>
+        <div class="toolcell"><b>desktop_ui_tree</b><em>read UI automation</em></div>
+        <div class="toolcell"><b>desktop_click_element</b><em>click by name, not pixel</em></div>
+      </div>
+
+      <div class="skill-h">Security analysis — for work you're authorised to do</div>
+      <div class="toolwall">
+        <div class="toolcell"><b>taint_analyze</b><em>source → sink tracing</em></div>
+        <div class="toolcell"><b>payload</b><em>encode / chain</em></div>
+        <div class="toolcell"><b>honeypot_check</b><em>is this a trap?</em></div>
+        <div class="toolcell"><b>protocol_fingerprint</b><em>identify the stack</em></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================= PERMISSIONS ============================= -->
+<section class="section invert" id="permissions" data-power="0.55">
+  <div class="wrap">
+    <div class="shead">
+      <div class="shead-rule draw reveal"></div>
+      <div class="shead-idx">[ 04 ]</div>
+      <div class="shead-main">
+        <h2 class="h2" data-split="words">A denial you can't talk it out of</h2>
+        <p class="body reveal d1" style="max-width:54ch">
+          Every tool call walks the same ladder, top to bottom. The hard safety
+          denylist sits above every rule you can write, so no setting, no
+          "always allow", and no persuasive prompt gets underneath it.
+        </p>
+      </div>
+    </div>
+
+    <div class="ladder reveal">
+      <div class="rung hard"><span class="n">01</span><span class="t">hard safety denylist</span><span class="d">not overridable</span></div>
+      <div class="rung"><span class="n">02</span><span class="t">session rules</span><span class="d">this session only</span></div>
+      <div class="rung"><span class="n">03</span><span class="t">project rules</span><span class="d">this project</span></div>
+      <div class="rung"><span class="n">04</span><span class="t">global rules</span><span class="d">everywhere</span></div>
+      <div class="rung"><span class="n">05</span><span class="t">tool defaults</span><span class="d">the fallback</span></div>
+    </div>
+
+    <div class="grid grid-3" style="margin-top:40px">
+      <div class="panel"><span class="panel-n">Mode</span><h3 class="h3">Safe</h3><p>Everything asks. Nothing is remembered.</p></div>
+      <div class="panel"><span class="panel-n">Mode</span><h3 class="h3">Default</h3><p>Reads run. Writes and execution ask.</p></div>
+      <div class="panel"><span class="panel-n">Mode</span><h3 class="h3">Auto</h3><p>Fewest prompts. The denylist still holds.</p></div>
+    </div>
+
+    <p class="body reveal d1" style="margin-top:32px; max-width:64ch">
+      Before you approve, the card shows the exact command, the exact path, and —
+      if you click "always allow" — the precise rule that would be written. And
+      approving is deliberately <em>not</em> a global shortcut: Y and N live on the
+      focused card, so a stray keypress while reading can never run a command.
+    </p>
+  </div>
+</section>
+
+<!-- ============================= ARCHITECTURE ============================= -->
+<section class="section" id="build" data-power="0.28">
+  <div class="wrap">
+    <div class="shead">
+      <div class="shead-rule draw reveal"></div>
+      <div class="shead-idx">[ 05 ]</div>
+      <div class="shead-main">
+        <h2 class="h2" data-split="words">A monorepo you can read</h2>
+        <p class="body reveal d1" style="max-width:54ch">
+          Electron rather than Tauri — the fastest path to a real desktop app —
+          with the agent core in the main process. No Rust sidecar, no IPC bridge
+          between the loop and the tools it calls.
+        </p>
+      </div>
+    </div>
+
+    <div class="grid grid-2">
+      <div class="panel">
+        <span class="panel-n">Layout</span>
+        <div class="code" style="border:0;background:transparent;padding:0"><span class="k">apps/desktop</span>      Electron: main/ (host), src/ (renderer)
+<span class="k">packages/</span>
+  <span class="k">shared-types</span>    cross-package contracts
+  <span class="k">agent-core</span>      loop, sessions, context
+  <span class="k">model-adapters</span>  provider catalog + adapters
+  <span class="k">tools</span>           all 42 tool executors
+  <span class="k">permission-gate</span> rule engine + denylist
+<span class="k">scripts</span>          build / dev / packaging</div>
+      </div>
+
+      <div class="panel" data-tilt="3">
+        <span class="panel-n">Design</span>
+        <h3 class="h3">The renderer holds nothing</h3>
+        <p style="margin-bottom:16px">
+          The React renderer keeps no secrets and executes nothing. It sends
+          intents over IPC and renders what streams back — so a compromised page
+          has nothing worth stealing.
+        </p>
+        <h3 class="h3">Packaged for three OSes</h3>
+        <p>
+          NSIS and portable builds for Windows, a hand-assembled <code class="mono">.deb</code>
+          that builds even from a Windows host, a distro-agnostic tarball, and
+          macOS targets wired up in <code class="mono">package.json</code>.
+        </p>
+      </div>
+    </div>
+
+    <div class="hero-actions reveal d1" style="margin-top:40px">
+      <a class="btn btn-acid" href="downloads.html"><span>Downloads &amp; checksums</span></a>
+      <a class="btn" href="https://github.com/rxdsec634" target="_blank" rel="noopener"><span>Source on GitHub</span></a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-foot">
+  <div class="wrap">
+    <div class="foot-huge" data-split="chars" data-split-fast>REX</div>
+    <div class="foot-cols">
+      <div>
+        <h5>Project</h5>
+        <a href="#what">What it is</a>
+        <a href="#tools">Tools</a>
+        <a href="#permissions">Permissions</a>
+        <a href="#build">Architecture</a>
+      </div>
+      <div>
+        <h5>Get it</h5>
+        <a href="downloads.html">Downloads</a>
+        <a href="downloads.html#builds">Checksums</a>
+        <a href="https://github.com/rxdsec634" target="_blank" rel="noopener">Source</a>
+      </div>
+      <div>
+        <h5>RXDSEC</h5>
+        <a href="index.html">Home</a>
+        <a href="index.html#work">Work</a>
+        <a href="index.html#contact">Contact</a>
+      </div>
+      <div>
+        <h5>Elsewhere</h5>
+        <a href="https://github.com/rxdsec634" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.youtube.com/@RXDSEC" target="_blank" rel="noopener">YouTube</a>
+        <a href="https://www.linkedin.com/in/redweb-sec-2a4077240/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://www.instagram.com/rxdsec/" target="_blank" rel="noopener">Instagram</a>
+      </div>
+    </div>
+    <div class="foot-end">
+      <span>© <span data-year>2026</span> rxdsec · MIT licence</span>
+      <span>Local-first · your keys · no prompt telemetry</span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/scene.js"></script>
+<script src="assets/js/fx.js"></script>
+<script src="assets/js/account.js"></script>
+</body>
+</html>
