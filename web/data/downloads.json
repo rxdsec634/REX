@@ -5,7 +5,7 @@
     "version": "0.2.4",
     "date": "2026-09-09",
     "license": "MIT",
-    "repo": "https://github.com/rxdsec634/rex",
+    "repo": "https://github.com/rxdsec634/REX",
     "highlights": [
       "Offensive-security loop: fingerprint, taint-trace, payload, prove, patch",
       "Agentic loop with streaming, native tool calling and append-only session history",
@@ -24,7 +24,7 @@
       "icon": "power",
       "size": 90269315,
       "sha256": "b0718a5465747ea0b0b774c0898b7b509e2e46077188dd5d639955c52a07dac9",
-      "url": "https://github.com/rxdsec634/rex/releases/download/v0.2.4/REX.0.2.4.exe",
+      "url": "https://github.com/rxdsec634/REX/releases/download/v0.2.4/REX.0.2.4.exe",
       "tags": [
         "x64",
         "portable"
@@ -41,7 +41,7 @@
       "primary": true,
       "size": 90496200,
       "sha256": "8bc958c8b2beba6241e49b3d4a0f7f1fcc3096cc88bfd533712241c3154e7b7a",
-      "url": "https://github.com/rxdsec634/rex/releases/download/v0.2.4/REX.Setup.0.2.4.exe",
+      "url": "https://github.com/rxdsec634/REX/releases/download/v0.2.4/REX.Setup.0.2.4.exe",
       "tags": [
         "x64",
         "recommended"
@@ -57,7 +57,7 @@
       "icon": "archive",
       "size": 121990343,
       "sha256": "9ae123906514c4aef28520d3bfbd8fd1e36bc3ec9ddd9ce976ec3bf241493392",
-      "url": "https://github.com/rxdsec634/rex/releases/download/v0.2.4/rex-0.2.4-linux-x64.tar.gz",
+      "url": "https://github.com/rxdsec634/REX/releases/download/v0.2.4/rex-0.2.4-linux-x64.tar.gz",
       "tags": [
         "x64",
         "no-root"
@@ -75,7 +75,7 @@
       "primary": true,
       "size": 122005876,
       "sha256": "93a8d30e999c3bcac040811cea3bc38843f19c502882db25226bac54c32fad3a",
-      "url": "https://github.com/rxdsec634/rex/releases/download/v0.2.4/rex_0.2.4_amd64.deb",
+      "url": "https://github.com/rxdsec634/REX/releases/download/v0.2.4/rex_0.2.4_amd64.deb",
       "tags": [
         "amd64",
         "kali-ready"
@@ -109,13 +109,13 @@
       "icon": "code",
       "size": 0,
       "status": "repo",
-      "url": "https://github.com/rxdsec634/rex",
+      "url": "https://github.com/rxdsec634/REX",
       "tags": [
         "node 20+",
         "electron",
         "typescript"
       ],
-      "install": "git clone https://github.com/rxdsec634/rex.git\ncd rex\nnpm install\nnpm start"
+      "install": "git clone https://github.com/rxdsec634/REX.git\ncd rex\nnpm install\nnpm start"
     }
   ],
   "projects": [
@@ -131,7 +131,7 @@
         "MIT"
       ],
       "url": "#builds",
-      "repo": "https://github.com/rxdsec634/rex",
+      "repo": "https://github.com/rxdsec634/REX",
       "featured": true
     }
   ]
