@@ -1,0 +1,138 @@
+{
+  "$comment": "Edit this file to publish a new build or add one of your own projects. downloads.html renders entirely from here — no HTML editing needed. See web/README.md.",
+  "release": {
+    "product": "REX",
+    "version": "0.2.4",
+    "date": "2026-09-09",
+    "license": "MIT",
+    "repo": "https://github.com/rxdsec634/rex",
+    "highlights": [
+      "Offensive-security loop: fingerprint, taint-trace, payload, prove, patch",
+      "Agentic loop with streaming, native tool calling and append-only session history",
+      "23 model providers — cloud, local and fully custom OpenAI-compatible endpoints",
+      "Permission gate with a hard safety denylist that no rule can override",
+      "Desktop control, browser automation and a managed local GGUF engine"
+    ]
+  },
+  "builds": [
+    {
+      "id": "win32-portable",
+      "os": "windows",
+      "osLabel": "Windows",
+      "title": "REX 0.2.4.exe",
+      "subtitle": "Portable single file. No install, no registry writes — run it from a USB stick.",
+      "icon": "power",
+      "size": 90269315,
+      "sha256": "b0718a5465747ea0b0b774c0898b7b509e2e46077188dd5d639955c52a07dac9",
+      "url": "https://github.com/rxdsec634/rex/releases/download/v0.2.4/REX.0.2.4.exe",
+      "tags": [
+        "x64",
+        "portable"
+      ],
+      "verify": "certutil -hashfile \"REX 0.2.4.exe\" SHA256"
+    },
+    {
+      "id": "win32-installer",
+      "os": "windows",
+      "osLabel": "Windows",
+      "title": "REX Setup 0.2.4.exe",
+      "subtitle": "NSIS installer — Windows 10/11, x64. Adds a Start-menu entry and file associations.",
+      "icon": "window",
+      "primary": true,
+      "size": 90496200,
+      "sha256": "8bc958c8b2beba6241e49b3d4a0f7f1fcc3096cc88bfd533712241c3154e7b7a",
+      "url": "https://github.com/rxdsec634/rex/releases/download/v0.2.4/REX.Setup.0.2.4.exe",
+      "tags": [
+        "x64",
+        "recommended"
+      ],
+      "verify": "certutil -hashfile \"REX Setup 0.2.4.exe\" SHA256"
+    },
+    {
+      "id": "linux-tarball",
+      "os": "linux",
+      "osLabel": "Linux",
+      "title": "rex-0.2.4-linux-x64.tar.gz",
+      "subtitle": "Distro-agnostic tarball. Extract anywhere and run ./rex — no package manager involved.",
+      "icon": "archive",
+      "size": 121990343,
+      "sha256": "9ae123906514c4aef28520d3bfbd8fd1e36bc3ec9ddd9ce976ec3bf241493392",
+      "url": "https://github.com/rxdsec634/rex/releases/download/v0.2.4/rex-0.2.4-linux-x64.tar.gz",
+      "tags": [
+        "x64",
+        "no-root"
+      ],
+      "install": "tar -xzf rex-0.2.4-linux-x64.tar.gz && ./rex/rex",
+      "verify": "sha256sum rex-0.2.4-linux-x64.tar.gz"
+    },
+    {
+      "id": "linux-deb",
+      "os": "linux",
+      "osLabel": "Linux",
+      "title": "rex_0.2.4_amd64.deb",
+      "subtitle": "Debian / Ubuntu / Kali. Installs to /opt/REX, puts rex on your PATH, registers a desktop entry.",
+      "icon": "terminal",
+      "primary": true,
+      "size": 122005876,
+      "sha256": "93a8d30e999c3bcac040811cea3bc38843f19c502882db25226bac54c32fad3a",
+      "url": "https://github.com/rxdsec634/rex/releases/download/v0.2.4/rex_0.2.4_amd64.deb",
+      "tags": [
+        "amd64",
+        "kali-ready"
+      ],
+      "install": "sudo apt install ./rex_0.2.4_amd64.deb",
+      "verify": "sha256sum rex_0.2.4_amd64.deb"
+    },
+    {
+      "id": "macos",
+      "os": "macos",
+      "osLabel": "macOS",
+      "title": "REX-0.2.4.dmg",
+      "subtitle": "Apple silicon and Intel. Build target is configured; a signed artifact has not been published yet.",
+      "icon": "monitor",
+      "size": 0,
+      "status": "pending",
+      "tags": [
+        "arm64",
+        "x64",
+        "not yet published"
+      ],
+      "install": "npm run package:mac",
+      "note": "Packaging is wired up in package.json — build it yourself on a Mac until a notarised DMG ships here."
+    },
+    {
+      "id": "source",
+      "os": "source",
+      "osLabel": "Source",
+      "title": "Build from source",
+      "subtitle": "Clone the monorepo and run it in dev mode with a hot-reloaded renderer.",
+      "icon": "code",
+      "size": 0,
+      "status": "repo",
+      "url": "https://github.com/rxdsec634/rex",
+      "tags": [
+        "node 20+",
+        "electron",
+        "typescript"
+      ],
+      "install": "git clone https://github.com/rxdsec634/rex.git\ncd rex\nnpm install\nnpm start"
+    }
+  ],
+  "projects": [
+    {
+      "name": "REX Agent",
+      "blurb": "The full local-first offensive-security and engineering agent — recon, taint analysis, payload construction, agentic loop, 23 providers, permission gate, desktop control, browser automation. This is the flagship; the builds above are its releases.",
+      "kind": "Desktop app",
+      "icon": "cpu",
+      "tags": [
+        "Electron",
+        "React",
+        "TypeScript",
+        "MIT"
+      ],
+      "url": "#builds",
+      "repo": "https://github.com/rxdsec634/rex",
+      "featured": true
+    }
+  ]
+}

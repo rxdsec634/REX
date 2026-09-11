@@ -1,0 +1,29 @@
+node_modules/
+dist/
+apps/desktop/dist/
+dist-installer/
+.test-build/
+.rex/
+electron-out.log
+electron-err.log
+*.tsbuildinfo
+.DS_Store
+# stray Windows redirect artifact
+nul
+
+# server state — users, tokens, session secret
+server/data/
+server/.env
+dist-deploy/
+.tunnel-url
+.tunnel-key
+.tunnel-key.pub
+
+# admin bootstrap password — plaintext, must never be published
+.admin-bootstrap.tmp
+
+# captured third-party site bundles (research artifacts, not REX source).
+# am/ embeds a third party's live Google Maps API key; publishing it would
+# expose someone else's credential.
+am/
+bundles/

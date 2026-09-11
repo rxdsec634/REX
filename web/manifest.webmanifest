@@ -1,0 +1,19 @@
+{
+  "name": "RXDSEC — AI Security Engineer",
+  "short_name": "RXDSEC",
+  "description": "Offensive tooling, agent infrastructure and desktop software by rxdsec. Home of REX, a local-first coding agent.",
+  "start_url": "index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0b0b0c",
+  "theme_color": "#0b0b0c",
+  "icons": [
+    { "src": "assets/img/mark.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "assets/img/mark.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Downloads", "url": "downloads.html" },
+    { "name": "REX", "url": "rex.html" }
+  ]
+}

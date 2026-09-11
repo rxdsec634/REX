@@ -1,0 +1,88 @@
+{
+  "$comment": "Identity for the site. This file is served publicly at /data/profile.json, so anything in here is on the internet. Legal name, address, employers, education and certifications are deliberately NOT in it — experience is stated as a duration only. Do not paste the CV back in wholesale.",
+
+  "handle": "RXDSEC",
+  "name": "rxdsec",
+  "title": "Cybersecurity Analyst",
+  "disciplines": ["VAPT", "Penetration Testing", "Red Teaming", "AI Security"],
+  "tagline": "I build the tools that break things.",
+
+  "summary": "Cybersecurity practitioner specialising in offensive security — VAPT, web application penetration testing, and AI red teaming. Hands-on across digital forensics, responsible vulnerability disclosure, and Python security tooling, grounded in the OWASP Top 10 including the one for LLMs.",
+
+  "yearsExperience": "2+",
+  "availability": "Open to work",
+
+  "$omitted": [
+    "legal name",
+    "phone number",
+    "email address",
+    "city / address",
+    "employer names and dates",
+    "university and degree",
+    "certification list"
+  ],
+
+  "links": {
+    "github": "https://github.com/rxdsec634",
+    "youtube": "https://www.youtube.com/@RXDSEC",
+    "linkedin": "https://www.linkedin.com/in/redweb-sec-2a4077240/",
+    "instagram": "https://www.instagram.com/rxdsec/"
+  },
+
+  "$practice_note": "Capability areas, stated without naming where each was done.",
+  "practice": [
+    "Digital forensics on live investigations — evidence extraction, triage and reporting",
+    "Responsible disclosure of XSS, SQL injection and CSRF against production targets",
+    "Web application security testing and VAPT engagements end to end",
+    "LLM evaluation — stress-testing prompts and outputs across GPT, Claude and Gemini",
+    "Python and Bash security tooling for automated analysis and triage"
+  ],
+
+  "skills": {
+    "Offensive security": ["Penetration Testing", "VAPT", "Web App Security Testing", "OWASP Top 10", "Bug Bounty", "Vulnerability Research"],
+    "Tools": ["Burp Suite", "OWASP ZAP", "Nmap", "Wireshark", "Metasploit", "CodeQL", "Semgrep"],
+    "AI security": ["AI Red Teaming", "Jailbreak & Prompt-Injection Testing", "Adversarial Testing", "OWASP Top 10 for LLMs", "Model Security", "AI Governance"],
+    "Forensics & defence": ["Digital Forensics", "Evidence Triage", "Log Analysis", "Email Investigation (SPF/DKIM/DMARC)", "Phishing Detection"],
+    "Scripting & platform": ["Python", "Bash", "Linux", "SQL", "REST APIs", "GitHub Actions", "Docker", "AWS"]
+  },
+
+  "$repos_comment": "Real repositories from github.com/rxdsec634. GitHub shows no descriptions, so these blurbs are written here.",
+  "repos": [
+    {
+      "name": "AiPentestFramework",
+      "blurb": "Chains AI models with Nmap, Burp Suite and OWASP ZAP to automate reconnaissance and vulnerability assessment across web targets.",
+      "icon": "bug", "stars": 3, "forks": 0, "license": "MIT", "language": "Python",
+      "updated": "Mar 2025", "tags": ["Pentest", "AI", "Framework"]
+    },
+    {
+      "name": "RXDSEC-CLI",
+      "blurb": "The command-line side of the toolkit — one Python entry point instead of a folder of scripts.",
+      "icon": "terminal", "stars": 1, "forks": 0, "license": "MIT", "language": "Python",
+      "updated": "Dec 2025", "tags": ["Python", "CLI", "Tooling"]
+    },
+    {
+      "name": "Bluedos",
+      "blurb": "BlueSec — Bluetooth attack-surface auditing for authorised security research and lab use.",
+      "icon": "zap", "stars": 2, "forks": 0, "license": "MIT", "language": null,
+      "updated": "Mar 2025", "tags": ["Bluetooth", "Wireless", "Research"]
+    },
+    {
+      "name": "rootmaster",
+      "blurb": "Privilege and root-access tooling. The only repo on the profile with an outside fork.",
+      "icon": "key", "stars": 1, "forks": 1, "license": "MIT", "language": null,
+      "updated": "Mar 2025", "tags": ["Linux", "Privesc"]
+    },
+    {
+      "name": "airmobile",
+      "blurb": "AirMobile — Wi-Fi attack-surface auditing, extending the wireless toolkit past Bluetooth.",
+      "icon": "monitor", "stars": 1, "forks": 0, "license": "MIT", "language": null,
+      "updated": "Jan 2026", "tags": ["Wi-Fi", "Wireless"]
+    },
+    {
+      "name": "simplebtcbot",
+      "blurb": "A small automation bot — the most recent push on the profile.",
+      "icon": "command", "stars": 1, "forks": 0, "license": null, "language": null,
+      "updated": "Jun 2026", "tags": ["Automation", "Bot"]
+    }
+  ]
+}
