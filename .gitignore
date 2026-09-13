@@ -27,3 +27,6 @@ dist-deploy/
 # expose someone else's credential.
 am/
 bundles/
+
+# private backend deploy bundle — must never enter the public site repo
+rex-api/
