@@ -30,3 +30,6 @@ bundles/
 
 # private backend deploy bundle — must never enter the public site repo
 rex-api/
+
+# unified site+API Node app (deploy bundle) — keep out of the public site repo
+rex-app/
