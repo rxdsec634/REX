@@ -23,13 +23,13 @@
   var AKEY = "rxdsec.admin";
 
   /* The API lives wherever the site is served from, so a deploy to a real
-     domain needs no edit here. Override with ?api= for testing against a
-     server on another host. */
-  var API = (function () {
-    var q = new URLSearchParams(location.search).get("api");
-    if (q && /^https?:\/\//.test(q)) return q.replace(/\/$/, "");
-    return location.origin;
-  })();
+     domain needs no edit here.
+
+     This is deliberately not overridable. An ?api= parameter used to be
+     accepted for testing, but it meant a link like account.html?api=evil.tld
+     would hand a visitor's credentials to whatever host the link named, on a
+     page that still looks like this one. Same origin, always. */
+  var API = location.origin;
 
   /* ------------------------- tiny helpers ------------------------- */
 
