@@ -1132,35 +1132,84 @@
       if (input.files.length) upload(input.files);
     });
 
+    /* A PUT that reports how much of the body has actually gone out.
+       fetch() cannot do this: a request body has no progress events, so an
+       upload of a 120 MB build sat at 0% until it finished and then snapped to
+       100% — indistinguishable from a hang. XMLHttpRequest still exposes
+       upload.onprogress, which is the only way to see bytes leave. */
+    function putWithProgress(url, file, token, onProgress) {
+      return new Promise(function (resolve, reject) {
+        var xhr = new XMLHttpRequest();
+        xhr.open("PUT", url, true);
+        xhr.setRequestHeader("authorization", "Bearer " + token);
+        xhr.upload.onprogress = function (e) {
+          if (e.lengthComputable) onProgress(e.loaded, e.total);
+        };
+        xhr.onload = function () {
+          var out;
+          try { out = JSON.parse(xhr.responseText || "{}"); } catch (err) { out = {}; }
+          if (xhr.status >= 200 && xhr.status < 300) resolve(out);
+          else reject(new Error(out.error || "HTTP " + xhr.status));
+        };
+        // A dropped connection and a refused one look the same here; neither
+        // tells us whether the server saw any of it, so say only what is true.
+        xhr.onerror = function () { reject(new Error("The connection dropped during upload.")); };
+        xhr.ontimeout = function () { reject(new Error("The upload timed out.")); };
+        xhr.send(file);
+      });
+    }
+
     async function upload(files) {
       var list = Array.prototype.slice.call(files);
       var a = readAdmin();
+      var fill = bar.querySelector("i");
       bar.hidden = false;
       upmsg.innerHTML = "";
       var done = [];
 
       for (var i = 0; i < list.length; i++) {
         var f = list[i];
-        bar.querySelector("i").style.width = Math.round((i / list.length) * 100) + "%";
+        var index = i;
+        var many = list.length > 1 ? " (" + (index + 1) + " of " + list.length + ")" : "";
+
+        fill.style.width = ((index / list.length) * 100).toFixed(1) + "%";
         upmsg.innerHTML = note("good", "upload", "Uploading <b>" + esc(f.name) + "</b> — " + bytes(f.size) + "…");
+
         try {
           // Streamed straight from the File object; the browser handles the
           // chunking and a 120 MB build never sits in a JS string.
-          var res = await fetch(
+          var out = await putWithProgress(
             API + "/api/v1/admin/upload?name=" + encodeURIComponent(f.name),
-            { method: "PUT", headers: { authorization: "Bearer " + a.token }, body: f }
+            f,
+            a.token,
+            (function (file, idx, label) {
+              return function (loaded, total) {
+                var part = total ? loaded / total : 0;
+                fill.style.width = (((idx + part) / list.length) * 100).toFixed(1) + "%";
+                upmsg.innerHTML = note(
+                  "good",
+                  "upload",
+                  "Uploading <b>" + esc(file.name) + "</b>" + label + " — " +
+                  bytes(loaded) + " of " + bytes(total) + " · " + Math.round(part * 100) + "%"
+                );
+              };
+            })(f, index, many)
           );
-          var out = await res.json();
-          if (!res.ok) throw new Error(out.error || "HTTP " + res.status);
           done.push(out);
         } catch (err) {
           bar.hidden = true;
           upmsg.innerHTML = note("bad", "alert", "<b>" + esc(f.name) + "</b><br>" + esc(err.message));
           return;
         }
+
+        // The last bytes are sent well before the server has finished writing
+        // and hashing them, so say so rather than showing a full bar that is
+        // waiting on something.
+        fill.style.width = (((index + 1) / list.length) * 100).toFixed(1) + "%";
+        upmsg.innerHTML = note("good", "upload", "Finishing <b>" + esc(f.name) + "</b> on the server…");
       }
 
-      bar.querySelector("i").style.width = "100%";
+      fill.style.width = "100%";
       setTimeout(function () { showAdminConsole(); }, 350);
     }
 
