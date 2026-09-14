@@ -25,11 +25,19 @@
   /* The API lives wherever the site is served from, so a deploy to a real
      domain needs no edit here.
 
-     This is deliberately not overridable. An ?api= parameter used to be
-     accepted for testing, but it meant a link like account.html?api=evil.tld
-     would hand a visitor's credentials to whatever host the link named, on a
-     page that still looks like this one. Same origin, always. */
-  var API = location.origin;
+     It is pinned to the production host rather than to location.origin, so a
+     copy of this page served from anywhere — localhost, a staging domain, a
+     mirror — still registers and signs in against the one real server. There
+     is one account system, and it lives here.
+
+     Deliberately not overridable. An ?api= parameter used to be accepted for
+     testing, but it meant a link like account.html?api=evil.tld would hand a
+     visitor's credentials to whatever host the link named, on a page that
+     still looks like this one.
+
+     Moving domains is a one-line edit here (and REX_DEFAULT_SERVER for the
+     desktop app). */
+  var API = "https://rxdsec.vercel.app";
 
   /* ------------------------- tiny helpers ------------------------- */
 
