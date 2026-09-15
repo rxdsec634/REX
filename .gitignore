@@ -40,11 +40,12 @@ rex-app/
 # `git add -A` published the application source. Naming them is the control.
 apps/
 packages/
-scripts/
+# scripts/* rather than scripts/, because git will not re-include a file whose
+# parent directory is excluded — the negation below only works this way round.
+scripts/*
 # …except the one that maintains this site: it regenerates the inline manifest
 # in downloads.html, and a checksum that drifts from the file is the worst
 # thing a download page can publish.
-!scripts/
 !scripts/sync-downloads-html.mjs
 server/
 tests/
