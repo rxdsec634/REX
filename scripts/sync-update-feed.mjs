@@ -68,8 +68,12 @@ async function liveAssets() {
     const res = await fetch(api, { headers: { accept: "application/vnd.github+json" } });
     if (!res.ok) return null;
     const rel = await res.json();
-    if (!Array.isArray(rel.assets) || !rel.assets.length) return null;
-    const byName = new Map(rel.assets.map((a) => [String(a.name).toLowerCase(), a]));
+    if (!rel?.tag_name) return null;
+    // A release with no assets yet still knows its tag, and the tag is the part
+    // the constructed URL gets wrong. Returning null here sent us back to
+    // guessing v<version> for a release tagged something else — which is the
+    // exact failure this function exists to prevent.
+    const byName = new Map((rel.assets || []).map((a) => [String(a.name).toLowerCase(), a]));
     return { tag: rel.tag_name, byName };
   } catch {
     return null;
@@ -77,8 +81,12 @@ async function liveAssets() {
 }
 
 const live = await liveAssets();
-if (live) console.log(`Release ${live.tag} found on GitHub — taking asset URLs from it.`);
-else console.log("No published release found — falling back to constructed URLs.");
+if (live && live.byName.size) console.log(`Release ${live.tag} found with assets — taking URLs from it.`);
+else if (live) console.log(`Release ${live.tag} found but has no assets yet — building URLs from its tag.`);
+else console.log("No release found — falling back to a URL built from the version.");
+
+/* Prefer the real tag over the assumed one. */
+const tagBase = live?.tag ? `${repo.replace(/\/$/, "")}/releases/download/${live.tag}/` : base;
 
 const assets = [];
 const missing = [];
@@ -99,7 +107,7 @@ for (const t of TARGETS) {
   assets.push({
     platform: t.platform,
     arch: t.arch,
-    url: hit?.browser_download_url || base + t.asset,
+    url: hit?.browser_download_url || tagBase + t.asset,
     size: buf.length,
     sha256: crypto.createHash("sha256").update(buf).digest("hex"),
   });

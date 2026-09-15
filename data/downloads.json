@@ -22,9 +22,9 @@
       "title": "REX 0.2.4.exe",
       "subtitle": "Portable single file. No install, no registry writes — run it from a USB stick.",
       "icon": "power",
-      "size": 88588839,
-      "sha256": "859046e93929698d8ab83aaccc4423d13f70bab870b209a5b27c5d8cc1820d65",
-      "url": "https://github.com/rxdsec634/REX/releases/download/v0.2.4/REX.0.2.4.exe",
+      "size": 88590444,
+      "sha256": "49b24d19a4eb5667d075ce53659b8caa43fbffab9b241a39c19cf32868a5956a",
+      "url": "https://github.com/rxdsec634/REX/releases/download/rex/REX.0.2.4.exe",
       "tags": [
         "x64",
         "portable"
@@ -39,9 +39,9 @@
       "subtitle": "NSIS installer — Windows 10/11, x64. Adds a Start-menu entry and file associations.",
       "icon": "window",
       "primary": true,
-      "size": 88815712,
-      "sha256": "9f4fda256cc3cd2cc7a14496aed57f26a4fdac5962a7065fcfd8145e1ac25014",
-      "url": "https://github.com/rxdsec634/REX/releases/download/v0.2.4/REX.Setup.0.2.4.exe",
+      "size": 88817326,
+      "sha256": "c72603324802b2116708eead13e98213bdd67598c24afa08c1e68bef318a8b73",
+      "url": "https://github.com/rxdsec634/REX/releases/download/rex/REX.Setup.0.2.4.exe",
       "tags": [
         "x64",
         "recommended"
@@ -55,9 +55,9 @@
       "title": "rex-0.2.4-linux-x64.tar.gz",
       "subtitle": "Distro-agnostic tarball. Extract anywhere and run ./rex — no package manager involved.",
       "icon": "archive",
-      "size": 119728131,
-      "sha256": "ac0194482450af704b360dcc11af3e85d7e2933cef5dc7ea25f9316c750f4e8e",
-      "url": "https://github.com/rxdsec634/REX/releases/download/v0.2.4/rex-0.2.4-linux-x64.tar.gz",
+      "size": 119728183,
+      "sha256": "3054434c1ab3ddccfbbf3acac06850692d77ee99b9f8ca2caf5844632f6c3cc8",
+      "url": "https://github.com/rxdsec634/REX/releases/download/rex/rex-0.2.4-linux-x64.tar.gz",
       "tags": [
         "x64",
         "no-root"
@@ -73,9 +73,9 @@
       "subtitle": "Debian / Ubuntu / Kali. Installs to /opt/REX, puts rex on your PATH, registers a desktop entry.",
       "icon": "terminal",
       "primary": true,
-      "size": 119742902,
-      "sha256": "9170f1ca6ac9f37c876536913928361eee2c5f9850dfaf67c463e8b50e6e814b",
-      "url": "https://github.com/rxdsec634/REX/releases/download/v0.2.4/rex_0.2.4_amd64.deb",
+      "size": 119743150,
+      "sha256": "b189378c0130205e2730c9107c13658c438643517cb81e7370b0ea4160a63c0a",
+      "url": "https://github.com/rxdsec634/REX/releases/download/rex/rex_0.2.4_amd64.deb",
       "tags": [
         "amd64",
         "kali-ready"
