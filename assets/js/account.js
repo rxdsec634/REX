@@ -223,6 +223,9 @@
   function authCard(providers, opts) {
     opts = opts || {};
     var isReg = mode === "register";
+    // The server decides whether email+password exists at all. When it is off,
+    // rendering the fields anyway would offer a form that the endpoint refuses.
+    var pw = opts.password !== false;
     var oauth = providers.map(function (p) {
       return (
         '<button class="btn" data-provider="' + esc(p.id) + '" type="button">' +
@@ -240,18 +243,21 @@
           ? '<div class="hero-actions" style="flex-direction:column;align-items:stretch;margin-bottom:22px">' + oauth + "</div>" +
             '<div style="display:flex;align-items:center;gap:14px;margin-bottom:22px">' +
               '<i style="flex:1;height:1px;background:var(--rule)"></i>' +
-              '<span class="label" style="color:var(--ink-3)">or with email</span>' +
+              '<span class="label" style="color:var(--ink-3)">' + (pw ? "or with email" : "") + "</span>" +
               '<i style="flex:1;height:1px;background:var(--rule)"></i>' +
             "</div>"
-          : '<p class="field-hint" style="margin:-6px 0 20px">' +
-            "GitHub and Google sign-in are not enabled on this server yet. " +
-            "Email and password works exactly the same way." +
-            "</p>") +
+          : "") +
 
-        (isReg
+        (!pw && !oauth
+          ? note("bad", "alert", "No sign-in method is enabled on this server.")
+          : "") +
+
+        (pw && isReg
           ? '<label class="field"><span>Name <i style="color:var(--ink-3);font-style:normal">optional</i></span>' +
             '<input class="input" name="name" autocomplete="name" maxlength="80"></label>'
           : "") +
+
+        (pw ?
 
         '<label class="field"><span>Email</span>' +
         '<input class="input" name="email" type="email" required autocomplete="email" ' +
@@ -268,7 +274,8 @@
           '<span class="spacer"></span>' +
           '<button class="btn btn-sm" type="button" id="swapmode">' +
           "<span>" + (isReg ? "I already have an account" : "Create an account") + "</span></button>" +
-        "</div>" +
+        "</div>"
+        : "") +
         (opts.footer || "") +
       "</form>"
     );
@@ -282,7 +289,9 @@
       msg.innerHTML = note(kind, icon, html);
     }
 
-    form.addEventListener("submit", async function (e) {
+    // With password sign-in disabled the form has no fields and no submit
+    // button; only the provider buttons below are wired.
+    if (form.email) form.addEventListener("submit", async function (e) {
       e.preventDefault();
       var btn = form.querySelector('button[type="submit"]');
       var data = {
@@ -303,7 +312,10 @@
       }
     });
 
-    document.getElementById("swapmode").addEventListener("click", function () {
+    // Absent when password sign-in is disabled: there is no second mode to
+    // swap to, because registering by email is not on offer.
+    var swap = document.getElementById("swapmode");
+    if (swap) swap.addEventListener("click", function () {
       mode = mode === "login" ? "register" : "login";
       rerender();
     });
@@ -330,6 +342,7 @@
     render(
       '<div class="grid grid-2">' +
         authCard(conf.providers || [], {
+          password: conf.password !== false,
           footer:
             conf.allowSignup === false && mode === "register"
               ? note("warn", "info", "Registration is closed on this server at the moment.")
@@ -404,7 +417,7 @@
 
     render(
       '<div class="grid grid-2">' +
-        authCard(conf.providers || []) +
+        authCard(conf.providers || [], { password: conf.password !== false }) +
         '<div class="panel">' +
           '<span class="panel-n">Signing in to the agent</span>' +
           '<h3 class="h3">REX is waiting for this</h3>' +
