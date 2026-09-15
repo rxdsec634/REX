@@ -242,7 +242,66 @@
     return data;
   }
 
-  function withLiveRelease(data) {
+  /* Supabase is the address of record.
+     It is edited in one place, by the owner, and takes effect without a deploy
+     — which is the point. GitHub stays as the fallback because it knows where
+     the assets really are when the table has not been filled in yet, and the
+     manifest stays behind that because a page that shows nothing is worse than
+     a page showing a stale address.
+
+     Matching is by platform + kind, which is how the manifest already
+     distinguishes an installer from a portable build on the same OS. */
+  var KIND_BY_ID = {
+    "win32-installer": { platform: "win32", kind: "installer" },
+    "win32-portable": { platform: "win32", kind: "portable" },
+    "linux-deb": { platform: "linux", kind: "deb" },
+    "linux-tarball": { platform: "linux", kind: "tarball" },
+    macos: { platform: "darwin", kind: null },
+  };
+
+  function applySupabase(data, rows) {
+    if (!rows || !rows.length) return { data: data, used: 0 };
+    var used = 0;
+
+    (data.builds || []).forEach(function (b) {
+      var want = KIND_BY_ID[b.id];
+      if (!want) return;
+      var row = null;
+      for (var i = 0; i < rows.length; i++) {
+        if (rows[i].platform !== want.platform) continue;
+        if (want.kind && rows[i].kind && rows[i].kind !== want.kind) continue;
+        row = rows[i]; // ordered newest first, so the first match is the one
+        break;
+      }
+      if (!row || !row.url) return;
+      used++;
+      b.url = row.url;
+      if (typeof row.size === "number") b.size = row.size;
+      if (row.sha256) b.sha256 = row.sha256;
+      if (row.version) b.title = String(b.title || "").replace(/\d+\.\d+\.\d+/, row.version);
+      delete b.status;
+    });
+
+    if (used && rows[0].version) {
+      data.release = data.release || {};
+      data.release.version = rows[0].version;
+    }
+    return { data: data, used: used };
+  }
+
+  function withSupabase(data) {
+    if (!window.SB || !window.SB.listReleases) return Promise.resolve({ data: data, used: 0 });
+    return window.SB.listReleases("stable")
+      .then(function (rows) {
+        return applySupabase(data, rows);
+      })
+      .catch(function () {
+        // Table missing, project paused, offline — all the same answer here.
+        return { data: data, used: 0 };
+      });
+  }
+
+  function withGitHub(data) {
     return fetch(GH_API, { cache: "no-cache", headers: { accept: "application/vnd.github+json" } })
       .then(function (r) {
         return r.ok ? r.json() : null;
@@ -268,7 +327,13 @@
       if (!r.ok) throw new Error("HTTP " + r.status);
       return r.json();
     })
-    .then(withLiveRelease)
+    .then(function (data) {
+      return withSupabase(data).then(function (r) {
+        // Only ask GitHub when the table had nothing to say. Two sources
+        // racing to set the same field is how they end up disagreeing.
+        return r.used ? r.data : withGitHub(r.data);
+      });
+    })
     .then(boot)
     .catch(function () {
       if (window.__DOWNLOADS__) boot(window.__DOWNLOADS__);

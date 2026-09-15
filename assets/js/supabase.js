@@ -147,6 +147,18 @@
     });
   }
 
+  /* ----------------------------- releases ----------------------------- */
+  /* Published download addresses. Readable without signing in — the download
+     page is the front of the site, not something behind a login — so this is
+     the one call that deliberately sends no token. */
+  function listReleases(channel) {
+    return request(
+      "/rest/v1/releases?select=version,channel,platform,arch,kind,url,size,sha256,notes,created_at" +
+        "&published=eq.true&channel=eq." + encodeURIComponent(channel || "stable") +
+        "&order=created_at.desc"
+    );
+  }
+
   /* ------------------------------ devices ----------------------------- */
   /* The machines this account has claimed. Read-only on purpose: the row is
      what stops one computer collecting a second trial, so letting someone
@@ -162,6 +174,7 @@
   global.SB = {
     url: URL_BASE,
     listDevices: listDevices,
+    listReleases: listReleases,
     Session: Session,
     signInWith: signInWith,
     signOut: signOut,
