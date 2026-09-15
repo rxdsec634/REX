@@ -174,10 +174,10 @@
 
       var slot = document.getElementById("dl-slot");
       if (slot) {
-        slot.innerHTML =
-          "<b>Your next release goes here</b>" +
-          'Drop the file in <code class="mono">web/files/</code> and add an entry to ' +
-          '<code class="mono">web/data/downloads.json</code> — this page picks it up on reload.';
+        // Instructions to the owner used to sit here, on a page every visitor
+        // sees — and they named web/files/ and web/data/, paths that stopped
+        // existing when the site was flattened to the repository root.
+        slot.innerHTML = "<b>Your next release goes here</b>";
       }
     }
   }
