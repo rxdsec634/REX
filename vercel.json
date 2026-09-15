@@ -54,11 +54,5 @@
         }
       ]
     }
-  ],
-  "rewrites": [
-    {
-      "source": "/api/:path*",
-      "destination": "https://rex-app-5crx.onrender.com/api/:path*"
-    }
   ]
 }

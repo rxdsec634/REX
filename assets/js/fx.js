@@ -573,24 +573,11 @@
       })
       .then(function (cfg) {
         cfg = cfg || {};
-        if (cfg.slides && cfg.slides.length) {
-          mount(cfg);
-          return;
-        }
-        return fetch("/api/art", { cache: "no-cache" })
-          .then(function (r) {
-            return r.ok ? r.json() : null;
-          })
-          .then(function (live) {
-            if (!live || !live.slides || !live.slides.length) return;
-            live.interval = cfg.interval;
-            live.fade = cfg.fade;
-            live.dim = cfg.dim;
-            mount(live);
-          })
-          .catch(function () {
-            /* not the dev server — art.json is authoritative, and it is empty */
-          });
+        if (cfg.slides && cfg.slides.length) mount(cfg);
+        // No /api/art fallback any more: there is no server to ask. art.json is
+        // the only source, and `node scan-art.mjs` is what fills it. An empty
+        // manifest means no artwork, which is a valid state — the aura carries
+        // the hero on its own.
       })
       .catch(function () {
         /* no manifest — nothing to show, and nothing to report */
