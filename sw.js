@@ -16,7 +16,7 @@
        hundreds of megabytes and have no business in a browser cache.
    ================================================================== */
 
-var VERSION = "rxdsec-v5";
+var VERSION = "rxdsec-v6";
 
 var SHELL = [
   "index.html",
@@ -29,6 +29,8 @@ var SHELL = [
   "assets/js/fx.js",
   "assets/js/scene.js",
   "assets/js/downloads.js",
+  "assets/js/supabase.js",
+  "assets/js/nav-auth.js",
   "assets/img/mark.svg",
   "data/downloads.json",
   "data/profile.json",

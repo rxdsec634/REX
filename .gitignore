@@ -33,3 +33,20 @@ rex-api/
 
 # unified site+API Node app (deploy bundle) — keep out of the public site repo
 rex-app/
+
+# --- monorepo: this repository is the WEBSITE only ---
+# Nothing below belongs on a public repo, and until now nothing stopped it
+# going there: the directories were merely never added, so a single
+# `git add -A` published the application source. Naming them is the control.
+apps/
+packages/
+scripts/
+server/
+tests/
+build/
+.claude/
+tsconfig.json
+package.json
+package-lock.json
+ledger-panels.html
+.github/workflows/ci.yml

@@ -1,0 +1,15 @@
+# rxdsec.vercel.app
+User-agent: *
+Allow: /
+
+# The account page is per-visitor and carries a noindex of its own; there is
+# nothing there for a crawler to keep, and a stale copy in an index is worse
+# than no copy.
+Disallow: /account.html
+
+# Development helpers that happen to sit in the web root. They are harmless to
+# read, but they are not content.
+Disallow: /serve.mjs
+Disallow: /scan-art.mjs
+
+Sitemap: https://rxdsec.vercel.app/sitemap.xml
