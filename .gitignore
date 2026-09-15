@@ -47,6 +47,7 @@ scripts/*
 # in downloads.html, and a checksum that drifts from the file is the worst
 # thing a download page can publish.
 !scripts/sync-downloads-html.mjs
+!scripts/sync-update-feed.mjs
 server/
 tests/
 build/

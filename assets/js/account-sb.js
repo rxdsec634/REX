@@ -73,7 +73,7 @@
 
     root.querySelectorAll("[data-p]").forEach(function (b) {
       b.addEventListener("click", function () {
-        window.SB.signInWith(b.getAttribute("data-p"), location.origin + location.pathname);
+        window.SB.signInWith(b.getAttribute("data-p"), location.href);
       });
     });
   }
@@ -177,6 +177,33 @@
 
   /* ------------------------------ boot ------------------------------- */
 
+  /* ---------------------- desktop hand-off ---------------------- */
+  /* REX opens this page with ?rex=<loopback port>&state=<one-time>. Once a
+     session exists we send it back by navigating to that listener.
+
+     The tokens go in the QUERY string, not the fragment: a fragment is never
+     sent to a server, so the listener would receive nothing. The destination is
+     127.0.0.1, so they do not leave the machine, and REX checks the state value
+     so a page it did not open cannot push a session at it. */
+  function handOffToRex(q) {
+    var port = q.get("rex");
+    var state = q.get("state");
+    if (!port || !/^[0-9]{1,5}$/.test(port) || !state) return false;
+
+    var s = window.SB.Session.get();
+    if (!s || !s.access_token) return false;
+
+    var u = "http://127.0.0.1:" + port + "/cb" +
+      "?state=" + encodeURIComponent(state) +
+      "&access_token=" + encodeURIComponent(s.access_token) +
+      "&refresh_token=" + encodeURIComponent(s.refresh_token || "") +
+      "&expires_in=" + Math.max(60, Math.round(((s.expires_at || 0) - Date.now()) / 1000));
+
+    render('<div class="slot"><b>Returning you to REX</b>You can close this tab.</div>');
+    location.href = u;
+    return true;
+  }
+
   (async function () {
     busy("Checking your account");
 
@@ -189,6 +216,12 @@
       return signedOut(q.get("error_description") || q.get("error"));
     }
 
+    // REX asked for a specific provider and there is no session yet: go
+    // straight there. Without this the user picks a provider twice.
+    if (q.get("rex") && q.get("provider") && !window.SB.Session.get()) {
+      return window.SB.signInWith(q.get("provider"), location.href);
+    }
+
     var profile;
     try {
       profile = await window.SB.me();
@@ -197,6 +230,11 @@
     }
 
     if (!profile) return signedOut();
+
+    // Signed in and REX is waiting: hand the session over rather than showing
+    // an account page the user did not ask for.
+    if (handOffToRex(q)) return;
+
     signedIn(profile);
   })();
 })();
