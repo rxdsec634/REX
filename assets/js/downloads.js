@@ -259,9 +259,27 @@
     macos: { platform: "darwin", kind: null },
   };
 
+  /* Numeric per segment, so 0.10.0 beats 0.9.0. A string compare gets that
+     backwards and would quietly start showing an older build after the tenth
+     minor release. */
+  function cmpVersion(a, b) {
+    var x = String(a).split("-")[0].split(".");
+    var y = String(b).split("-")[0].split(".");
+    for (var i = 0; i < Math.max(x.length, y.length); i++) {
+      var d = (parseInt(x[i], 10) || 0) - (parseInt(y[i], 10) || 0);
+      if (d) return d;
+    }
+    return 0;
+  }
+
   function applySupabase(data, rows) {
     if (!rows || !rows.length) return { data: data, used: 0 };
     var used = 0;
+
+    // Sorted by version, not by the query's created_at: backfilling an old
+    // release after a new one would otherwise put the older row first and the
+    // page would advertise it as current.
+    rows = rows.slice().sort(function (a, b) { return cmpVersion(b.version, a.version); });
 
     (data.builds || []).forEach(function (b) {
       var want = KIND_BY_ID[b.id];
