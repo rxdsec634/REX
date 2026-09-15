@@ -33,6 +33,23 @@ function locate(...parts) {
 const HTML = locate("downloads.html");
 const JSON_FILE = locate("data", "downloads.json");
 
+/* rex.html carries the version in prose, which is the kind of copy nobody
+   thinks to update — it still read v0.1.0 four releases later. Stamping it from
+   the same manifest keeps the two from disagreeing, which is the only reason
+   this file exists at all. */
+const REX_HTML = locate("rex.html");
+const REX_VERSION_RE = /(<span data-rex-version>)([^<]*)(<\/span>)/;
+
+function stampRexVersion(version, { check: dryRun } = {}) {
+  if (!fs.existsSync(REX_HTML)) return null;
+  const html = fs.readFileSync(REX_HTML, "utf8");
+  const m = REX_VERSION_RE.exec(html);
+  if (!m) return null;                 // marker removed: nothing to keep in sync
+  if (m[2] === version) return false;  // already correct
+  if (!dryRun) fs.writeFileSync(REX_HTML, html.replace(REX_VERSION_RE, `$1${version}$3`));
+  return true;                         // was stale
+}
+
 const check = process.argv.includes("--check");
 
 const manifest = JSON.parse(fs.readFileSync(JSON_FILE, "utf8"));
@@ -61,6 +78,11 @@ const next = html.slice(0, start) + block + html.slice(end);
 if (check) {
   if (next !== html) {
     console.error("web/downloads.html is out of sync with web/data/downloads.json.");
+    console.error("Run: node scripts/sync-downloads-html.mjs");
+    process.exit(1);
+  }
+  if (stampRexVersion(manifest.release?.version, { check: true })) {
+    console.error("rex.html advertises a different version to downloads.json.");
     console.error("Run: node scripts/sync-downloads-html.mjs");
     process.exit(1);
   }
@@ -95,3 +117,7 @@ if (version) {
 
 fs.writeFileSync(HTML, out);
 console.log(`Synced web/downloads.html from downloads.json (version ${version}).`);
+
+if (stampRexVersion(version)) {
+  console.log(`Also corrected the version on rex.html to ${version}.`);
+}
