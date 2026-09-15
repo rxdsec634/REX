@@ -1077,7 +1077,10 @@ html.ready.has-figure .figure-haze { opacity: 0.55; }
   .nav-links a::after { left: 0; right: auto; width: 0; bottom: 6px; transform: none; transition: width 0.3s var(--ease); }
   .nav-links a:hover::after, .nav-links a.current::after { width: 2.2em; }
 
-  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  /* minmax(0, …) for the same reason as .dl-row: these hold panels, and a panel
+     containing a checksum or a command in nowrap would otherwise set the floor
+     for the whole page. */
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: minmax(0, 1fr); }
   .stats { grid-template-columns: repeat(2, 1fr); }
   .stat { border-right: 0; border-bottom: 1px solid var(--rule); padding-right: 0; }
   .stat:nth-child(odd) { border-right: 1px solid var(--rule); padding-right: 18px; }
@@ -1089,8 +1092,12 @@ html.ready.has-figure .figure-haze { opacity: 0.55; }
   .irow-go { width: 38px; height: 38px; }
 
   .step { grid-template-columns: 1fr; gap: 10px; }
-  .spec-row { grid-template-columns: 1fr; gap: 6px; }
-  .dl-row { grid-template-columns: 1fr; }
+  .spec-row { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+  /* minmax(0, 1fr), not 1fr: a bare 1fr is minmax(auto, 1fr), and `auto` will
+     not shrink a grid item below its min-content — which here is an install
+     command set in nowrap. The column then refused to go narrower than the
+     longest command and pushed the whole page to 548px on a 375px screen. */
+  .dl-row { grid-template-columns: minmax(0, 1fr); }
   .dl-side { min-width: 0; }
   .os-tabs { width: 100%; }
   .os-tab { flex: 1; justify-content: center; }
