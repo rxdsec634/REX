@@ -142,16 +142,26 @@
         "</div>" +
 
         '<div class="panel">' +
-          '<span class="panel-n">Using REX</span>' +
-          '<h3 class="h3">' + (p.approved ? "You are good to go" : "Once approved") + "</h3>" +
-          "<p>Download REX, sign in with this same account, and the agent picks up your " +
-          "entitlement. One machine per account — the first computer you sign in on is the " +
-          "one it binds to.</p>" +
-          '<div class="form-actions" style="margin-top:18px">' +
+          '<span class="panel-n">Account</span>' +
+
+          '<div class="kv"><span>Plan</span><code class="mono">' + esc(p.plan || "—") + "</code></div>" +
+          '<div class="kv"><span>Signed up</span><code class="mono">' +
+            esc(p.created_at ? String(p.created_at).slice(0, 10) : "—") + "</code></div>" +
+          '<div class="kv"><span>Email</span><code class="mono">' + esc(p.email || "—") + "</code></div>" +
+
+          '<h3 class="h3" style="margin-top:24px">Your machines</h3>' +
+          "<p class=\"small\">REX binds to the computer you first sign in on, which is how one " +
+          "account gets one trial. These are read-only — releasing a machine is not something " +
+          "you can do yourself, because that would hand back the limit it exists to enforce.</p>" +
+          '<div id="devs" class="small mono" style="margin-top:12px">Loading…</div>' +
+
+          '<div class="form-actions" style="margin-top:22px">' +
             '<a class="btn btn-primary" href="downloads.html">' + svg("download", 14) + "<span>Downloads</span></a>" +
             '<span class="spacer"></span>' +
-            '<a class="btn btn-sm" href="pricing.html">' + svg("externalLink", 14) + "<span>Plans</span></a>" +
+            '<button class="btn btn-sm" type="button" id="outall">' + svg("power", 14) +
+              "<span>Sign out everywhere</span></button>" +
           "</div>" +
+          '<div id="allmsg"></div>' +
         "</div>" +
       "</div>"
     );
@@ -160,6 +170,46 @@
       busy("Signing out");
       await window.SB.signOut();
       signedOut();
+    });
+
+    // Devices load after the panel renders: it is extra information, and the
+    // page should not wait on a second request to show the account itself.
+    (function () {
+      var box = document.getElementById("devs");
+      if (!box || !window.SB.listDevices) return;
+      window.SB.listDevices()
+        .then(function (rows) {
+          if (!rows || !rows.length) {
+            box.textContent = "No machine has signed in yet.";
+            return;
+          }
+          box.innerHTML = rows
+            .map(function (d) {
+              return '<div class="kv"><span>' + esc(d.label || "unknown") + "</span>" +
+                "<code>" + esc(String(d.id).slice(0, 12)) + "… · " +
+                esc(String(d.claimed_at || "").slice(0, 10)) + "</code></div>";
+            })
+            .join("");
+        })
+        .catch(function (e) {
+          box.textContent = "Could not load machines: " + e.message;
+        });
+    })();
+
+    document.getElementById("outall").addEventListener("click", async function () {
+      var warn = "Sign out of RXDSEC everywhere?" + String.fromCharCode(10, 10) +
+        "Every browser and every copy of REX will need to sign in again, including this one.";
+      if (!confirm(warn)) return;
+      var box = document.getElementById("allmsg");
+      box.innerHTML = "";
+      try {
+        // scope=global, so the refresh tokens held by REX stop working too —
+        // a sign-out that leaves the desktop app signed in is not one.
+        await window.SB.signOut(true);
+        signedOut();
+      } catch (e) {
+        box.innerHTML = note("bad", "alert", esc(e.message));
+      }
     });
 
     document.getElementById("save").addEventListener("click", async function () {

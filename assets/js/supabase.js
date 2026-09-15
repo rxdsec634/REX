@@ -147,8 +147,21 @@
     });
   }
 
+  /* ------------------------------ devices ----------------------------- */
+  /* The machines this account has claimed. Read-only on purpose: the row is
+     what stops one computer collecting a second trial, so letting someone
+     delete their own would hand back the hole it exists to close. Showing them
+     is still worth it — "why does it say I already have a device" is a fair
+     question to be able to answer. */
+  async function listDevices() {
+    var s = await Session.valid();
+    if (!s) throw new Error("Not signed in.");
+    return request("/rest/v1/devices?select=id,label,claimed_at&order=claimed_at.desc", { token: s.access_token });
+  }
+
   global.SB = {
     url: URL_BASE,
+    listDevices: listDevices,
     Session: Session,
     signInWith: signInWith,
     signOut: signOut,
