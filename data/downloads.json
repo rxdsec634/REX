@@ -22,8 +22,8 @@
       "title": "REX 0.2.4.exe",
       "subtitle": "Portable single file. No install, no registry writes — run it from a USB stick.",
       "icon": "power",
-      "size": 90268821,
-      "sha256": "b1fce7d631ab33fcaa5c7959064da076b45b7c7fb08ada171395f2489a4b5c1a",
+      "size": 90269930,
+      "sha256": "7a862a42bbb907c3a54bb088e7adadb9022c91ffb85a6bcc9e94dc9c6fcaecea",
       "url": "https://github.com/rxdsec634/REX/releases/download/v0.2.4/REX.0.2.4.exe",
       "tags": [
         "x64",
@@ -39,8 +39,8 @@
       "subtitle": "NSIS installer — Windows 10/11, x64. Adds a Start-menu entry and file associations.",
       "icon": "window",
       "primary": true,
-      "size": 90495708,
-      "sha256": "530fd2c8c22e6d2b5c12c3634e4400052c76a52bf770e2823d64d9b6b3240e28",
+      "size": 90496865,
+      "sha256": "27db430cc625689847b4797224a30436feb1ff58a88c0038625681b463f80614",
       "url": "https://github.com/rxdsec634/REX/releases/download/v0.2.4/REX.Setup.0.2.4.exe",
       "tags": [
         "x64",
@@ -55,8 +55,8 @@
       "title": "rex-0.2.4-linux-x64.tar.gz",
       "subtitle": "Distro-agnostic tarball. Extract anywhere and run ./rex — no package manager involved.",
       "icon": "archive",
-      "size": 121989679,
-      "sha256": "9a05618474190667c2f745f260f251c7bb0db2f07ab80c9c6216b70e34d95692",
+      "size": 121990695,
+      "sha256": "85e37541e2143d3dbfa133e257bb735e82dbf91934662e510bc1f425159d7922",
       "url": "https://github.com/rxdsec634/REX/releases/download/v0.2.4/rex-0.2.4-linux-x64.tar.gz",
       "tags": [
         "x64",
@@ -73,8 +73,8 @@
       "subtitle": "Debian / Ubuntu / Kali. Installs to /opt/REX, puts rex on your PATH, registers a desktop entry.",
       "icon": "terminal",
       "primary": true,
-      "size": 122004720,
-      "sha256": "5c3b46f7c9a1a5ba4dca1caf8c6459a5cf9d1eb5f016c566acea862934c9c0da",
+      "size": 122006156,
+      "sha256": "e64cfe5b572d135ec162aefb17277fca7d4c81dd24b62aa6bb5c127bcffe0110",
       "url": "https://github.com/rxdsec634/REX/releases/download/v0.2.4/rex_0.2.4_amd64.deb",
       "tags": [
         "amd64",

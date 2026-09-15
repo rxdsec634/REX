@@ -13,15 +13,15 @@
             "platform": "win32",
             "arch": "x64",
             "url": "https://github.com/rxdsec634/REX/releases/download/v0.2.4/REX.Setup.0.2.4.exe",
-            "size": 90495708,
-            "sha256": "530fd2c8c22e6d2b5c12c3634e4400052c76a52bf770e2823d64d9b6b3240e28"
+            "size": 90496865,
+            "sha256": "27db430cc625689847b4797224a30436feb1ff58a88c0038625681b463f80614"
           },
           {
             "platform": "linux",
             "arch": "x64",
             "url": "https://github.com/rxdsec634/REX/releases/download/v0.2.4/rex_0.2.4_amd64.deb",
-            "size": 122004720,
-            "sha256": "5c3b46f7c9a1a5ba4dca1caf8c6459a5cf9d1eb5f016c566acea862934c9c0da"
+            "size": 122006156,
+            "sha256": "e64cfe5b572d135ec162aefb17277fca7d4c81dd24b62aa6bb5c127bcffe0110"
           }
         ]
       }
