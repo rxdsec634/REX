@@ -190,6 +190,74 @@
     }
   }
 
+  /* ------------------------ live release lookup ------------------------ */
+  /* The manifest names the builds; GitHub knows where they actually are.
+     Keeping both by hand is what produced a page advertising
+     /releases/download/v0.2.4/ while the release was tagged `rex`, and
+     checksums belonging to a build that had since been replaced.
+
+     So: ask the API which assets exist, and take the URL, the size and the
+     digest from the answer. The manifest still supplies everything GitHub has
+     no opinion about — the wording, the install command, the ordering.
+
+     Unauthenticated calls are rate-limited per IP, and a release may not exist
+     at all, so every failure here falls back to the manifest rather than
+     emptying the page. */
+  var GH_API = "https://api.github.com/repos/rxdsec634/REX/releases/latest";
+
+  /* Match an asset to a build by file name. The manifest's `title` is the
+     name on disk; GitHub replaces spaces with dots on upload, so compare with
+     that substitution applied rather than requiring an exact match. */
+  function assetFor(assets, build) {
+    var want = String(build.title || "").replace(/ /g, ".").toLowerCase();
+    if (!want) return null;
+    for (var i = 0; i < assets.length; i++) {
+      if (String(assets[i].name || "").toLowerCase() === want) return assets[i];
+    }
+    return null;
+  }
+
+  function applyRelease(data, release) {
+    var assets = (release && release.assets) || [];
+    if (!assets.length) return data;
+
+    var used = 0;
+    (data.builds || []).forEach(function (b) {
+      var a = assetFor(assets, b);
+      if (!a) return;
+      used++;
+      b.url = a.browser_download_url;
+      if (typeof a.size === "number") b.size = a.size;
+      // "sha256:abc…" — the prefix names the algorithm, so check it rather
+      // than assuming, and drop a digest in anything else.
+      var d = String(a.digest || "");
+      if (d.slice(0, 7).toLowerCase() === "sha256:") b.sha256 = d.slice(7);
+      delete b.status; // it is published, whatever the manifest guessed
+    });
+
+    if (used && release.tag_name) {
+      data.release = data.release || {};
+      data.release.tag = release.tag_name;
+    }
+    return data;
+  }
+
+  function withLiveRelease(data) {
+    return fetch(GH_API, { cache: "no-cache", headers: { accept: "application/vnd.github+json" } })
+      .then(function (r) {
+        return r.ok ? r.json() : null;
+      })
+      .then(function (rel) {
+        return rel ? applyRelease(data, rel) : data;
+      })
+      .catch(function () {
+        // Rate-limited, offline, or no release yet. The manifest is still a
+        // correct description of what was built; only the addresses may be
+        // stale, and a stale address beats an empty page.
+        return data;
+      });
+  }
+
   if (location.protocol === "file:" && window.__DOWNLOADS__) {
     boot(window.__DOWNLOADS__);
     return;
@@ -200,6 +268,7 @@
       if (!r.ok) throw new Error("HTTP " + r.status);
       return r.json();
     })
+    .then(withLiveRelease)
     .then(boot)
     .catch(function () {
       if (window.__DOWNLOADS__) boot(window.__DOWNLOADS__);

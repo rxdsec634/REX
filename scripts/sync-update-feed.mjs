@@ -53,6 +53,33 @@ const TARGETS = [
   { file: `rex_${version}_amd64.deb`, asset: `rex_${version}_amd64.deb`, platform: "linux", arch: "x64" },
 ];
 
+/**
+ * Ask GitHub where the assets actually are.
+ *
+ * Constructing `/releases/download/v<version>/<name>` assumes the tag is
+ * `v<version>`, and a tag that is anything else — `rex`, say — produces URLs
+ * that 404 while looking perfectly reasonable in the file. The API knows the
+ * real tag and the real names, so use them and fall back to the guess only
+ * when there is no release to ask about.
+ */
+async function liveAssets() {
+  const api = `https://api.github.com/repos/${repo.replace(/^https?:\/\/github\.com\//, "").replace(/\/$/, "")}/releases/latest`;
+  try {
+    const res = await fetch(api, { headers: { accept: "application/vnd.github+json" } });
+    if (!res.ok) return null;
+    const rel = await res.json();
+    if (!Array.isArray(rel.assets) || !rel.assets.length) return null;
+    const byName = new Map(rel.assets.map((a) => [String(a.name).toLowerCase(), a]));
+    return { tag: rel.tag_name, byName };
+  } catch {
+    return null;
+  }
+}
+
+const live = await liveAssets();
+if (live) console.log(`Release ${live.tag} found on GitHub — taking asset URLs from it.`);
+else console.log("No published release found — falling back to constructed URLs.");
+
 const assets = [];
 const missing = [];
 
@@ -63,10 +90,16 @@ for (const t of TARGETS) {
     continue;
   }
   const buf = fs.readFileSync(full);
+  const hit = live?.byName.get(t.asset.toLowerCase());
+
+  // The checksum is always of the local bytes. If GitHub is serving something
+  // else under that name, the updater must refuse it — taking the remote
+  // digest instead would make a mismatch impossible to detect, which is the
+  // one thing the hash exists for.
   assets.push({
     platform: t.platform,
     arch: t.arch,
-    url: base + t.asset,
+    url: hit?.browser_download_url || base + t.asset,
     size: buf.length,
     sha256: crypto.createHash("sha256").update(buf).digest("hex"),
   });
