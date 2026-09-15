@@ -61,7 +61,7 @@ if (!a.token || !b.token) {
 console.log("\n-- what a user SHOULD be able to do --");
 const own = await api(`/rest/v1/profiles?select=*`, { token: a.token });
 check("read own profile", own.status === 200 && Array.isArray(own.json) && own.json.length === 1);
-check("own profile starts unapproved", own.json?.[0]?.approved === false, `approved=${own.json?.[0]?.approved}`);
+check("own profile starts approved", own.json?.[0]?.approved === true, `approved=${own.json?.[0]?.approved}`);
 check("own profile starts on trial", own.json?.[0]?.plan === "trial", `plan=${own.json?.[0]?.plan}`);
 
 const rename = await api(`/rest/v1/profiles?id=eq.${a.id}`, {
@@ -79,6 +79,20 @@ const approveSelf = await api(`/rest/v1/profiles?id=eq.${a.id}`, {
   method: "PATCH", token: a.token, body: { approved: true }, prefer: "return=representation",
 });
 check("CANNOT approve self", approveSelf.status >= 400, `got ${approveSelf.status}`);
+
+// The one that matters most: offensive mode is the capability that points REX
+// at someone else's systems. If a user can set this on themselves, the grant
+// means nothing.
+const selfOffensive = await api(`/rest/v1/profiles?id=eq.${a.id}`, {
+  method: "PATCH", token: a.token, body: { offensive: true }, prefer: "return=representation",
+});
+check("CANNOT grant self offensive mode", selfOffensive.status >= 400, `got ${selfOffensive.status}`);
+
+const offRead = await api(`/rest/v1/profiles?select=offensive`, { token: a.token });
+check("offensive defaults to false", offRead.json?.[0]?.offensive === false, `offensive=${offRead.json?.[0]?.offensive}`);
+
+const approvedRead = await api(`/rest/v1/profiles?select=approved`, { token: a.token });
+check("approved defaults to true (open signup)", approvedRead.json?.[0]?.approved === true, `approved=${approvedRead.json?.[0]?.approved}`);
 
 const unsuspend = await api(`/rest/v1/profiles?id=eq.${a.id}`, {
   method: "PATCH", token: a.token, body: { suspended: false }, prefer: "return=representation",

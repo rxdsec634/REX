@@ -108,11 +108,22 @@
           "</div>" +
 
           '<div class="kv"><span>Status</span>' + planLine(p) + "</div>" +
+          '<div class="kv"><span>Offensive mode</span>' +
+            (p.offensive
+              ? '<span class="state ok"><i></i>Granted</span>'
+              : '<span class="state warn"><i></i>Not granted</span>') +
+          "</div>" +
 
           (!p.approved && !p.suspended
             ? note("warn", "info",
                 "Your account is waiting to be approved. REX will not run until then — " +
                 "you do not need to do anything, and this page will show the change once it happens.")
+            : "") +
+
+          (!p.offensive && !p.suspended
+            ? note("warn", "info",
+                "REX runs, but its offensive tooling is switched off. That part is granted " +
+                "by hand, per person — ask if you need it, and say what you are testing.")
             : "") +
 
           (p.suspended

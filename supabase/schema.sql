@@ -25,7 +25,17 @@ create table if not exists public.profiles (
 
   -- Set by the owner only, from the dashboard. Deliberately NOT writable by
   -- the user: these are the entitlement.
-  approved      boolean     not null default false,
+  --
+  -- approved gates ordinary use and defaults to TRUE: the trial is already
+  -- limited to one machine by the devices table, so making every user wait on
+  -- a human buys very little and costs every one of them their first session.
+  approved      boolean     not null default true,
+
+  -- offensive gates REX's exploitation tooling and defaults to FALSE. This is
+  -- the flag worth a manual decision: ordinary use is a trial, offensive use is
+  -- someone attacking a target, and the owner should choose who does that by
+  -- name rather than by whoever signed up.
+  offensive     boolean     not null default false,
   plan          text        not null default 'trial'
                   check (plan in ('trial', 'pro', 'none')),
   suspended     boolean     not null default false,
