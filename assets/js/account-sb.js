@@ -100,8 +100,9 @@
       '<div class="grid grid-2">' +
         '<div class="panel">' +
           '<span class="panel-n">Signed in</span>' +
-          '<div class="acct-head">' +
-            '<div class="avatar">' + esc(initial) + "</div>" +
+          '<div style="display:flex;align-items:center;gap:14px;margin-bottom:18px">' +
+            '<div style="width:42px;height:42px;flex:0 0 42px;display:grid;place-items:center;' +
+              'border:1px solid var(--rule);font-weight:600">' + esc(initial) + "</div>" +
             "<div><b>" + esc(p.name || "—") + "</b>" +
             '<div class="small mono">' + esc(p.email || "") + "</div></div>" +
           "</div>" +
@@ -135,9 +136,10 @@
           "<p>Download REX, sign in with this same account, and the agent picks up your " +
           "entitlement. One machine per account — the first computer you sign in on is the " +
           "one it binds to.</p>" +
-          '<div class="acct-actions" style="margin-top:18px">' +
+          '<div class="form-actions" style="margin-top:18px">' +
             '<a class="btn btn-primary" href="downloads.html">' + svg("download", 14) + "<span>Downloads</span></a>" +
-            '<a class="ghost btn-link" href="pricing.html">' + svg("externalLink", 14) + "<span>Plans</span></a>" +
+            '<span class="spacer"></span>' +
+            '<a class="btn btn-sm" href="pricing.html">' + svg("externalLink", 14) + "<span>Plans</span></a>" +
           "</div>" +
         "</div>" +
       "</div>"
