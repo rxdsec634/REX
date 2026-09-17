@@ -57,3 +57,11 @@ package.json
 package-lock.json
 ledger-panels.html
 .github/workflows/ci.yml
+
+# Launch-video working files — never part of the website
+.reel/
+
+# Personal documents — never part of the public website
+*Resume*.pdf
+*resume*.pdf
+resume/
