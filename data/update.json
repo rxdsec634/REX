@@ -3,25 +3,25 @@
   "channels": {
     "stable": [
       {
-        "version": "0.2.4",
-        "releasedAt": "2026-09-15",
+        "version": "0.2.5",
+        "releasedAt": "2026-09-17",
         "mandatory": false,
         "draft": false,
-        "notes": "Sign-in moved to Supabase. The server address is fixed in the build and no longer configurable.",
+        "notes": "",
         "assets": [
           {
             "platform": "win32",
             "arch": "x64",
-            "url": "https://github.com/rxdsec634/REX/releases/download/rex/REX.Setup.0.2.4.exe",
-            "size": 88817326,
-            "sha256": "c72603324802b2116708eead13e98213bdd67598c24afa08c1e68bef318a8b73"
+            "url": "https://github.com/rxdsec634/REX/releases/download/rex/REX.Setup.0.2.5.exe",
+            "size": 88827902,
+            "sha256": "87f312e3ee9088cabfe6d10101a0ed5c69d590c328892188dca4af1a5dc552ef"
           },
           {
             "platform": "linux",
             "arch": "x64",
-            "url": "https://github.com/rxdsec634/REX/releases/download/rex/rex_0.2.4_amd64.deb",
-            "size": 119743150,
-            "sha256": "b189378c0130205e2730c9107c13658c438643517cb81e7370b0ea4160a63c0a"
+            "url": "https://github.com/rxdsec634/REX/releases/download/rex/rex_0.2.5_amd64.deb",
+            "size": 119760360,
+            "sha256": "7217f5f462dfde100c865b5b89bf981a844932b1aee5a6e369605fcf260bea4c"
           }
         ]
       }
