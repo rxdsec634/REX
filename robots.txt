@@ -1,4 +1,4 @@
-# rxdsec.vercel.app
+# rxdsec.tech
 User-agent: *
 Allow: /
 
@@ -12,4 +12,4 @@ Disallow: /account.html
 Disallow: /serve.mjs
 Disallow: /scan-art.mjs
 
-Sitemap: https://rxdsec.vercel.app/sitemap.xml
+Sitemap: https://rxdsec.tech/sitemap.xml
