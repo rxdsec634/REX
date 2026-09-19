@@ -119,12 +119,26 @@
     location.href = u.toString();
   }
 
-  async function signOut() {
+  /* `everywhere` revokes every refresh token this account holds, not just the
+     one in this browser -- which is what "sign out everywhere" has to mean if
+     the desktop app is to stop working too.
+
+     It took an argument at the call site before it took one here: account-sb.js
+     called signOut(true) under a comment promising scope=global, and the value
+     was silently discarded. The button revoked the current tab and nothing
+     else, so someone signing out everywhere because they thought a machine was
+     compromised left REX's refresh token live -- and was told otherwise. */
+  async function signOut(everywhere) {
     var s = store();
     if (s) {
       // Best effort: the local session is gone either way, and a failed
       // revoke must not leave the user looking signed in.
-      try { await request("/auth/v1/logout", { method: "POST", token: s.access_token }); } catch (e) {}
+      try {
+        await request("/auth/v1/logout?scope=" + (everywhere ? "global" : "local"), {
+          method: "POST",
+          token: s.access_token,
+        });
+      } catch (e) {}
     }
     Session.clear();
   }

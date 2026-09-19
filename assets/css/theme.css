@@ -906,6 +906,45 @@ html.ready.has-figure .figure-haze { opacity: 0.55; }
 .meter { height: 2px; background: var(--rule); overflow: hidden; }
 .meter i { display: block; height: 100%; width: 0; background: var(--ink); transition: width 1.2s var(--ease); }
 
+/* ================= tags & keycaps ================= */
+
+/* .tag and .proj-stack were written into the markup and never into a
+   stylesheet: 19 chips across the five skills groups and the About panel
+   rendered as bare runs of body text. The work list's own chips
+   (.irow-tags span) WERE styled, which is why only half the page looked
+   finished.
+
+   Same shape as those, deliberately -- a chip is a chip wherever it sits. */
+.proj-stack { display: flex; flex-wrap: wrap; gap: 7px; }
+
+.tag {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border: 1px solid var(--rule);
+  color: var(--ink-3);
+  white-space: nowrap;
+  transition: color 0.3s var(--ease), border-color 0.3s var(--ease);
+}
+.panel:hover .tag { border-color: var(--rule-hard); color: var(--ink-2); }
+
+/* A keycap, for the command-palette line on the REX page. Weighted like a
+   physical key: a hairline box with a heavier bottom edge for depth. */
+.kbd {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 1;
+  padding: 4px 7px;
+  color: var(--ink-2);
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  border-bottom-width: 2px;
+  border-bottom-color: var(--rule-hard);
+}
+
 /* ================= process / timeline ================= */
 
 .steps { border-top: 1px solid var(--rule); }

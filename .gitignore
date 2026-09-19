@@ -65,3 +65,7 @@ ledger-panels.html
 *Resume*.pdf
 *resume*.pdf
 resume/
+
+# Inference gateway — server source and upstream key config, kept private
+# for the same reason apps/ and packages/ are: it is the product, not the site.
+gateway/
