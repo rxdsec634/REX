@@ -205,16 +205,50 @@
      emptying the page. */
   var GH_API = "https://api.github.com/repos/rxdsec634/REX/releases/latest";
 
-  /* Match an asset to a build by file name. The manifest's `title` is the
-     name on disk; GitHub replaces spaces with dots on upload, so compare with
-     that substitution applied rather than requiring an exact match. */
+  /* Which file on a release belongs to which build.
+
+     Exact name first: the manifest's `title` is the name on disk, and GitHub
+     replaces spaces with dots on upload, so compare with that substitution
+     applied.
+
+     Then by SHAPE, which is what makes the page self-updating. Matching only on
+     the exact name meant the manifest had to already know the version: ship
+     0.2.6 while the committed manifest still said 0.2.5 and nothing matched, so
+     the page kept advertising 0.2.5 and the links pointed at assets that had
+     been replaced. The build ids are stable across releases where version
+     numbers are not, so recognise each one by its filename shape instead. */
+  var ASSET_SHAPE = {
+    "win32-installer": /^rex\.setup\..*\.exe$/i,
+    "win32-portable": /^rex\.\d[\d.]*\.exe$/i,
+    "linux-deb": /\.deb$/i,
+    "linux-tarball": /linux.*\.tar\.gz$/i,
+    macos: /\.dmg$/i,
+  };
+
   function assetFor(assets, build) {
+    var i;
     var want = String(build.title || "").replace(/ /g, ".").toLowerCase();
-    if (!want) return null;
-    for (var i = 0; i < assets.length; i++) {
-      if (String(assets[i].name || "").toLowerCase() === want) return assets[i];
+    if (want) {
+      for (i = 0; i < assets.length; i++) {
+        if (String(assets[i].name || "").toLowerCase() === want) return assets[i];
+      }
+    }
+    var shape = ASSET_SHAPE[build.id];
+    if (!shape) return null;
+    for (i = 0; i < assets.length; i++) {
+      if (shape.test(String(assets[i].name || ""))) return assets[i];
     }
     return null;
+  }
+
+  /* The version a release represents, from the tag or the release name.
+     Either may carry a leading "v", and the tag here is a fixed rolling name
+     ("rex") that holds no version at all -- so take the first thing that looks
+     like one and ignore the rest. */
+  function versionOf(release) {
+    var m = /(\d+\.\d+\.\d+)/.exec(String((release && release.name) || "")) ||
+            /(\d+\.\d+\.\d+)/.exec(String((release && release.tag_name) || ""));
+    return m ? m[1] : null;
   }
 
   function applyRelease(data, release) {
@@ -222,6 +256,7 @@
     if (!assets.length) return data;
 
     var used = 0;
+    var ver = versionOf(release);
     (data.builds || []).forEach(function (b) {
       var a = assetFor(assets, b);
       if (!a) return;
@@ -232,12 +267,25 @@
       // than assuming, and drop a digest in anything else.
       var d = String(a.digest || "");
       if (d.slice(0, 7).toLowerCase() === "sha256:") b.sha256 = d.slice(7);
+      /* Restamp every version the manifest wrote by hand: the heading, the
+         install command and the checksum command all name the file, and a
+         stale number there is worse than no number -- it tells someone to
+         verify a digest against a filename that is not what they downloaded. */
+      if (ver) {
+        ["title", "install", "verify"].forEach(function (k) {
+          if (b[k]) b[k] = String(b[k]).replace(/\d+\.\d+\.\d+/g, ver);
+        });
+      }
       delete b.status; // it is published, whatever the manifest guessed
     });
 
-    if (used && release.tag_name) {
+    if (used) {
       data.release = data.release || {};
-      data.release.tag = release.tag_name;
+      if (release.tag_name) data.release.tag = release.tag_name;
+      /* The published date belongs to the release too, or the page pairs a new
+         version with the date the old one shipped. */
+      if (ver) data.release.version = ver;
+      if (release.published_at) data.release.date = String(release.published_at).slice(0, 10);
     }
     return data;
   }
