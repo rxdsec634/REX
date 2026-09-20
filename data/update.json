@@ -3,8 +3,8 @@
   "channels": {
     "stable": [
       {
-        "version": "0.2.6",
-        "releasedAt": "2026-09-19",
+        "version": "0.2.7",
+        "releasedAt": "2026-09-20",
         "mandatory": false,
         "draft": false,
         "notes": "",
@@ -12,16 +12,16 @@
           {
             "platform": "win32",
             "arch": "x64",
-            "url": "https://github.com/rxdsec634/REX/releases/download/rex/REX.Setup.0.2.6.exe",
-            "size": 88827849,
-            "sha256": "1ab841d5e9b257d5dbde1d6998db9ac5e54008120880239e9fd815d2f3bf758c"
+            "url": "https://github.com/rxdsec634/REX/releases/download/rex/REX.Setup.0.2.7.exe",
+            "size": 88834776,
+            "sha256": "256e6c8622905898fa028abc01992b12388ef5bc9e17c439c9b78dd361c1dbda"
           },
           {
             "platform": "linux",
             "arch": "x64",
-            "url": "https://github.com/rxdsec634/REX/releases/download/rex/rex_0.2.6_amd64.deb",
-            "size": 119760418,
-            "sha256": "a6027d823d261aea5a39a4c3b293a93df02ce4d95d918ece8897cbb9c782f1eb"
+            "url": "https://github.com/rxdsec634/REX/releases/download/rex/rex_0.2.7_amd64.deb",
+            "size": 119769472,
+            "sha256": "2ecefb2874694ba10aa21fe65dec57544b8a77b81b07bd0f5f6cd5f02cf6468f"
           }
         ]
       }
