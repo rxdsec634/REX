@@ -3,270 +3,156 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Downloads · RXDSEC</title>
-<meta name="description" content="Download REX 0.2.7 for Windows and Linux with SHA-256 checksums and install commands, plus other releases by rxdsec.">
+<title>Download REX — Windows, Linux, macOS</title>
+<meta name="description" content="Download REX for Windows and Linux with SHA-256 checksums and install commands. macOS in progress.">
 <meta name="author" content="rxdsec">
-<meta name="theme-color" content="#0b0b0c">
-
+<meta name="theme-color" content="#050406">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Downloads · RXDSEC">
-<meta property="og:description" content="REX 0.2.7 for Windows and Linux, with checksums. Plus other releases by rxdsec.">
-
+<meta property="og:title" content="Download REX">
 <link rel="icon" href="assets/img/mark.svg" type="image/svg+xml">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/theme.css">
-
-<script>
-(function(){try{var m=localStorage.getItem("rxdsec.theme");
-document.documentElement.setAttribute("data-theme", m||"dark");}
-catch(e){document.documentElement.setAttribute("data-theme","dark");}})();
-</script>
-
-<noscript><style>
-  .reveal, [data-split] .sp { opacity: 1 !important; transform: none !important; }
-  .preloader { display: none !important; }
-</style></noscript>
-
-<link rel="canonical" href="https://rxdsec.tech/downloads.html">
-<meta property="og:url" content="https://rxdsec.tech/downloads.html">
-<meta property="og:site_name" content="RXDSEC">
-<meta property="og:image" content="https://rxdsec.tech/assets/img/source/hero-original.jpg">
-<meta property="og:image:width" content="1600">
-<meta property="og:image:height" content="900">
-<meta property="og:image:alt" content="Download REX">
-<meta name="twitter:image" content="https://rxdsec.tech/assets/img/source/hero-original.jpg">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/core.css">
+<noscript><style>.reveal,.split .ch{opacity:1!important;transform:none!important}</style></noscript>
 </head>
 <body>
 <script src="assets/js/icons.js"></script>
+<canvas id="core" aria-hidden="true"></canvas>
+<div class="backdrop" aria-hidden="true"></div>
 
-<div class="preloader">
-  <div class="pre-mark">RXD<span>SEC</span></div>
-  <div class="pre-row"><span>Downloads</span><span><span class="pre-pct">0</span>%</span></div>
-  <div class="pre-bar"><i></i></div>
-</div>
-
-<canvas id="gl" aria-hidden="true"></canvas>
-<div class="grain" aria-hidden="true"></div>
-<div class="cursor" aria-hidden="true"><div class="cursor-ring"></div><div class="cursor-dot"></div></div>
-<div class="scroll-progress" aria-hidden="true"><i></i></div>
-<div class="curtain" aria-hidden="true"></div>
-
-<!-- ============================= NAV ============================= -->
-<nav class="site-nav">
+<nav class="nav">
   <div class="wrap">
-    <a class="brand" href="index.html" aria-label="RXDSEC home"><b>RXD</b><i>SEC</i></a>
-    <span class="brand-sub">Downloads</span>
-
-    <div class="nav-links">
-      <a href="index.html">Home</a>
-      <a href="rex.html">REX</a>
-      <a href="#builds">Builds</a>
-      <a href="#first-run">First run</a>
-      <a href="#releases">Releases</a>
+    <a class="logo" href="index.html" aria-label="REX home">
+      <svg viewBox="0 0 100 100" fill="none" aria-hidden="true"><path d="M50 5 L88 27 L88 73 L50 95 L12 73 L12 27 Z" stroke="currentColor" stroke-width="7"/><path d="M56 20 L38 50 L50 50 L44 78 L62 48 L50 48 Z" fill="currentColor"/></svg>
+      REX <small>by rxdsec</small>
+    </a>
+    <div class="nav-links" id="nav-links">
+      <a href="index.html#interface">Interface</a>
+      <a href="rex.html">Capabilities</a>
+      <a href="index.html#safety">Safety</a>
+      <a href="downloads.html" class="current">Download</a>
       <a href="pricing.html">Plans</a>
-      <a href="index.html#contact">Contact</a>
+      <a href="about.html">About</a>
     </div>
-
     <div class="nav-tools">
-      <button class="icon-btn theme-btn" data-theme-toggle aria-label="Switch theme">
-        <svg class="icon sun" width="16" height="16"><use href="#i-sun"/></svg>
-        <svg class="icon moon" width="16" height="16"><use href="#i-moon"/></svg>
-      </button>
-      <!-- Sign in / account. Replaces the PWA-install icon, which was a
-           low-value control sitting in the most valuable slot in the nav. -->
-      <a class="btn btn-sm btn-primary nav-auth" href="account.html" data-auth-cta>
-        <svg class="icon" width="14" height="14"><use href="#i-key"/></svg>
-        <span data-auth-label>Login</span>
-      </a>
-      <button class="icon-btn nav-toggle" aria-expanded="false" aria-label="Menu">
-        <svg class="icon" width="17" height="17"><use href="#i-menu"/></svg>
-      </button>
+      <a class="btn btn-sm btn-primary" href="account.html" data-auth-cta><svg class="icon" width="14" height="14"><use href="#i-key"/></svg><span data-auth-label>Login</span></a>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Menu"><svg class="icon" width="18" height="18"><use href="#i-menu"/></svg></button>
     </div>
   </div>
 </nav>
 
 <main>
 
-<!-- ============================= HEADER ============================= -->
-<header class="section" data-power="0.5" style="padding-top:calc(var(--nav-h) + clamp(56px,10vh,120px))">
+<header class="page-head split-head" data-core="slot">
   <div class="wrap">
-    <div class="hero-kicker">
-      <span class="label">[ Downloads ]</span>
-      <span class="label">MIT · 14 days free · sign-in required</span>
+    <div style="display:grid; gap:22px">
+      <span class="eyebrow">Download</span>
+      <h1 class="h1" data-split>Get REX <span class="grad">on your machine.</span></h1>
+      <p class="lede reveal d1">
+        Every build lists its SHA-256 — check it before you run it. That's true
+        of software from anyone, including me. 14 days free, no card.
+      </p>
+      <div class="tags reveal d2" id="dl-release"></div>
     </div>
-
-    <h1 class="h1" data-split="words" style="max-width:16ch; margin-bottom:22px">Get REX, and everything else I've shipped.</h1>
-
-    <p class="lede reveal d1" style="max-width:56ch">
-      Every build lists its SHA-256 — check it before you run it. That's true of
-      software from anyone, including me.
-    </p>
-
-    <div class="hero-kicker reveal d2" id="dl-release" style="margin-top:26px"></div>
+    <div class="core-slot" aria-hidden="true"></div>
   </div>
 </header>
 
-<!-- ============================= BUILDS ============================= -->
-<section class="section section-line" id="builds" data-power="0.25" style="padding-top:clamp(40px,6vh,70px)">
+<section class="section" id="builds" style="padding-top:10px" data-core="ambient">
   <div class="wrap">
-    <div class="shead">
-      <div class="shead-rule draw reveal"></div>
-      <div class="shead-idx">[ 01 ]</div>
-      <div class="shead-main">
-        <h2 class="h2" data-split="words">Builds</h2>
+    <div class="notice" id="dl-mobile" hidden>
+      <svg class="icon" width="18" height="18"><use href="#i-monitor"/></svg>
+      <div>
+        <b>You're on a phone.</b> REX is a desktop agent for Windows, Linux and
+        (soon) macOS. Send this page to your computer and install it there.
+        <div class="hero-actions" style="margin-top:12px"><button class="btn btn-sm" type="button" data-share-link hidden><span>Send link to my computer</span></button></div>
       </div>
     </div>
 
     <div id="dl-tabs" class="os-tabs" role="tablist" aria-label="Platform"></div>
-
     <div id="dl-list" class="dl-list">
       <div class="slot"><b>Loading builds…</b>Reading the release manifest.</div>
     </div>
+  </div>
+</section>
 
-    <div class="grid grid-2" style="margin-top:44px">
-      <article class="panel">
-        <span class="panel-n">Verify</span>
-        <h3 class="h3">Check what you downloaded</h3>
-        <p style="margin-bottom:16px">Compare the printed hash with the one on the build. If they differ, don't run it.</p>
+<section class="section" data-core="ambient">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow reveal">Verify and install</span>
+      <h2 class="h2 reveal d1">Check what you downloaded.</h2>
+    </div>
+    <div class="grid grid-2">
+      <article class="hud reveal">
+        <span class="panel-n">Checksum</span>
+        <h3 class="h3">Compare the hash</h3>
+        <p style="margin-bottom:16px">If the printed hash differs from the one on the build, don't run it.</p>
         <div class="code"><span class="c"># Windows</span>
-certutil -hashfile "REX Setup 0.2.7.exe" SHA256
-
+certutil -hashfile "REX Setup 0.2.8.exe" SHA256
 <span class="c"># Linux / macOS</span>
-sha256sum rex_0.2.7_amd64.deb</div>
+sha256sum rex_0.2.8_amd64.deb</div>
       </article>
-
-      <article class="panel">
-        <span class="panel-n">Kali</span>
-        <h3 class="h3">Installing on Debian family</h3>
-        <p style="margin-bottom:16px">
-          Use <code class="mono">apt</code>, not <code class="mono">dpkg -i</code> — it pulls the
-          dependencies. As root the launcher adds <code class="mono">--no-sandbox</code> for you;
-          as a normal user it runs fully sandboxed.
-        </p>
-        <div class="code">sudo apt install ./rex_0.2.7_amd64.deb
+      <article class="hud reveal d1">
+        <span class="panel-n">Debian family</span>
+        <h3 class="h3">Install with apt</h3>
+        <p style="margin-bottom:16px">Use <code>apt</code>, not <code>dpkg -i</code> — it pulls the dependencies for you.</p>
+        <div class="code">sudo apt install ./rex_0.2.8_amd64.deb
 rex
-
-<span class="c"># desktop_* tools need xdotool (X11)</span>
+<span class="c"># desktop tools need xdotool (X11)</span>
 <span class="c"># or ydotool under Wayland</span></div>
       </article>
     </div>
   </div>
 </section>
 
-<!-- ============================= FIRST RUN ============================= -->
-<section class="section" id="first-run" data-power="0.25">
+<section class="section" id="first-run" data-core="ambient">
   <div class="wrap">
-    <div class="shead">
-      <div class="shead-rule draw reveal"></div>
-      <div class="shead-idx">[ 02 ]</div>
-      <div class="shead-main">
-        <h2 class="h2" data-split="words">Three steps and you're working</h2>
-      </div>
+    <div class="section-head">
+      <span class="eyebrow reveal">First run</span>
+      <h2 class="h2 reveal d1">Three steps and <span class="grad">you're working.</span></h2>
     </div>
-
     <div class="steps">
-      <div class="step reveal">
-        <div class="step-w">STEP 01</div>
-        <div>
-          <h4 class="h4">Add a provider</h4>
-          <p>Settings → Providers. Paste an API key — it's encrypted into the OS credential store, not a dotfile. Or skip it entirely: if Ollama is running locally, REX finds it on its own.</p>
-        </div>
-      </div>
-      <div class="step reveal d1">
-        <div class="step-w">STEP 02</div>
-        <div>
-          <h4 class="h4">Open a project</h4>
-          <p>New session, then pick a folder. Every file and shell operation is scoped to it, and the status bar shows you which folder is live.</p>
-        </div>
-      </div>
-      <div class="step reveal d2">
-        <div class="step-w">STEP 03</div>
-        <div>
-          <h4 class="h4">Ask for something real</h4>
-          <p>"Find where we verify JWTs and fix anything unsafe." REX greps, reads, proposes a diff, and waits for you before it writes a byte.</p>
-        </div>
-      </div>
+      <div class="step reveal"><div class="step-w">STEP 01</div><h4 class="h4">Add a provider</h4><p>Settings → Providers. Paste a key — it's sealed in the OS credential store. Or skip it: if Ollama is running, REX finds it on its own.</p></div>
+      <div class="step reveal d1"><div class="step-w">STEP 02</div><h4 class="h4">Open a project</h4><p>New session, then pick a folder. Every file and shell operation is scoped to it, and the status bar shows which folder is live.</p></div>
+      <div class="step reveal d2"><div class="step-w">STEP 03</div><h4 class="h4">Ask for something real</h4><p>"Find where we verify JWTs and fix anything unsafe." REX searches, reads, proposes a diff — and waits for you.</p></div>
     </div>
   </div>
 </section>
 
-<!-- ============================= RELEASES ============================= -->
-<section class="section section-line" id="releases" data-power="0.28">
+<section class="section" id="releases" data-core="ambient">
   <div class="wrap">
-    <div class="shead">
-      <div class="shead-rule draw reveal"></div>
-      <div class="shead-idx">[ 03 ]</div>
-      <div class="shead-main">
-        <h2 class="h2" data-split="words">Releases</h2>
-        <p class="body reveal d1" style="max-width:54ch">
-          Every build here is published with its SHA-256. Check it before you run
-          anything — including this.
-        </p>
-      </div>
+    <div class="section-head">
+      <span class="eyebrow reveal">Releases</span>
+      <h2 class="h2 reveal d1">Everything else I've shipped.</h2>
     </div>
-
     <div class="ilist" id="dl-projects"></div>
-    <div class="slot" id="dl-slot" style="margin-top:24px"></div>
-  </div>
-</section>
-
-<!-- ============================= SOURCE ============================= -->
-<section class="section invert" data-power="0.6">
-  <div class="wrap" style="text-align:center">
-    <span class="label">Or build it yourself</span>
-    <h2 class="h1" data-split="words" style="margin:20px auto 22px; max-width:14ch">It's all on GitHub.</h2>
-    <p class="lede reveal d1" style="margin:0 auto 30px">
-      Node 20+, one <code class="mono">npm install</code>, and <code class="mono">npm start</code>
-      builds and launches the app.
-    </p>
-    <div class="hero-actions reveal d2" style="justify-content:center">
-      <a class="btn btn-acid" href="https://github.com/rxdsec634" target="_blank" rel="noopener"><span>github.com/rxdsec634</span></a>
-      <a class="btn" href="index.html#work"><span>More by rxdsec</span></a>
-    </div>
+    <div class="slot" id="dl-slot" style="margin-top:16px"></div>
   </div>
 </section>
 
 </main>
 
-<footer class="site-foot">
+<footer class="foot">
   <div class="wrap">
-    <div class="foot-huge" data-split="chars" data-split-fast>DOWNLOAD</div>
+    <div class="foot-big grad">GET REX</div>
     <div class="foot-cols">
-      <div>
-        <h5>Downloads</h5>
-        <a href="#builds">All builds</a>
-        <a href="#first-run">First run</a>
-        <a href="#releases">Releases</a>
-      </div>
-      <div>
-        <h5>REX</h5>
-        <a href="rex.html">Overview</a>
-        <a href="rex.html#tools">Tools</a>
-        <a href="rex.html#permissions">Permissions</a>
-      </div>
-      <div>
-        <h5>RXDSEC</h5>
-        <a href="index.html">Home</a>
-        <a href="index.html#work">Work</a>
-        <a href="index.html#contact">Contact</a>
-      </div>
-      <div>
-        <h5>Elsewhere</h5>
-        <a href="https://github.com/rxdsec634" target="_blank" rel="noopener">GitHub</a>
-        <a href="https://www.youtube.com/@RXDSEC" target="_blank" rel="noopener">YouTube</a>
-        <a href="https://www.linkedin.com/in/redweb-sec-2a4077240/" target="_blank" rel="noopener">LinkedIn</a>
-        <a href="https://www.instagram.com/rxdsec/" target="_blank" rel="noopener">Instagram</a>
-      </div>
+      <div><h5>Download</h5><a href="#builds">All builds</a><a href="#first-run">First run</a><a href="#releases">Releases</a></div>
+      <div><h5>Product</h5><a href="index.html">REX</a><a href="rex.html">Capabilities</a><a href="pricing.html">Plans</a></div>
+      <div><h5>Account</h5><a href="account.html">Sign in</a><a href="about.html">About rxdsec</a></div>
+      <div><h5>Source</h5><a href="https://github.com/rxdsec634" target="_blank" rel="noopener">GitHub</a></div>
     </div>
-    <div class="foot-end">
-      <span>© <span data-year>2026</span> rxdsec · MIT licence</span>
-      <span>Always verify the checksum</span>
-    </div>
+    <div class="foot-end"><span>© <span data-year>2026</span> rxdsec · MIT</span><span>Always verify the checksum</span></div>
   </div>
 </footer>
+
+<nav class="tabbar" aria-label="Quick actions">
+  <a href="index.html"><svg class="icon" width="18" height="18"><use href="#i-sparkle"/></svg>Home</a>
+  <a href="index.html#interface"><svg class="icon" width="18" height="18"><use href="#i-play"/></svg>Demo</a>
+  <a class="hot" href="#builds"><svg class="icon" width="18" height="18"><use href="#i-download"/></svg>Builds</a>
+  <a href="account.html" data-auth-cta><svg class="icon" width="18" height="18"><use href="#i-key"/></svg><span data-auth-label>Login</span></a>
+</nav>
 
 <!-- Inline copy of data/downloads.json so the page also works over file://,
      where fetch() of a local file is blocked. Keep the two in sync. -->
@@ -275,8 +161,8 @@ window.__DOWNLOADS__ = {
   "$comment": "Addresses and checksums are resolved live: the releases table in Supabase first, then the GitHub release. This file is the fallback and the source of everything those two have no opinion about — wording, install commands, ordering. Regenerate the inline copy in downloads.html with scripts/sync-downloads-html.mjs.",
   "release": {
     "product": "REX",
-    "version": "0.2.7",
-    "date": "2026-09-20",
+    "version": "0.2.8",
+    "date": "2026-09-25",
     "license": "MIT",
     "repo": "https://github.com/rxdsec634/REX",
     "highlights": [
@@ -292,75 +178,75 @@ window.__DOWNLOADS__ = {
       "id": "win32-portable",
       "os": "windows",
       "osLabel": "Windows",
-      "title": "REX 0.2.7.exe",
+      "title": "REX 0.2.8.exe",
       "subtitle": "Portable single file. No install, no registry writes — run it from a USB stick.",
       "icon": "power",
-      "size": 88607827,
-      "sha256": "b8f3ac9664289e7de14420775e1daf538a663b864cec41dfeb8b30e105a2b7a2",
-      "url": "https://github.com/rxdsec634/REX/releases/download/rex/REX.0.2.7.exe",
+      "size": 88607166,
+      "sha256": "bfaa1319aac85e5fd4984b1fc4a7f09d02ff1688c64d6095ed26edcb95a91bf5",
+      "url": "https://github.com/rxdsec634/REX/releases/download/rex/REX.0.2.8.exe",
       "tags": [
         "x64",
         "portable"
       ],
-      "verify": "certutil -hashfile \"REX 0.2.7.exe\" SHA256"
+      "verify": "certutil -hashfile \"REX 0.2.8.exe\" SHA256"
     },
     {
       "id": "win32-installer",
       "os": "windows",
       "osLabel": "Windows",
-      "title": "REX Setup 0.2.7.exe",
+      "title": "REX Setup 0.2.8.exe",
       "subtitle": "NSIS installer — Windows 10/11, x64. Adds a Start-menu entry and file associations.",
       "icon": "window",
       "primary": true,
-      "size": 88834776,
-      "sha256": "256e6c8622905898fa028abc01992b12388ef5bc9e17c439c9b78dd361c1dbda",
-      "url": "https://github.com/rxdsec634/REX/releases/download/rex/REX.Setup.0.2.7.exe",
+      "size": 88834054,
+      "sha256": "e292d3197ef357f1bf2857d26595d7c9df684a39301dff1c9f498985f3b6f9c2",
+      "url": "https://github.com/rxdsec634/REX/releases/download/rex/REX.Setup.0.2.8.exe",
       "tags": [
         "x64",
         "recommended"
       ],
-      "verify": "certutil -hashfile \"REX Setup 0.2.7.exe\" SHA256"
+      "verify": "certutil -hashfile \"REX Setup 0.2.8.exe\" SHA256"
     },
     {
       "id": "linux-tarball",
       "os": "linux",
       "osLabel": "Linux",
-      "title": "rex-0.2.7-linux-x64.tar.gz",
+      "title": "rex-0.2.8-linux-x64.tar.gz",
       "subtitle": "Distro-agnostic tarball. Extract anywhere and run ./rex — no package manager involved.",
       "icon": "archive",
-      "size": 119754159,
-      "sha256": "5d93f65c6783590ad1592e6173c0cfdae1f0fcedf44d9728a2df8ec9185ae24d",
-      "url": "https://github.com/rxdsec634/REX/releases/download/rex/rex-0.2.7-linux-x64.tar.gz",
+      "size": 122110102,
+      "sha256": "e28c20449bf31b65d915a71ba967d15d89d328b7bf07f692bc3143568e56756a",
+      "url": "https://github.com/rxdsec634/REX/releases/download/rex/rex-0.2.8-linux-x64.tar.gz",
       "tags": [
         "x64",
         "no-root"
       ],
-      "install": "tar -xzf rex-0.2.7-linux-x64.tar.gz && ./rex/rex",
-      "verify": "sha256sum rex-0.2.7-linux-x64.tar.gz"
+      "install": "tar -xzf rex-0.2.8-linux-x64.tar.gz && ./rex/rex",
+      "verify": "sha256sum rex-0.2.8-linux-x64.tar.gz"
     },
     {
       "id": "linux-deb",
       "os": "linux",
       "osLabel": "Linux",
-      "title": "rex_0.2.7_amd64.deb",
+      "title": "rex_0.2.8_amd64.deb",
       "subtitle": "Debian / Ubuntu / Kali. Installs to /opt/REX, puts rex on your PATH, registers a desktop entry.",
       "icon": "terminal",
       "primary": true,
-      "size": 119769472,
-      "sha256": "2ecefb2874694ba10aa21fe65dec57544b8a77b81b07bd0f5f6cd5f02cf6468f",
-      "url": "https://github.com/rxdsec634/REX/releases/download/rex/rex_0.2.7_amd64.deb",
+      "size": 122126734,
+      "sha256": "af34cd4d5c1db821c6866b6d0d6039b21fe528a088fe521c632f3a9708b28ddb",
+      "url": "https://github.com/rxdsec634/REX/releases/download/rex/rex_0.2.8_amd64.deb",
       "tags": [
         "amd64",
         "kali-ready"
       ],
-      "install": "sudo apt install ./rex_0.2.7_amd64.deb",
-      "verify": "sha256sum rex_0.2.7_amd64.deb"
+      "install": "sudo apt install ./rex_0.2.8_amd64.deb",
+      "verify": "sha256sum rex_0.2.8_amd64.deb"
     },
     {
       "id": "macos",
       "os": "macos",
       "osLabel": "macOS",
-      "title": "REX-0.2.7.dmg",
+      "title": "REX-0.2.8.dmg",
       "subtitle": "Apple silicon and Intel. Build target is configured; a signed artifact has not been published yet.",
       "icon": "monitor",
       "size": 0,
@@ -411,8 +297,14 @@ window.__DOWNLOADS__ = {
 };
 </script>
 
-<script src="assets/js/scene.js"></script>
-<script src="assets/js/fx.js"></script>
+<script type="importmap">
+{ "imports": {
+    "three": "./assets/vendor/three/build/three.module.min.js",
+    "three/addons/": "./assets/vendor/three/examples/jsm/"
+} }
+</script>
+<script type="module" src="assets/js/core3d.js"></script>
+<script src="assets/js/site.js"></script>
 <script src="assets/js/supabase.js"></script>
 <script src="assets/js/nav-auth.js"></script>
 <script src="assets/js/downloads.js"></script>

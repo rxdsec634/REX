@@ -32,6 +32,15 @@
   }
 
   function detectOS() {
+    // site.js has already classified the device; phones fall back to the
+    // Windows tab (the most common desktop) and get a notice instead.
+    var known = window.REX_OS;
+    if (known === "android" || known === "ios") {
+      var note = document.getElementById("dl-mobile");
+      if (note) note.hidden = false;
+      return "windows";
+    }
+    if (known) return known;
     var p = (navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || "";
     var s = (p + " " + (navigator.userAgent || "")).toLowerCase();
     if (s.indexOf("win") > -1) return "windows";
@@ -40,7 +49,7 @@
     return "windows";
   }
 
-  var OS_ICON = { windows: "window", macos: "monitor", linux: "terminal", source: "code" };
+  var OS_ICON = { windows: "windows", macos: "apple", linux: "linux", source: "code" };
 
   function render(data) {
     var builds = data.builds || [];

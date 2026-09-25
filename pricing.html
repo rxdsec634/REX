@@ -3,341 +3,153 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Plans · RXDSEC</title>
-<meta name="description" content="REX starts with a 14-day free trial, no card. After that, a plan. Offensive tooling is granted per account.">
+<title>Plans — REX</title>
+<meta name="description" content="Start REX free for 14 days — no card, nothing that renews itself. Paid tiers are provisional.">
 <meta name="author" content="rxdsec">
-<meta name="theme-color" content="#0b0b0c">
-
-<meta property="og:type" content="website">
-<meta property="og:title" content="Plans · RXDSEC">
-<meta property="og:description" content="14 days free, then a plan. Offensive mode is granted per account, not sold.">
-
+<meta name="theme-color" content="#050406">
 <link rel="icon" href="assets/img/mark.svg" type="image/svg+xml">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/theme.css">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/core.css">
 <link rel="stylesheet" href="assets/css/forms.css">
-
-<script>
-(function(){try{var m=localStorage.getItem("rxdsec.theme");
-document.documentElement.setAttribute("data-theme", m||"dark");}
-catch(e){document.documentElement.setAttribute("data-theme","dark");}})();
-</script>
-
-<noscript><style>
-  .reveal, [data-split] .sp { opacity: 1 !important; transform: none !important; }
-  .preloader { display: none !important; }
-</style></noscript>
-
-<link rel="canonical" href="https://rxdsec.tech/pricing.html">
-<meta property="og:url" content="https://rxdsec.tech/pricing.html">
-<meta property="og:site_name" content="RXDSEC">
-<meta property="og:image" content="https://rxdsec.tech/assets/img/source/hero-original.jpg">
-<meta property="og:image:width" content="1600">
-<meta property="og:image:height" content="900">
-<meta property="og:image:alt" content="REX plans">
-<meta name="twitter:image" content="https://rxdsec.tech/assets/img/source/hero-original.jpg">
+<noscript><style>.reveal,.split .ch{opacity:1!important;transform:none!important}</style></noscript>
 </head>
 <body>
 <script src="assets/js/icons.js"></script>
+<canvas id="core" aria-hidden="true"></canvas>
+<div class="backdrop" aria-hidden="true"></div>
 
-<div class="preloader">
-  <div class="pre-mark">RXD<span>SEC</span></div>
-  <div class="pre-row"><span>Plans</span><span><span class="pre-pct">0</span>%</span></div>
-  <div class="pre-bar"><i></i></div>
-</div>
-
-<canvas id="gl" aria-hidden="true"></canvas>
-<div class="grain" aria-hidden="true"></div>
-<div class="cursor" aria-hidden="true"><div class="cursor-ring"></div><div class="cursor-dot"></div></div>
-<div class="scroll-progress" aria-hidden="true"><i></i></div>
-<div class="curtain" aria-hidden="true"></div>
-
-<!-- ============================= NAV ============================= -->
-<nav class="site-nav">
+<nav class="nav">
   <div class="wrap">
-    <a class="brand" href="index.html" aria-label="RXDSEC home"><b>RXD</b><i>SEC</i></a>
-    <span class="brand-sub">Plans</span>
-
-    <div class="nav-links">
-      <a href="index.html">Home</a>
-      <a href="rex.html">REX</a>
-      <a href="downloads.html">Downloads</a>
-      <a href="#plans" class="current">Plans</a>
-      <a href="index.html#contact">Contact</a>
+    <a class="logo" href="index.html" aria-label="REX home">
+      <svg viewBox="0 0 100 100" fill="none" aria-hidden="true"><path d="M50 5 L88 27 L88 73 L50 95 L12 73 L12 27 Z" stroke="currentColor" stroke-width="7"/><path d="M56 20 L38 50 L50 50 L44 78 L62 48 L50 48 Z" fill="currentColor"/></svg>
+      REX <small>by rxdsec</small>
+    </a>
+    <div class="nav-links" id="nav-links">
+      <a href="index.html#interface">Interface</a>
+      <a href="rex.html">Capabilities</a>
+      <a href="index.html#safety">Safety</a>
+      <a href="downloads.html">Download</a>
+      <a href="pricing.html" class="current">Plans</a>
+      <a href="about.html">About</a>
     </div>
-
     <div class="nav-tools">
-      <button class="icon-btn theme-btn" data-theme-toggle aria-label="Switch theme">
-        <svg class="icon sun" width="16" height="16"><use href="#i-sun"/></svg>
-        <svg class="icon moon" width="16" height="16"><use href="#i-moon"/></svg>
-      </button>
-      <a class="btn btn-sm btn-primary nav-auth" href="account.html" data-auth-cta>
-        <svg class="icon" width="14" height="14"><use href="#i-key"/></svg>
-        <span data-auth-label>Login</span>
-      </a>
-      <button class="icon-btn nav-toggle" aria-expanded="false" aria-label="Menu">
-        <svg class="icon" width="17" height="17"><use href="#i-menu"/></svg>
-      </button>
+      <a class="btn btn-sm btn-primary" href="account.html" data-auth-cta><svg class="icon" width="14" height="14"><use href="#i-key"/></svg><span data-auth-label>Login</span></a>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Menu"><svg class="icon" width="18" height="18"><use href="#i-menu"/></svg></button>
     </div>
   </div>
 </nav>
 
 <main>
 
-<!-- ============================ HERO ============================= -->
-<section class="section" data-power="0.5" style="padding-top:calc(var(--nav-h) + clamp(56px,10vh,110px))">
-  <div class="wrap">
-    <div class="hero-kicker">
-      <span class="label">[ Plans ]</span>
-      <span class="label">14 days free · no card</span>
-    </div>
-
-    <h1 class="h1" data-split="words" style="max-width:15ch; margin-bottom:22px">Start free. Decide later.</h1>
-    <p class="lede reveal d1" style="max-width:60ch">
-      Every account gets fourteen days of the whole thing — no card, no trimmed
-      feature list, nothing that quietly starts charging on day fifteen. It
-      stops, and you decide whether it earned a plan.
+<header class="page-head" data-core="ambient">
+  <div class="wrap" style="justify-items:center; text-align:center">
+    <span class="eyebrow">Plans</span>
+    <h1 class="h1" data-split style="max-width:14ch">Start free. <span class="grad">Decide later.</span></h1>
+    <p class="lede reveal d1" style="margin-inline:auto">
+      Every account gets fourteen days of the whole thing — no card, no
+      trimmed features, nothing that quietly starts charging on day fifteen.
     </p>
-
-    <div class="hero-actions reveal d2" style="margin-top:34px">
-      <a class="btn btn-lg btn-primary" href="account.html">
-        <svg class="icon" width="15" height="15"><use href="#i-key"/></svg>
-        <span>Start the trial</span>
-      </a>
-      <a class="btn btn-lg" href="rex.html">
-        <svg class="icon" width="15" height="15"><use href="#i-terminal"/></svg>
-        <span>What REX does</span>
-      </a>
-    </div>
   </div>
-</section>
+</header>
 
-<!-- =========================== PLANS ============================= -->
-<section class="section section-line" id="plans" data-power="0.35">
+<section class="section" id="plans" style="padding-top:0" data-core="ambient">
   <div class="wrap">
-    <div class="shead">
-      <div class="shead-rule"></div>
-      <span class="shead-idx">01</span>
-      <div class="shead-main">
-        <h2 class="h2">What it costs</h2>
-        <p class="body" style="max-width:56ch">
-          Pricing for the paid tiers is not finalised. Rather than invent a
-          number and change it on you, the figures below are marked as
-          provisional — the trial is live today and is not.
-        </p>
-      </div>
-    </div>
-
     <div class="plans reveal">
-
-      <!-- ---------------------- trial ---------------------- -->
       <div class="plan">
         <span class="plan-n">Trial</span>
         <div class="plan-price"><b>Free</b><span>/ 14 days</span></div>
-        <p class="plan-sub">
-          The complete agent, for two weeks, from the moment you register.
-        </p>
+        <p class="plan-sub">The complete agent for two weeks, from the moment you register.</p>
         <ul>
           <li><svg class="icon" width="15" height="15"><use href="#i-check"/></svg>Every capability, no throttle</li>
           <li><svg class="icon" width="15" height="15"><use href="#i-check"/></svg>Windows and Linux builds</li>
           <li><svg class="icon" width="15" height="15"><use href="#i-check"/></svg>Automatic updates</li>
           <li><svg class="icon" width="15" height="15"><use href="#i-check"/></svg>No card, no auto-renewal</li>
-          <li class="off"><svg class="icon" width="15" height="15"><use href="#i-close"/></svg>Offensive mode on request</li>
         </ul>
-        <div class="plan-cta">
-          <a class="btn btn-primary" href="account.html"><span>Start now</span></a>
-        </div>
+        <div class="plan-cta"><a class="btn btn-primary" href="account.html"><span>Start the trial</span></a></div>
       </div>
-
-      <!-- ----------------------- pro ----------------------- -->
       <div class="plan feature">
         <span class="plan-n">Pro · provisional</span>
         <div class="plan-price"><b>TBC</b><span>/ month</span></div>
-        <p class="plan-sub">
-          For continued individual use once the trial ends. Price not yet set.
-        </p>
+        <p class="plan-sub">For continued individual use once the trial ends. Price not yet set.</p>
         <ul>
           <li><svg class="icon" width="15" height="15"><use href="#i-check"/></svg>Everything in the trial, ongoing</li>
-          <li><svg class="icon" width="15" height="15"><use href="#i-check"/></svg>Offensive mode, once approved</li>
           <li><svg class="icon" width="15" height="15"><use href="#i-check"/></svg>Priority on bug reports</li>
           <li><svg class="icon" width="15" height="15"><use href="#i-check"/></svg>Your own model keys — no markup</li>
+          <li><svg class="icon" width="15" height="15"><use href="#i-check"/></svg>Early access to new tools</li>
         </ul>
-        <div class="plan-cta">
-          <a class="btn" href="index.html#contact"><span>Register interest</span></a>
-        </div>
+        <div class="plan-cta"><a class="btn" href="about.html#contact"><span>Register interest</span></a></div>
       </div>
-
-      <!-- ---------------------- teams ---------------------- -->
       <div class="plan">
         <span class="plan-n">Team · provisional</span>
         <div class="plan-price"><b>TBC</b><span>/ seat / month</span></div>
-        <p class="plan-sub">
-          Several operators, one licence, permissions set centrally.
-        </p>
+        <p class="plan-sub">Several people, one licence, permissions set centrally.</p>
         <ul>
-          <li><svg class="icon" width="15" height="15"><use href="#i-check"/></svg>Per-seat offensive-mode control</li>
+          <li><svg class="icon" width="15" height="15"><use href="#i-check"/></svg>Central permission policy</li>
           <li><svg class="icon" width="15" height="15"><use href="#i-check"/></svg>Shared usage reporting</li>
           <li><svg class="icon" width="15" height="15"><use href="#i-check"/></svg>Self-hosted licence server</li>
           <li><svg class="icon" width="15" height="15"><use href="#i-check"/></svg>Named contact</li>
         </ul>
-        <div class="plan-cta">
-          <a class="btn" href="index.html#contact"><span>Talk to rxdsec</span></a>
-        </div>
+        <div class="plan-cta"><a class="btn" href="about.html#contact"><span>Talk to rxdsec</span></a></div>
       </div>
-
     </div>
-
-    <p class="small reveal" style="margin-top:22px;max-width:70ch">
-      <b>Provisional</b> means exactly that: no payment is taken anywhere on this
-      site, there is no card form, and no plan renews itself. When pricing is
-      settled it will appear here first, and existing trials will not be
-      shortened to make a point.
+    <p class="small reveal" style="margin-top:20px; max-width:72ch">
+      <b style="color:var(--text)">Provisional</b> means exactly that: no payment is taken anywhere on
+      this site, there's no card form, and no plan renews itself. When pricing is
+      settled it appears here first.
     </p>
   </div>
 </section>
 
-<!-- ====================== OFFENSIVE MODE ========================= -->
-<section class="section section-line" data-power="0.4">
+<section class="section" data-core="ambient">
   <div class="wrap">
-    <div class="shead">
-      <div class="shead-rule"></div>
-      <span class="shead-idx">02</span>
-      <div class="shead-main">
-        <h2 class="h2">Offensive mode is granted, not bought</h2>
-      </div>
+    <div class="section-head">
+      <span class="eyebrow reveal">Questions</span>
+      <h2 class="h2 reveal d1">Worth answering.</h2>
     </div>
-
-    <div class="grid grid-2 reveal">
-      <div class="panel">
-        <svg class="icon panel-ico" width="26" height="26"><use href="#i-shield"/></svg>
-        <span class="panel-n">Default deny</span>
-        <h3 class="h3">Off on every account</h3>
-        <p>
-          REX's exploitation and post-exploitation tooling is disabled for every
-          account, on every plan, until it is switched on for that specific
-          person. Paying does not switch it on. An account nobody has looked at
-          is an account nobody has approved.
-        </p>
-        <p class="small" style="margin-top:16px">
-          The agent enforces this itself, in its main process, using a claim in
-          the signed session token — not with a hidden button in the interface.
-        </p>
-      </div>
-
-      <div class="panel">
-        <svg class="icon panel-ico" width="26" height="26"><use href="#i-key"/></svg>
-        <span class="panel-n">Getting it</span>
-        <h3 class="h3">Ask, with context</h3>
-        <p>
-          Say who you are and what you are testing. Offensive tooling belongs on
-          systems you own or have written permission to attack, and that is the
-          only basis on which it is enabled.
-        </p>
-        <div class="hero-actions" style="margin-top:22px">
-          <a class="btn" href="index.html#contact"><span>Request access</span></a>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============================= FAQ ============================= -->
-<section class="section section-line" data-power="0.3">
-  <div class="wrap">
-    <div class="shead">
-      <div class="shead-rule"></div>
-      <span class="shead-idx">03</span>
-      <div class="shead-main"><h2 class="h2">Questions worth answering</h2></div>
-    </div>
-
-    <div class="grid grid-2 reveal">
-      <div class="panel">
-        <span class="panel-n">Trial</span>
-        <h3 class="h3">What happens on day fifteen?</h3>
-        <p>
-          The agent stops running and tells you why. Nothing is deleted, no card
-          is charged — there is no card. Sign in and the account is still there,
-          waiting for a plan.
-        </p>
-      </div>
-
-      <div class="panel">
-        <span class="panel-n">Data</span>
-        <h3 class="h3">What does the server actually see?</h3>
-        <p>
-          Your email and display name, the id and avatar from GitHub or Google if
-          you used them, and a running count of tokens the agent spends. Not your
-          prompts, not your file names, not your code, not your targets.
-        </p>
-      </div>
-
-      <div class="panel">
-        <span class="panel-n">Keys</span>
-        <h3 class="h3">Do I pay for model usage twice?</h3>
-        <p>
-          No. REX uses your own provider keys and talks to them directly from
-          your machine. A plan pays for the agent, not for tokens — the token
-          count here exists so usage is visible, not so it can be resold.
-        </p>
-      </div>
-
-      <div class="panel">
-        <span class="panel-n">Offline</span>
-        <h3 class="h3">Does it need the internet to run?</h3>
-        <p>
-          Not continuously. It re-validates when it can and keeps working through
-          a grace period when it cannot, so a flight or an air-gapped lab does
-          not stop you mid-engagement.
-        </p>
-      </div>
+    <div class="grid grid-2">
+      <div class="hud reveal"><span class="panel-n">Trial</span><h3 class="h3">What happens on day fifteen?</h3><p>The agent stops and tells you why. Nothing is deleted and nothing is charged — there's no card. Sign in and the account is still there, waiting for a plan.</p></div>
+      <div class="hud reveal d1"><span class="panel-n">Data</span><h3 class="h3">What does the server see?</h3><p>Your email and display name, the id and avatar from GitHub or Google if you used them, and a count of tokens spent. Not your prompts, file names or code.</p></div>
+      <div class="hud reveal"><span class="panel-n">Keys</span><h3 class="h3">Do I pay for model usage twice?</h3><p>No. REX uses your own provider keys and talks to them directly from your machine. A plan pays for the agent, not for tokens.</p></div>
+      <div class="hud reveal d1"><span class="panel-n">Offline</span><h3 class="h3">Does it need the internet?</h3><p>Not continuously. It re-validates when it can and keeps working through a grace period when it can't — so a flight or a lab network doesn't stop you.</p></div>
+      <div class="hud reveal"><span class="panel-n">Advanced tooling</span><h3 class="h3">Is everything on by default?</h3><p>No. REX's advanced security tooling is off on every account until it's enabled for that person — and paying doesn't switch it on. Ask, with context about what you're authorised to test.</p></div>
+      <div class="hud reveal d1"><span class="panel-n">Platforms</span><h3 class="h3">Mac and mobile?</h3><p>Windows and Linux ship today. macOS is in progress. REX is a desktop agent, so there's no phone build — this site works on phones, the agent doesn't.</p></div>
     </div>
   </div>
 </section>
 
 </main>
 
-<footer class="site-foot">
+<footer class="foot">
   <div class="wrap">
+    <div class="foot-big grad">REX</div>
     <div class="foot-cols">
-      <div>
-        <h5>Site</h5>
-        <a href="index.html">Home</a>
-        <a href="rex.html">REX</a>
-        <a href="downloads.html">Downloads</a>
-      </div>
-      <div>
-        <h5>Account</h5>
-        <a href="account.html">Sign in</a>
-        <a href="pricing.html">Plans</a>
-        <a href="downloads.html">Get REX</a>
-      </div>
-      <div>
-        <h5>Elsewhere</h5>
-        <a href="https://github.com/rxdsec634" target="_blank" rel="noopener">GitHub</a>
-        <a href="https://www.youtube.com/@RXDSEC" target="_blank" rel="noopener">YouTube</a>
-        <a href="https://www.linkedin.com/in/redweb-sec-2a4077240/" target="_blank" rel="noopener">LinkedIn</a>
-        <a href="https://www.instagram.com/rxdsec/" target="_blank" rel="noopener">Instagram</a>
-      </div>
-      <div>
-        <h5>Note</h5>
-        <p class="small" style="max-width:28ch">
-          Prices marked provisional are not final and nothing on this site takes
-          payment today.
-        </p>
-      </div>
+      <div><h5>Product</h5><a href="index.html">REX</a><a href="rex.html">Capabilities</a><a href="index.html#safety">Safety</a></div>
+      <div><h5>Get it</h5><a href="downloads.html">Downloads</a><a href="https://github.com/rxdsec634" target="_blank" rel="noopener">Source</a></div>
+      <div><h5>Account</h5><a href="account.html">Sign in</a><a href="about.html">About rxdsec</a></div>
+      <div><h5>Note</h5><p class="small">Prices marked provisional aren't final, and nothing on this site takes payment today.</p></div>
     </div>
-    <div class="foot-end">
-      <span>© <span data-year>2026</span> rxdsec</span>
-      <span>14 days free, then a plan</span>
-    </div>
+    <div class="foot-end"><span>© <span data-year>2026</span> rxdsec</span><span>14 days free, then a plan</span></div>
   </div>
 </footer>
 
-<script src="assets/js/scene.js"></script>
-<script src="assets/js/fx.js"></script>
+<nav class="tabbar" aria-label="Quick actions">
+  <a href="index.html"><svg class="icon" width="18" height="18"><use href="#i-sparkle"/></svg>Home</a>
+  <a href="#plans"><svg class="icon" width="18" height="18"><use href="#i-listChecks"/></svg>Plans</a>
+  <a class="hot" href="downloads.html"><svg class="icon" width="18" height="18"><use href="#i-download"/></svg>Get</a>
+  <a href="account.html" data-auth-cta><svg class="icon" width="18" height="18"><use href="#i-key"/></svg><span data-auth-label>Login</span></a>
+</nav>
+
+<script type="importmap">
+{ "imports": {
+    "three": "./assets/vendor/three/build/three.module.min.js",
+    "three/addons/": "./assets/vendor/three/examples/jsm/"
+} }
+</script>
+<script type="module" src="assets/js/core3d.js"></script>
+<script src="assets/js/site.js"></script>
 <script src="assets/js/supabase.js"></script>
 <script src="assets/js/nav-auth.js"></script>
 </body>

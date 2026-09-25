@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" fill="none">
-  <!-- REX sigil — a breach: the hexagon is the perimeter, the bolt is the
-       fracture through it, the bar beneath is the denylist that never moves.
-       Original mark. -->
-  <path d="M50 5 L88 27 L88 73 L50 95 L12 73 L12 27 Z" stroke="currentColor" stroke-width="4"/>
-  <path d="M56 20 L38 50 L50 50 L44 78 L62 48 L50 48 Z" fill="currentColor"/>
-  <rect x="28" y="84" width="44" height="5" fill="currentColor" opacity="0.55"/>
-</svg>

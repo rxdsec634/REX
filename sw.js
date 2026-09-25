@@ -16,25 +16,26 @@
        hundreds of megabytes and have no business in a browser cache.
    ================================================================== */
 
-var VERSION = "rxdsec-v6";
+// v7: the Core redesign — new stylesheet and scripts, and the About page.
+var VERSION = "rxdsec-v7";
 
 var SHELL = [
   "index.html",
   "rex.html",
+  "about.html",
   "downloads.html",
   "pricing.html",
-  "assets/css/theme.css",
+  "assets/css/core.css",
   "assets/css/forms.css",
   "assets/js/icons.js",
-  "assets/js/fx.js",
-  "assets/js/scene.js",
+  "assets/js/site.js",
+  "assets/js/core3d.js",
   "assets/js/downloads.js",
   "assets/js/supabase.js",
   "assets/js/nav-auth.js",
   "assets/img/mark.svg",
   "data/downloads.json",
   "data/profile.json",
-  "data/art.json",
 ];
 
 self.addEventListener("install", function (e) {

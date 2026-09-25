@@ -3,91 +3,51 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>RXDSEC — Cybersecurity Analyst · VAPT &amp; AI Red Teaming</title>
-<meta name="description" content="rxdsec — cybersecurity practitioner in offensive security: VAPT, web application penetration testing and AI red teaming. Live cybercrime forensics, responsible disclosure, Python security tooling. Creator of REX.">
+<title>REX — the agent that asks before it acts</title>
+<meta name="description" content="REX is a local-first AI agent for engineers and security teams. 42 tools, 23 model providers, editable diffs, and a permission gate no prompt can talk its way past. Built by rxdsec.">
 <meta name="author" content="rxdsec">
-<meta name="theme-color" content="#0b0b0c">
-
-<meta property="og:type" content="profile">
-<meta property="og:title" content="RXDSEC — Cybersecurity Analyst">
-<meta property="og:description" content="VAPT, web application penetration testing and AI red teaming. Creator of REX, an agentic AI desktop application for offensive security.">
+<meta name="theme-color" content="#050406">
+<meta property="og:type" content="website">
+<meta property="og:title" content="REX — the agent that asks before it acts">
+<meta property="og:description" content="A local-first AI agent with 42 tools, 23 providers and a permission gate you can't talk it out of.">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="canonical" href="https://rxdsec.tech/">
-<meta property="og:url" content="https://rxdsec.tech/">
-<meta property="og:site_name" content="RXDSEC">
-<meta property="og:image" content="https://rxdsec.tech/assets/img/source/hero-original.jpg">
-<meta property="og:image:width" content="1600">
-<meta property="og:image:height" content="900">
-<meta property="og:image:alt" content="RXDSEC — Cybersecurity Analyst">
-<meta name="twitter:image" content="https://rxdsec.tech/assets/img/source/hero-original.jpg">
-
 
 <link rel="icon" href="assets/img/mark.svg" type="image/svg+xml">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/theme.css">
-
-<script>
-/* Set the theme before first paint so the page never flashes the wrong one. */
-(function(){try{var m=localStorage.getItem("rxdsec.theme");
-document.documentElement.setAttribute("data-theme", m||"dark");}
-catch(e){document.documentElement.setAttribute("data-theme","dark");}})();
-</script>
-
-<noscript><style>
-  /* Without JS nothing adds .in — make sure the page is still whole. */
-  .reveal, [data-split] .sp { opacity: 1 !important; transform: none !important; }
-  .preloader { display: none !important; }
-  .meter i { width: 68% !important; }
-</style></noscript>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/core.css">
+<noscript><style>.reveal,.split .ch{opacity:1!important;transform:none!important}</style></noscript>
 </head>
 <body>
 <script src="assets/js/icons.js"></script>
 
-<!-- preloader -->
-<div class="preloader">
-  <div class="pre-mark">RXD<span>SEC</span></div>
-  <div class="pre-row"><span>Loading</span><span><span class="pre-pct">0</span>%</span></div>
-  <div class="pre-bar"><i></i></div>
-</div>
-
-<canvas id="gl" aria-hidden="true"></canvas>
-<div class="grain" aria-hidden="true"></div>
-<div class="cursor" aria-hidden="true"><div class="cursor-ring"></div><div class="cursor-dot"></div></div>
-<div class="scroll-progress" aria-hidden="true"><i></i></div>
-<div class="curtain" aria-hidden="true"></div>
+<canvas id="core" aria-hidden="true"></canvas>
+<div class="backdrop" aria-hidden="true"></div>
 
 <!-- ============================= NAV ============================= -->
-<nav class="site-nav">
+<nav class="nav">
   <div class="wrap">
-    <a class="brand" href="index.html" aria-label="RXDSEC home"><b>RXD</b><i>SEC</i></a>
-    <span class="brand-sub">Cybersecurity Analyst</span>
-
-    <div class="nav-links">
-      <a href="#about">About</a>
-      <a href="#work">Work</a>
-      <a href="#rex">REX</a>
-      <a href="#arsenal">Arsenal</a>
-      <a href="#contact">Contact</a>
-      <a href="downloads.html">Downloads</a>
+    <a class="logo" href="index.html" aria-label="REX home">
+      <svg viewBox="0 0 100 100" fill="none" aria-hidden="true"><path d="M50 5 L88 27 L88 73 L50 95 L12 73 L12 27 Z" stroke="currentColor" stroke-width="7"/><path d="M56 20 L38 50 L50 50 L44 78 L62 48 L50 48 Z" fill="currentColor"/></svg>
+      REX <small>by rxdsec</small>
+    </a>
+    <div class="nav-links" id="nav-links">
+      <a href="#interface">Interface</a>
+      <a href="rex.html">Capabilities</a>
+      <a href="#safety">Safety</a>
+      <a href="downloads.html">Download</a>
       <a href="pricing.html">Plans</a>
+      <a href="about.html">About</a>
     </div>
-
     <div class="nav-tools">
-      <button class="icon-btn theme-btn" data-theme-toggle aria-label="Switch theme">
-        <svg class="icon sun" width="16" height="16"><use href="#i-sun"/></svg>
-        <svg class="icon moon" width="16" height="16"><use href="#i-moon"/></svg>
-      </button>
-      <!-- Sign in / account. Replaces the PWA-install icon, which was a
-           low-value control sitting in the most valuable slot in the nav. -->
-      <a class="btn btn-sm btn-primary nav-auth" href="account.html" data-auth-cta>
+      <a class="btn btn-sm btn-primary" href="account.html" data-auth-cta>
         <svg class="icon" width="14" height="14"><use href="#i-key"/></svg>
         <span data-auth-label>Login</span>
       </a>
-      <button class="icon-btn nav-toggle" aria-expanded="false" aria-label="Menu">
-        <svg class="icon" width="17" height="17"><use href="#i-menu"/></svg>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Menu">
+        <svg class="icon" width="18" height="18"><use href="#i-menu"/></svg>
       </button>
     </div>
   </div>
@@ -96,444 +56,259 @@ catch(e){document.documentElement.setAttribute("data-theme","dark");}})();
 <main>
 
 <!-- ============================= HERO ============================= -->
-<header class="hero" data-power="0.55" data-figure="assets/img/figure.webp" data-figure-until="#about">
-  <div class="wrap hero-inner">
-
-    <div class="hero-top">
-      <div style="width:100%">
-        <div class="hero-kicker">
-          <span class="label">[ 00 ] &nbsp;Index</span>
-          <span class="label">VAPT · Red Teaming · AI Security</span>
-        </div>
-
-        <div class="hero-name">
-          <h1 class="display" data-split="chars" data-split-fast>
-            RXDSEC<span class="l2 outline-text">/ENGINEER</span>
-          </h1>
-        </div>
-
-        <div class="hero-sub">
-          <p class="lede reveal d1">
-            Cybersecurity practitioner working in offensive security — VAPT, web
-            application penetration testing, and AI red teaming. I build the
-            tools that break things, then the tooling that makes breaking them
-            repeatable.
-          </p>
-          <div class="hero-actions reveal d2">
-            <a class="btn btn-primary" href="#work"><span>See the work</span></a>
-            <a class="btn" href="#contact"><span>Get in touch</span></a>
-          </div>
-        </div>
+<header class="hero" data-core="slot">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <span class="eyebrow">Local-first AI agent · v<span data-rex-version>0.2.8</span></span>
+      <h1 class="display" data-split>The agent that <span class="l2 grad">asks first.</span></h1>
+      <p class="lede reveal d1">
+        REX reads your code, plans the change, calls real tools and shows you
+        every diff before a byte is written. It runs on your machine, speaks
+        to 23 model providers, and stops at every step where a mistake would
+        cost you something.
+      </p>
+      <div class="hero-actions reveal d2">
+        <a class="btn btn-lg btn-primary" href="downloads.html" data-os-cta>
+          <svg class="icon" width="16" height="16"><use href="#i-download"/></svg>
+          <span data-os-label>Download REX</span>
+        </a>
+        <a class="btn btn-lg" href="#interface">
+          <svg class="icon" width="16" height="16"><use href="#i-play"/></svg>
+          <span>Try the interface</span>
+        </a>
+      </div>
+      <div class="ticker reveal d3" aria-live="off">
+        <i></i><span data-ticker-verb>calling</span><b data-ticker>read</b>
       </div>
     </div>
 
-    <div class="hero-foot">
-      <span class="live"><i></i> Available for work</span>
-      <span class="spacer"></span>
-      <span>6 public repos</span>
-      <span>MIT by default</span>
-      <span class="scroll-hint"><i></i> Scroll</span>
+    <div class="hero-stage core-slot" role="img" aria-label="REX at work: a thinking core sends pulses out to its tools; risky calls stop at the hexagon permission gate until approved. Click to make it reach for a risky tool.">
+      <svg class="core-fallback" viewBox="0 0 100 100" fill="none" aria-hidden="true">
+        <path d="M50 5 L88 27 L88 73 L50 95 L12 73 L12 27 Z" stroke="currentColor" stroke-width="3"/>
+        <path d="M56 20 L38 50 L50 50 L44 78 L62 48 L50 48 Z" fill="currentColor"/>
+        <rect x="28" y="84" width="44" height="4" fill="currentColor" opacity="0.6"/>
+      </svg>
+      <div class="readout ro-1"><span>tools</span><b data-count="42">42</b></div>
+      <div class="readout ro-2"><span>providers</span><b data-count="23">23</b></div>
     </div>
+  </div>
 
+  <div class="hero-foot wrap">
+    <span class="hide-sm">Windows · Linux · macOS soon</span>
+    <span class="scroll-cue"><i></i> Scroll</span>
+    <span class="hide-sm">MIT licence</span>
   </div>
 </header>
 
-<!-- ============================= MARQUEE ============================= -->
-<div class="marquee-strip" aria-hidden="true">
-  <div class="marquee">
-    <div class="marquee-track">
-      <span>Penetration testing</span>
-      <span>Agent infrastructure</span>
-      <span>Taint analysis</span>
-      <span>Desktop software</span>
-      <span>Protocol fingerprinting</span>
-      <span>LLM tool design</span>
-      <span>Wireless research</span>
-      <span>Permission systems</span>
-      <span>Open source</span>
-    </div>
+<!-- ============================= PROVIDERS ============================= -->
+<div class="marquee" aria-label="Supported model providers">
+  <div class="marquee-track">
+    <span>Anthropic</span><span>OpenAI</span><span>Google Gemini</span><span>OpenRouter</span><span>Ollama</span>
+    <span>LM Studio</span><span>llama.cpp</span><span>Groq</span><span>DeepSeek</span><span>Mistral</span><span>xAI</span>
+    <span>Cerebras</span><span>Together AI</span><span>Fireworks</span><span>NVIDIA NIM</span><span>GitHub Models</span>
+    <span>Anthropic</span><span>OpenAI</span><span>Google Gemini</span><span>OpenRouter</span><span>Ollama</span>
+    <span>LM Studio</span><span>llama.cpp</span><span>Groq</span><span>DeepSeek</span><span>Mistral</span><span>xAI</span>
+    <span>Cerebras</span><span>Together AI</span><span>Fireworks</span><span>NVIDIA NIM</span><span>GitHub Models</span>
   </div>
 </div>
 
-<!-- ============================= STATS ============================= -->
-<section class="section" data-power="0.3" style="padding-block:clamp(44px,6vh,80px)">
+<!-- ============================= INTERFACE ============================= -->
+<section class="section" id="interface" data-core="ambient">
   <div class="wrap">
-    <div class="stats reveal">
-      <div class="stat">
-        <div class="stat-n">2<sup>+</sup></div>
-        <div class="stat-l">Years in security</div>
-      </div>
-      <div class="stat">
-        <div class="stat-n"><span data-count="42">0</span></div>
-        <div class="stat-l">Tools shipped in REX</div>
-      </div>
-      <div class="stat">
-        <div class="stat-n"><span data-count="23">0</span></div>
-        <div class="stat-l">Model providers wired</div>
-      </div>
-      <div class="stat">
-        <div class="stat-n">3<sup>OS</sup></div>
-        <div class="stat-l">Platforms targeted</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============================= ABOUT ============================= -->
-<section class="section" id="about" data-power="0.35">
-  <div class="wrap">
-    <div class="shead">
-      <div class="shead-rule draw reveal"></div>
-      <div class="shead-idx">[ 01 ]</div>
-      <div class="shead-main">
-        <h2 class="h2" data-split="words">Introduction</h2>
-      </div>
+    <div class="section-head center">
+      <span class="eyebrow reveal">Live interface</span>
+      <h2 class="h2 reveal d1">This is REX. <span class="grad">Drive it.</span></h2>
+      <p class="lede reveal d2">
+        Not a video — the real layout, running a scripted session. Pick a task
+        below, watch it plan and call tools, then approve or deny the edit
+        yourself.
+      </p>
     </div>
 
-    <div class="grid grid-2">
-      <div class="panel" data-tilt="3">
-        <span class="panel-n">Who</span>
-        <p style="font-size:17px; line-height:1.6">
-          I'm <b style="color:var(--ink)">rxdsec</b> — a cybersecurity
-          practitioner specialising in offensive security. Vulnerability
-          assessment and penetration testing, web application security, and
-          AI red teaming, grounded in the OWASP Top 10 including the one
-          written for large language models.
-        </p>
-        <p style="margin-top:16px">
-          The work runs across three things that keep turning out to be the
-          same thing: breaking applications, investigating what happened after
-          someone else broke one, and building the tooling that makes both
-          repeatable instead of heroic.
-        </p>
+    <div class="app reveal" data-app>
+      <div class="app-bar">
+        <span class="app-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span class="app-title">api-gateway / <b data-app-title>New session</b></span>
+        <span class="app-model">claude-opus · default mode</span>
       </div>
+      <div class="app-body">
+        <aside class="app-side">
+          <div class="app-new"><svg class="icon" width="14" height="14"><use href="#i-plus"/></svg>New session</div>
+          <div class="app-grp">api-gateway</div>
+          <button class="app-sess" type="button" data-run="jwt">Harden JWT verification<span>now</span></button>
+          <button class="app-sess" type="button" data-run="rate">Rate-limit the login route<span>1h ago</span></button>
+          <div class="app-grp">rex</div>
+          <button class="app-sess" type="button" data-run="explain">Explain this repository<span>yesterday</span></button>
+        </aside>
 
-      <div class="panel" data-tilt="3">
-        <span class="panel-n">How that plays out</span>
-        <p>
-          Two-plus years of it: digital forensics on live investigations —
-          evidence extraction, triage and reporting. Responsible disclosure of
-          XSS, SQL injection and CSRF against production targets. Web
-          application security testing end to end. And, currently, stress-testing
-          LLM prompts and outputs across GPT, Claude and Gemini so unsafe model
-          behaviour gets caught before it reaches production.
-        </p>
-        <div class="proj-stack" style="margin-top:18px">
-          <span class="tag">2+ years in security</span>
-          <span class="tag">OWASP Top 10</span>
-          <span class="tag">OWASP Top 10 for LLMs</span>
-          <span class="tag">Open to work</span>
+        <div class="app-main">
+          <div class="app-log" aria-live="polite"></div>
+          <div class="app-comp">
+            <div class="chips">
+              <button class="chip" type="button" data-run="jwt">Audit our JWT checks</button>
+              <button class="chip" type="button" data-run="rate">Rate-limit /login</button>
+              <button class="chip" type="button" data-run="explain">Explain this repo</button>
+            </div>
+            <div class="app-comp-row">
+              <span>@ mention a file · paste an image</span><span class="sp"></span>
+              <span class="send" aria-hidden="true"><svg class="icon" width="14" height="14"><use href="#i-arrowUp"/></svg></span>
+            </div>
+          </div>
         </div>
+
+        <aside class="app-det">
+          <h5>Session</h5>
+          <div class="kvr"><span>mode</span><b data-d-mode>default</b></div>
+          <div class="kvr"><span>tools run</span><b data-d-tools>0</b></div>
+          <h5>Context</h5>
+          <div class="meter"><i data-d-ctx></i></div>
+          <div class="kvr"><span data-d-ctxtxt>16k / 200k</span><b>window</b></div>
+          <h5>Checkpoints</h5>
+          <div class="flist" data-d-files></div>
+          <h5>Keys</h5>
+          <div class="kvr"><span>store</span><b>OS keychain</b></div>
+        </aside>
+      </div>
+      <div class="app-status">
+        <span class="dot"></span><span data-app-status>idle · ready</span><span class="sp"></span>
+        <span>ollama: online</span><span>~/src/api-gateway</span>
       </div>
     </div>
 
-    <div class="stats reveal" style="margin-top:40px">
-      <div class="stat">
-        <div class="stat-n">2<sup>+</sup></div>
-        <div class="stat-l">Years in security</div>
-      </div>
-      <div class="stat">
-        <div class="stat-n"><span data-count="6">0</span></div>
-        <div class="stat-l">Public repos</div>
-      </div>
-      <div class="stat">
-        <div class="stat-n"><span data-count="3">0</span></div>
-        <div class="stat-l">Vuln classes disclosed</div>
-      </div>
-      <div class="stat">
-        <div class="stat-n"><span data-count="42">0</span></div>
-        <div class="stat-l">Tools shipped in REX</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============================= WORK ============================= -->
-<section class="section section-line" id="work" data-power="0.25">
-  <div class="wrap">
-    <div class="shead">
-      <div class="shead-rule draw reveal"></div>
-      <div class="shead-idx">[ 02 ]</div>
-      <div class="shead-main">
-        <h2 class="h2" data-split="words">Selected work</h2>
-        <p class="body reveal d1" style="max-width:52ch">
-          Six public repositories and one flagship. Stars, licences and dates are
-          straight off the GitHub profile — the descriptions are mine, because
-          GitHub's are empty.
-        </p>
-      </div>
-    </div>
-
-    <div class="ilist">
-
-      <a class="irow" href="rex.html">
-        <span class="irow-n">001</span>
-        <span>
-          <span class="irow-t">REX</span>
-          <span class="irow-tags">
-            <span>Offensive agent</span><span>Electron</span><span>TypeScript</span><span>MIT</span><span>Flagship</span>
-          </span>
-        </span>
-        <span class="irow-d irow-meta-cell">
-          An agentic AI desktop application for offensive security — assisting
-          pentesting, SOC triage and VAPT workflows. 42 tools, 23 model
-          providers, and a permission gate that cannot be talked out of a denial.
-        </span>
-        <span class="irow-go"><svg class="icon" width="17" height="17"><use href="#i-arrowUpRight"/></svg></span>
-      </a>
-
-      <a class="irow" href="https://github.com/rxdsec634/AiPentestFramework" target="_blank" rel="noopener">
-        <span class="irow-n">002</span>
-        <span>
-          <span class="irow-t">AiPentestFramework</span>
-          <span class="irow-tags"><span>★ 3</span><span>MIT</span><span>Mar 2025</span></span>
-        </span>
-        <span class="irow-d irow-meta-cell">
-          Chains AI models with Nmap, Burp Suite and OWASP ZAP to automate
-          reconnaissance and vulnerability assessment across web targets.
-        </span>
-        <span class="irow-go"><svg class="icon" width="17" height="17"><use href="#i-arrowUpRight"/></svg></span>
-      </a>
-
-      <a class="irow" href="https://github.com/rxdsec634/RXDSEC-CLI" target="_blank" rel="noopener">
-        <span class="irow-n">003</span>
-        <span>
-          <span class="irow-t">RXDSEC-CLI</span>
-          <span class="irow-tags"><span>Python</span><span>★ 1</span><span>Dec 2025</span></span>
-        </span>
-        <span class="irow-d irow-meta-cell">
-          The command-line side of the toolkit — one entry point instead of a
-          folder of scripts.
-        </span>
-        <span class="irow-go"><svg class="icon" width="17" height="17"><use href="#i-arrowUpRight"/></svg></span>
-      </a>
-
-      <a class="irow" href="https://github.com/rxdsec634/Bluedos" target="_blank" rel="noopener">
-        <span class="irow-n">004</span>
-        <span>
-          <span class="irow-t">Bluedos</span>
-          <span class="irow-tags"><span>★ 2</span><span>MIT</span><span>Mar 2025</span></span>
-        </span>
-        <span class="irow-d irow-meta-cell">
-          BlueSec — Bluetooth attack-surface auditing for authorised security
-          research and lab use.
-        </span>
-        <span class="irow-go"><svg class="icon" width="17" height="17"><use href="#i-arrowUpRight"/></svg></span>
-      </a>
-
-      <a class="irow" href="https://github.com/rxdsec634/rootmaster" target="_blank" rel="noopener">
-        <span class="irow-n">005</span>
-        <span>
-          <span class="irow-t">rootmaster</span>
-          <span class="irow-tags"><span>★ 1</span><span>1 fork</span><span>MIT</span></span>
-        </span>
-        <span class="irow-d irow-meta-cell">
-          Privilege and root-access tooling. The only repo on the profile that
-          someone else has forked.
-        </span>
-        <span class="irow-go"><svg class="icon" width="17" height="17"><use href="#i-arrowUpRight"/></svg></span>
-      </a>
-
-      <a class="irow" href="https://github.com/rxdsec634/airmobile" target="_blank" rel="noopener">
-        <span class="irow-n">006</span>
-        <span>
-          <span class="irow-t">airmobile</span>
-          <span class="irow-tags"><span>★ 1</span><span>MIT</span><span>Jan 2026</span></span>
-        </span>
-        <span class="irow-d irow-meta-cell">
-          AirMobile — Wi-Fi attack-surface auditing, extending the wireless toolkit
-          past Bluetooth.
-        </span>
-        <span class="irow-go"><svg class="icon" width="17" height="17"><use href="#i-arrowUpRight"/></svg></span>
-      </a>
-
-      <a class="irow" href="https://github.com/rxdsec634/simplebtcbot" target="_blank" rel="noopener">
-        <span class="irow-n">007</span>
-        <span>
-          <span class="irow-t">simplebtcbot</span>
-          <span class="irow-tags"><span>★ 1</span><span>Jun 2026</span></span>
-        </span>
-        <span class="irow-d irow-meta-cell">
-          A small automation bot, and the most recent push on the profile.
-        </span>
-        <span class="irow-go"><svg class="icon" width="17" height="17"><use href="#i-arrowUpRight"/></svg></span>
-      </a>
-
+    <div class="app-callouts">
+      <div class="hud spot reveal"><span class="panel-n">Composer</span><h3 class="h3">@-mention any file</h3><p>Type @ to pull a file into context. Paste a screenshot and it goes in as an attachment.</p></div>
+      <div class="hud spot reveal d1"><span class="panel-n">Diffs</span><h3 class="h3">Edit before you approve</h3><p>Every write arrives as a diff you can change first — and every approved write drops a checkpoint.</p></div>
+      <div class="hud spot reveal d2"><span class="panel-n">Palette</span><h3 class="h3">Ctrl K for everything</h3><p>Switch model, session, settings or the browser pane without leaving the keyboard.</p></div>
     </div>
   </div>
 </section>
 
-<!-- ============================= REX FEATURE (inverted) ============================= -->
-<section class="section invert" id="rex" data-power="0.55">
+<!-- ============================= WHY ============================= -->
+<section class="section" id="why" data-core="ambient">
   <div class="wrap">
-    <div class="shead">
-      <div class="shead-rule draw reveal"></div>
-      <div class="shead-idx">[ 03 ]</div>
-      <div class="shead-main">
-        <h2 class="h2" data-split="words">The flagship</h2>
-      </div>
+    <div class="section-head">
+      <span class="eyebrow reveal">Why REX</span>
+      <h2 class="h2 reveal d1">Built different, <span class="outline">on purpose.</span></h2>
     </div>
 
-    <h3 class="h1" data-split="chars" data-split-fast style="margin-bottom:28px">REX</h3>
-
-    <div class="grid grid-2" style="margin-bottom:34px">
-      <div class="panel" data-tilt="3">
-        <span class="panel-n">What it is</span>
-        <p style="font-size:16px">
-          An offensive-security agent that also happens to be an excellent
-          engineer. It fingerprints the stack, traces tainted input from source to
-          dangerous sink, builds and encodes the payload, drives a real browser to
-          prove it, then writes the patch and runs the test that closes it.
-        </p>
-      </div>
-      <div class="panel" data-tilt="3">
-        <span class="panel-n">Why it matters</span>
-        <p style="font-size:16px">
-          Nothing leaves the machine that you didn't send. Keys live in the OS
-          credential store, sessions are append-only files on disk, and the hard
-          safety denylist sits <em>above</em> the rule engine — so no setting and
-          no persuasive prompt gets underneath it.
-        </p>
-      </div>
-    </div>
-
-    <dl class="spec reveal">
-      <div class="spec-row"><dt>Discipline</dt><dd>Offensive security and software engineering, in one loop</dd></div>
-      <div class="spec-row"><dt>Tools</dt><dd>42 executors across recon, exploitation, files, shell, network, browser and desktop control</dd></div>
-      <div class="spec-row"><dt>Providers</dt><dd>23 — Anthropic, OpenAI, Gemini, Groq, DeepSeek, Ollama, LM Studio, llama.cpp and any OpenAI-compatible endpoint</dd></div>
-      <div class="spec-row"><dt>Stack</dt><dd>Electron · React · TypeScript monorepo, agent core in the main process</dd></div>
-      <div class="spec-row"><dt>Platforms</dt><dd>Windows · Linux · macOS</dd></div>
-      <div class="spec-row"><dt>Telemetry</dt><dd>None</dd></div>
-      <div class="spec-row"><dt>Licence</dt><dd>MIT</dd></div>
-    </dl>
-
-    <div class="hero-actions reveal d1" style="margin-top:32px">
-      <a class="btn btn-acid" href="downloads.html"><span>Download REX</span></a>
-      <a class="btn" href="rex.html"><span>Read the whole story</span></a>
-    </div>
-  </div>
-</section>
-
-<!-- ============================= ARSENAL ============================= -->
-<section class="section" id="arsenal" data-power="0.28">
-  <div class="wrap">
-    <div class="shead">
-      <div class="shead-rule draw reveal"></div>
-      <div class="shead-idx">[ 04 ]</div>
-      <div class="shead-main">
-        <h2 class="h2" data-split="words">What I actually do</h2>
-        <p class="body reveal d1" style="max-width:56ch">
-          Offensive security — VAPT, web application penetration testing, and AI
-          red teaming — grounded in the OWASP Top 10, including the one for LLMs.
-          Finding a bug is the short part. The long part is the tooling that
-          finds the next hundred.
-        </p>
-      </div>
-    </div>
-
-    <div class="grid grid-3" style="margin-bottom:56px">
-      <article class="panel" data-tilt="4">
-        <svg class="icon panel-ico" width="26" height="26"><use href="#i-bug"/></svg>
-        <span class="panel-n">01 / Offensive</span>
-        <h3 class="h3">Break it on purpose</h3>
-        <p>Web application penetration testing and VAPT against the OWASP Top 10. Responsibly disclosed XSS, SQL injection and CSRF in live production applications through coordinated disclosure programmes.</p>
+    <div class="grid grid-3">
+      <article class="hud spot reveal">
+        <div class="ico"><svg class="icon" width="20" height="20"><use href="#i-lock"/></svg></div>
+        <h3 class="h3">Keys never leave your OS</h3>
+        <p>Provider keys are sealed in the platform credential store, not a dotfile. REX talks to providers straight from your machine — no proxy in the middle.</p>
       </article>
-
-      <article class="panel" data-tilt="4">
-        <svg class="icon panel-ico" width="26" height="26"><use href="#i-cpu"/></svg>
-        <span class="panel-n">02 / AI security</span>
-        <h3 class="h3">Red teaming the models</h3>
-        <p>Jailbreak and prompt-injection testing, adversarial evaluation, and model security against the OWASP Top 10 for LLMs — plus the evaluation frameworks that catch unsafe output before it reaches production.</p>
+      <article class="hud spot reveal d1">
+        <div class="ico"><svg class="icon" width="20" height="20"><use href="#i-layers"/></svg></div>
+        <h3 class="h3">Agentic, not chatty</h3>
+        <p>Streaming responses, native tool calling, automatic context compaction and append-only session history. It plans, acts and checks its own work.</p>
       </article>
-
-      <article class="panel" data-tilt="4">
-        <svg class="icon panel-ico" width="26" height="26"><use href="#i-search"/></svg>
-        <span class="panel-n">03 / Forensics</span>
-        <h3 class="h3">Evidence, not guesses</h3>
-        <p>Digital evidence extraction and forensic analysis across live cybercrime investigations — evidence triage, log analysis, and email investigation down to SPF, DKIM and DMARC.</p>
+      <article class="hud spot reveal d2">
+        <div class="ico"><svg class="icon" width="20" height="20"><use href="#i-cpu"/></svg></div>
+        <h3 class="h3">Any model, even offline</h3>
+        <p>23 providers — cloud, local and any OpenAI-compatible endpoint. Run Ollama or a local GGUF and REX works with the network cable pulled.</p>
+      </article>
+      <article class="hud spot reveal">
+        <div class="ico"><svg class="icon" width="20" height="20"><use href="#i-browser"/></svg></div>
+        <h3 class="h3">A browser it drives</h3>
+        <p>A real browser view inside the window: navigate, read the accessibility tree, click, type and screenshot — while you watch.</p>
+      </article>
+      <article class="hud spot reveal d1">
+        <div class="ico"><svg class="icon" width="20" height="20"><use href="#i-monitor"/></svg></div>
+        <h3 class="h3">It can use the computer</h3>
+        <p>Screenshot, click and type through native backends on each OS. Never auto-allowed: every desktop action asks, every time.</p>
+      </article>
+      <article class="hud spot reveal d2">
+        <div class="ico"><svg class="icon" width="20" height="20"><use href="#i-database"/></svg></div>
+        <h3 class="h3">It remembers your rules</h3>
+        <p>A REX.md at the project root is read into every session, so conventions you explain once survive restarts and model switches.</p>
       </article>
     </div>
 
-    <div class="skills">
-      <div class="reveal">
-        <h4 class="skill-h">Offensive security</h4>
-        <div class="proj-stack">
-          <span class="tag">Penetration Testing</span><span class="tag">VAPT</span>
-          <span class="tag">Web App Security Testing</span><span class="tag">OWASP Top 10</span>
-          <span class="tag">Bug Bounty</span><span class="tag">Vulnerability Research</span>
-        </div>
-      </div>
-
-      <div class="reveal d1">
-        <h4 class="skill-h">Tools</h4>
-        <div class="proj-stack">
-          <span class="tag">Burp Suite</span><span class="tag">OWASP ZAP</span><span class="tag">Nmap</span>
-          <span class="tag">Wireshark</span><span class="tag">Metasploit</span>
-          <span class="tag">CodeQL</span><span class="tag">Semgrep</span>
-        </div>
-      </div>
-
-      <div class="reveal d2">
-        <h4 class="skill-h">AI security</h4>
-        <div class="proj-stack">
-          <span class="tag">AI Red Teaming</span><span class="tag">Prompt Injection</span>
-          <span class="tag">Jailbreak Testing</span><span class="tag">Adversarial Testing</span>
-          <span class="tag">OWASP Top 10 for LLMs</span><span class="tag">AI Governance</span>
-        </div>
-      </div>
-
-      <div class="reveal d3">
-        <h4 class="skill-h">Forensics &amp; defence</h4>
-        <div class="proj-stack">
-          <span class="tag">Digital Forensics</span><span class="tag">Evidence Triage</span>
-          <span class="tag">Log Analysis</span><span class="tag">SPF / DKIM / DMARC</span>
-          <span class="tag">Phishing Detection</span>
-        </div>
-      </div>
-
-      <div class="reveal d4">
-        <h4 class="skill-h">Scripting &amp; platform</h4>
-        <div class="proj-stack">
-          <span class="tag">Python</span><span class="tag">Bash</span><span class="tag">Linux</span>
-          <span class="tag">SQL</span><span class="tag">REST APIs</span>
-          <span class="tag">GitHub Actions</span><span class="tag">Docker</span><span class="tag">AWS</span>
-        </div>
-      </div>
+    <div class="stats" style="margin-top:16px">
+      <div class="stat reveal"><b data-count="42">42</b><span>tools</span></div>
+      <div class="stat reveal d1"><b data-count="23">23</b><span>model providers</span></div>
+      <div class="stat reveal d2"><b>3<sup>OS</sup></b><span>desktop targets</span></div>
+      <div class="stat reveal d3"><b>0</b><span>telemetry</span></div>
     </div>
   </div>
 </section>
 
-<!-- ============================= CONTACT ============================= -->
-<section class="section" id="contact" data-power="0.6">
-  <div class="wrap">
-    <div class="shead">
-      <div class="shead-rule draw reveal"></div>
-      <div class="shead-idx">[ 05 ]</div>
-      <div class="shead-main">
-        <h2 class="h2" data-split="words">Find me</h2>
-        <p class="body reveal d1" style="max-width:46ch">
-          The bio says it best — I may be slow to respond, but I do respond.
+<!-- ============================= SAFETY ============================= -->
+<section class="section" id="safety" data-core="ambient">
+  <div class="wrap gate">
+    <div>
+      <div class="section-head" style="margin-bottom:28px">
+        <span class="eyebrow reveal">Permission gate</span>
+        <h2 class="h2 reveal d1">A "no" you can't <span class="grad">talk it out of.</span></h2>
+        <p class="lede reveal d2">
+          Every tool call walks the same ladder, top to bottom. The hard safety
+          denylist sits above every rule you can write — no setting, no "always
+          allow", and no persuasive prompt gets underneath it.
         </p>
+      </div>
+      <div class="modes reveal d3">
+        <div class="mode"><b>Safe</b><span>Everything asks.</span></div>
+        <div class="mode"><b>Default</b><span>Reads run, writes ask.</span></div>
+        <div class="mode"><b>Auto</b><span>Fewest prompts. Denylist holds.</span></div>
       </div>
     </div>
 
-    <div class="contact-grid reveal">
-      <a class="contact-card" href="https://github.com/rxdsec634" target="_blank" rel="noopener">
-        <svg class="icon ci" width="24" height="24"><use href="#i-github"/></svg>
-        <span><b>GitHub</b><span>rxdsec634</span></span>
-      </a>
-      <a class="contact-card" href="https://www.youtube.com/@RXDSEC" target="_blank" rel="noopener">
-        <svg class="icon ci" width="24" height="24"><use href="#i-youtube"/></svg>
-        <span><b>YouTube</b><span>@RXDSEC</span></span>
-      </a>
-      <a class="contact-card" href="https://www.linkedin.com/in/redweb-sec-2a4077240/" target="_blank" rel="noopener">
-        <svg class="icon ci" width="24" height="24"><use href="#i-linkedin"/></svg>
-        <span><b>LinkedIn</b><span>redweb-sec</span></span>
-      </a>
-      <a class="contact-card" href="https://www.instagram.com/rxdsec/" target="_blank" rel="noopener">
-        <svg class="icon ci" width="24" height="24"><use href="#i-instagram"/></svg>
-        <span><b>Instagram</b><span>@rxdsec</span></span>
-      </a>
+    <div class="stack reveal d1" aria-label="Permission ladder, checked top to bottom">
+      <div class="layer hard"><span class="n">01</span><span class="t">hard safety denylist</span><span class="d">not overridable</span></div>
+      <div class="layer"><span class="n">02</span><span class="t">session rules</span><span class="d">this session</span></div>
+      <div class="layer"><span class="n">03</span><span class="t">project rules</span><span class="d">this project</span></div>
+      <div class="layer"><span class="n">04</span><span class="t">global rules</span><span class="d">everywhere</span></div>
+      <div class="layer"><span class="n">05</span><span class="t">tool defaults</span><span class="d">the fallback</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================= DOWNLOAD ============================= -->
+<section class="section" id="get" data-core="slot">
+  <div class="wrap">
+    <div class="dl-band">
+      <div style="display:grid; gap:22px">
+        <span class="eyebrow reveal">Get REX</span>
+        <h2 class="h2 reveal d1">Install it. <span class="grad">Point it at real work.</span></h2>
+        <p class="lede reveal d2" data-os-note>14 days free · no card</p>
+        <div class="os-cards reveal d2">
+          <a class="os-card" data-os-card="windows" href="downloads.html#builds">
+            <span class="ic"><svg class="icon" width="18" height="18"><use href="#i-windows"/></svg></span>
+            <span><b>Windows</b><span>Installer or portable · x64</span></span><em>.exe</em>
+          </a>
+          <a class="os-card" data-os-card="linux" href="downloads.html#builds">
+            <span class="ic"><svg class="icon" width="18" height="18"><use href="#i-linux"/></svg></span>
+            <span><b>Linux</b><span>Debian, Ubuntu, Kali · tarball</span></span><em>.deb</em>
+          </a>
+          <a class="os-card" data-os-card="macos" href="downloads.html#builds">
+            <span class="ic"><svg class="icon" width="18" height="18"><use href="#i-apple"/></svg></span>
+            <span><b>macOS</b><span>In progress · build from source</span></span><em>soon</em>
+          </a>
+        </div>
+        <div class="hero-actions reveal d3">
+          <a class="btn btn-primary" href="downloads.html" data-os-cta><span data-os-label>Download REX</span></a>
+          <button class="btn" type="button" data-share-link hidden>
+            <svg class="icon" width="15" height="15"><use href="#i-externalLink"/></svg><span>Send link to my computer</span>
+          </button>
+          <a class="btn" href="pricing.html"><span>See plans</span></a>
+        </div>
+      </div>
+      <div class="core-slot" style="aspect-ratio:1; min-height:260px" aria-hidden="true"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================= CREATOR ============================= -->
+<section class="section" style="padding-top:0" data-core="ambient">
+  <div class="wrap">
+    <div class="hud creator reveal">
+      <div class="avatar">RX</div>
+      <div>
+        <span class="panel-n">Built by rxdsec</span>
+        <h3 class="h3">A security practitioner who got tired of agents that don't ask.</h3>
+        <p>VAPT, web application testing and AI red teaming by day — REX is the tool built from that work.</p>
+      </div>
+      <a class="btn" href="about.html"><span>About the builder</span><svg class="icon" width="15" height="15"><use href="#i-arrowRight"/></svg></a>
     </div>
   </div>
 </section>
@@ -541,49 +316,35 @@ catch(e){document.documentElement.setAttribute("data-theme","dark");}})();
 </main>
 
 <!-- ============================= FOOTER ============================= -->
-<footer class="site-foot">
+<footer class="foot">
   <div class="wrap">
-    <div class="foot-huge" data-split="chars" data-split-fast>RXDSEC</div>
-
+    <div class="foot-big grad">REX</div>
     <div class="foot-cols">
-      <div>
-        <h5>Site</h5>
-        <a href="#about">About</a>
-        <a href="#work">Work</a>
-        <a href="#arsenal">Arsenal</a>
-        <a href="#contact">Contact</a>
-      </div>
-      <div>
-        <h5>REX</h5>
-        <a href="rex.html">Overview</a>
-        <a href="rex.html#tools">Tools</a>
-        <a href="downloads.html">Downloads</a>
-      </div>
-      <div>
-        <h5>Elsewhere</h5>
-        <a href="https://github.com/rxdsec634" target="_blank" rel="noopener">GitHub</a>
-        <a href="https://www.youtube.com/@RXDSEC" target="_blank" rel="noopener">YouTube</a>
-        <a href="https://www.linkedin.com/in/redweb-sec-2a4077240/" target="_blank" rel="noopener">LinkedIn</a>
-        <a href="https://www.instagram.com/rxdsec/" target="_blank" rel="noopener">Instagram</a>
-      </div>
-      <div>
-        <h5>Colophon</h5>
-        <p class="small" style="max-width:26ch">
-          Space Grotesk &amp; JetBrains Mono. Background is a raymarched
-          volumetric aura — one fragment shader, no geometry.
-        </p>
-      </div>
+      <div><h5>Product</h5><a href="#interface">Interface</a><a href="rex.html">Capabilities</a><a href="#safety">Safety</a><a href="pricing.html">Plans</a></div>
+      <div><h5>Get it</h5><a href="downloads.html">Downloads</a><a href="downloads.html#builds">Checksums</a><a href="https://github.com/rxdsec634" target="_blank" rel="noopener">Source</a></div>
+      <div><h5>Account</h5><a href="account.html">Sign in</a><a href="about.html">About rxdsec</a><a href="about.html#contact">Contact</a></div>
+      <div><h5>Elsewhere</h5><a href="https://github.com/rxdsec634" target="_blank" rel="noopener">GitHub</a><a href="https://www.youtube.com/@RXDSEC" target="_blank" rel="noopener">YouTube</a><a href="https://www.linkedin.com/in/redweb-sec-2a4077240/" target="_blank" rel="noopener">LinkedIn</a><a href="https://www.instagram.com/rxdsec/" target="_blank" rel="noopener">Instagram</a></div>
     </div>
-
-    <div class="foot-end">
-      <span>© <span data-year>2026</span> rxdsec</span>
-      <span>All tooling for authorised testing only</span>
-    </div>
+    <div class="foot-end"><span>© <span data-year>2026</span> rxdsec · MIT</span><span>For work you're authorised to do</span></div>
   </div>
 </footer>
 
-<script src="assets/js/scene.js"></script>
-<script src="assets/js/fx.js"></script>
+<!-- phones: primary actions under the thumb -->
+<nav class="tabbar" aria-label="Quick actions">
+  <a href="index.html"><svg class="icon" width="18" height="18"><use href="#i-sparkle"/></svg>Home</a>
+  <a href="#interface"><svg class="icon" width="18" height="18"><use href="#i-play"/></svg>Demo</a>
+  <a class="hot" href="downloads.html"><svg class="icon" width="18" height="18"><use href="#i-download"/></svg>Get</a>
+  <a href="account.html" data-auth-cta><svg class="icon" width="18" height="18"><use href="#i-key"/></svg><span data-auth-label>Login</span></a>
+</nav>
+
+<script type="importmap">
+{ "imports": {
+    "three": "./assets/vendor/three/build/three.module.min.js",
+    "three/addons/": "./assets/vendor/three/examples/jsm/"
+} }
+</script>
+<script type="module" src="assets/js/core3d.js"></script>
+<script src="assets/js/site.js"></script>
 <script src="assets/js/supabase.js"></script>
 <script src="assets/js/nav-auth.js"></script>
 </body>
