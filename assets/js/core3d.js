@@ -1,5 +1,5 @@
 /* ==================================================================
-   REX — origami eagle → hexagon gate
+   REX — origami eagle → origami lion
    ------------------------------------------------------------------
    One mesh of loose paper facets that holds two shapes:
 
@@ -7,14 +7,15 @@
        gold beak, angry brow, glowing red eyes, and wings built feather
        by feather (leading edge, two covert rows, secondaries, fingered
        primaries) that flap from the shoulder with the hand lagging
-     · a massive origami HEXAGON — pleated frame, inner ring, and the
-       REX bolt at its centre, glowing
+     · an origami LION head facing the viewer — scowling brow, glowing
+       red eyes, gold muzzle, and a mane of folded paper spikes in four
+       interleaved rings, gold at the face to crimson at the edge
 
    Every facet has a slot in both. Scrolling through [data-core-scroll]
    drives p from 0 to 1: each facet breaks off on its own delay, spins
-   along a curved path and re-folds into its place in the hexagon.
-   Facets the hexagon has no slot for become floating fragments.
-   Pages without one fold it over their first screen of scrolling.
+   along a curved path and re-folds into its place in the lion.
+   Facets the lion has no slot for become floating fragments.
+   Pages without one fold it over their first two screens of scrolling.
 
    Placement: data-core="slot" docks the scene into that section's
    .core-slot; other sections dim it so copy stays readable.
@@ -206,66 +207,75 @@ function buildEagle() {
   return tris;
 }
 
-function buildHexagon() {
+function buildLion() {
   const tris = [];
   const V = (x, y, z) => new THREE.Vector3(x, y, z);
   const tri = (a, b, c, color) => tris.push({ v: [a, b, c], color });
-  const corner = (r, k) => {
-    const a = Math.PI / 2 + (k * Math.PI) / 3;
-    return [Math.cos(a) * r, Math.sin(a) * r];
+  const mirror = (p) => V(-p.x, p.y, p.z);
+
+  /* ---- face: hand-placed facets, right half mirrored to the left ----
+     The brow sits low in the middle and high at the sides: the scowl. */
+  const Ct = V(0, 1.2, 0.3), Cb = V(0, 0.5, 0.64), Cr = V(0, 0.1, 0.86), Cn = V(0, -0.33, 1.06);
+  const Cl = V(0, -0.62, 0.96), Cm = V(0, -0.8, 0.86), Cc = V(0, -1.12, 0.62);
+  const R = {
+    fore: V(0.5, 1.05, 0.3), brow: V(0.52, 0.68, 0.5), temple: V(0.96, 0.72, 0.15),
+    eyeIn: V(0.2, 0.36, 0.63), eyeOut: V(0.56, 0.36, 0.48), eyeLow: V(0.38, 0.17, 0.58),
+    cheek: V(0.9, 0.04, 0.3), noseSide: V(0.24, -0.28, 0.89), muzzle: V(0.52, -0.5, 0.72),
+    corner: V(0.34, -0.82, 0.72), jaw: V(0.72, -0.78, 0.35), cheekLow: V(0.99, -0.38, 0.15),
+    earIn: V(0.55, 1.1, 0.2), earTip: V(0.98, 1.52, 0.02), earOut: V(1.13, 0.98, 0.02),
   };
-
-  // outer frame: pleated front, outer and inner walls
-  const Ro = 2.5, Ri = 1.86, Rm = (Ro + Ri) / 2, M = 8, DEPTH = 0.36;
-  for (let k = 0; k < 6; k++) {
-    const o0 = corner(Ro, k), o1 = corner(Ro, k + 1), i0 = corner(Ri, k), i1 = corner(Ri, k + 1), m0 = corner(Rm, k), m1 = corner(Rm, k + 1);
-    for (let s = 0; s < M; s++) {
-      const t0 = s / M, t1 = (s + 1) / M;
-      const at = (a, b, t, z) => V(lerp(a[0], b[0], t), lerp(a[1], b[1], t), z);
-      const zr0 = s % 2 ? 0.14 : 0.24, zr1 = s % 2 ? 0.24 : 0.14; // alternating pleat
-      const O0 = at(o0, o1, t0, 0), O1 = at(o0, o1, t1, 0);
-      const I0 = at(i0, i1, t0, 0.02), I1 = at(i0, i1, t1, 0.02);
-      const R0 = at(m0, m1, t0, zr0), R1 = at(m0, m1, t1, zr1);
-      const hue = ((k + t0) / 6 + 0.08) % 1; // gradient runs round the ring
-      const col = ramp(0.2 + 0.7 * Math.abs(Math.sin(hue * Math.PI)));
-      tri(O0, O1, R1, facet(col)); tri(O0, R1, R0, facet(col.clone().multiplyScalar(0.85)));
-      tri(R0, R1, I1, facet(col.clone().lerp(C.gold, 0.25))); tri(R0, I1, I0, facet(col.clone().lerp(C.gold, 0.25).multiplyScalar(0.85)));
-      const Ob0 = O0.clone().setZ(-DEPTH), Ob1 = O1.clone().setZ(-DEPTH);
-      tri(O0, Ob0, Ob1, facet(C.crimson)); tri(O0, Ob1, O1, facet(C.crimson));
-      const Ib0 = I0.clone().setZ(-DEPTH), Ib1 = I1.clone().setZ(-DEPTH);
-      tri(I0, I1, Ib1, facet(C.deep, 0.2)); tri(I0, Ib1, Ib0, facet(C.deep, 0.2));
-    }
-  }
-
-  // inner ring: thinner pleats, brighter
-  const r2o = 1.58, r2i = 1.38, M2 = 4;
-  for (let k = 0; k < 6; k++) {
-    const o0 = corner(r2o, k), o1 = corner(r2o, k + 1), i0 = corner(r2i, k), i1 = corner(r2i, k + 1);
-    for (let s = 0; s < M2; s++) {
-      const t0 = s / M2, t1 = (s + 1) / M2, tm = (t0 + t1) / 2;
-      const at = (a, b, t, z) => V(lerp(a[0], b[0], t), lerp(a[1], b[1], t), z);
-      const O0 = at(o0, o1, t0, 0.05), O1 = at(o0, o1, t1, 0.05), I0 = at(i0, i1, t0, 0.05), I1 = at(i0, i1, t1, 0.05);
-      const Cn = V(lerp(lerp(o0[0], o1[0], tm), lerp(i0[0], i1[0], tm), 0.5), lerp(lerp(o0[1], o1[1], tm), lerp(i0[1], i1[1], tm), 0.5), 0.13);
-      const col = ramp(0.7 + rnd() * 0.3);
-      tri(O0, O1, Cn, facet(col)); tri(O1, I1, Cn, facet(col.clone().multiplyScalar(0.85)));
-      tri(I1, I0, Cn, facet(col)); tri(I0, O0, Cn, facet(col.clone().multiplyScalar(0.85)));
-    }
-  }
-
-  // the REX bolt at the centre, each facet split around a raised centre
-  const P = (x, y) => new THREE.Vector2(((x - 50) / 42) * 1.2, ((50 - y) / 42) * 1.2);
-  const bolt = [P(56, 20), P(38, 50), P(50, 50), P(44, 78), P(62, 48), P(50, 48)];
-  const faces = THREE.ShapeUtils.triangulateShape(bolt, []);
-  faces.forEach(([a, b, c]) => {
-    const A = V(bolt[a].x, bolt[a].y, 0.18), B = V(bolt[b].x, bolt[b].y, 0.18), Cc = V(bolt[c].x, bolt[c].y, 0.18);
-    const mid = A.clone().add(B).add(Cc).divideScalar(3).setZ(0.3);
-    [[A, B], [B, Cc], [Cc, A]].forEach(([p, q]) => tri(p, q, mid, facet(C.pale.clone().lerp(C.gold, 0.4), 0.12)));
+  const gold = C.gold.clone().lerp(C.orange, 0.35), pale = C.gold.clone(), orange = C.orange.clone().lerp(C.red, 0.2), deep = C.deep, crimson = C.crimson;
+  // [a, b, c, colour] with names from R, or centre points
+  const face = [
+    [Ct, "fore", Cb, gold], ["fore", "brow", Cb, orange], ["fore", "temple", "brow", orange],
+    [Cb, "brow", "eyeIn", crimson], ["brow", "eyeOut", "eyeIn", crimson], ["brow", "temple", "eyeOut", orange],
+    ["eyeIn", "eyeOut", "eyeLow", deep],
+    [Cb, "eyeIn", Cr, gold], ["eyeIn", "eyeLow", Cr, gold], [Cr, "eyeLow", "noseSide", pale], [Cr, "noseSide", Cn, pale],
+    ["eyeOut", "temple", "cheek", orange], ["eyeOut", "cheek", "eyeLow", gold], ["eyeLow", "cheek", "muzzle", gold], ["eyeLow", "muzzle", "noseSide", pale],
+    [Cn, "noseSide", Cl, deep], ["noseSide", "muzzle", Cl, pale], [Cl, "muzzle", "corner", pale], [Cl, "corner", Cm, crimson],
+    [Cm, "corner", Cc, gold], ["corner", "jaw", Cc, orange], ["muzzle", "jaw", "corner", gold], ["muzzle", "cheek", "jaw", orange],
+    ["cheek", "cheekLow", "jaw", crimson], ["temple", "cheekLow", "cheek", crimson],
+    ["earIn", "earTip", "earOut", orange], ["earIn", "earOut", "temple", deep], ["fore", "earIn", "temple", crimson], [Ct, "earIn", "fore", gold],
+  ];
+  const pt = (x) => (typeof x === "string" ? R[x] : x);
+  face.forEach(([a, b, c, col]) => {
+    const A = pt(a), B = pt(b), Cp = pt(c);
+    tri(A, B, Cp, facet(col, 0.14));
+    tri(mirror(A), mirror(Cp), mirror(B), facet(col, 0.14));
   });
-  for (let i = 0; i < bolt.length; i++) {
-    const a = bolt[i], b = bolt[(i + 1) % bolt.length];
-    tri(V(a.x, a.y, 0.18), V(b.x, b.y, 0.18), V(b.x, b.y, -0.1), facet(C.orange));
-    tri(V(a.x, a.y, 0.18), V(b.x, b.y, -0.1), V(a.x, a.y, -0.1), facet(C.orange));
+
+  /* ---- mane: rings of folded paper spikes, gold at the face to crimson at the edge ---- */
+  function spike(a, r0, r1, z0, z1, width, color) {
+    const jit = (rnd() - 0.5) * 0.12;
+    const root = V(Math.cos(a) * r0, Math.sin(a) * r0 * 1.06 - 0.05, z0);
+    const tip = V(Math.cos(a + jit) * r1, Math.sin(a + jit) * r1 * 1.1 - 0.05, z1);
+    const d = tip.clone().sub(root);
+    const len = d.length();
+    d.normalize();
+    const side = V(-d.y, d.x, 0).normalize();
+    const up = V(0, 0, 1);
+    const v1 = root.clone().addScaledVector(d, len * 0.35).addScaledVector(side, width / 2).addScaledVector(up, -0.05);
+    const v3 = root.clone().addScaledVector(d, len * 0.35).addScaledVector(side, -width / 2).addScaledVector(up, -0.05);
+    const c1 = root.clone().addScaledVector(d, len * 0.5).addScaledVector(up, 0.09); // the raised fold
+    const tipC = color.clone().lerp(C.gold, 0.35);
+    tri(root, v1, c1, facet(color));
+    tri(c1, v1, tip, facet(tipC));
+    tri(root, c1, v3, facet(color.clone().multiplyScalar(0.8)));
+    tri(c1, tip, v3, facet(tipC.clone().multiplyScalar(0.8)));
   }
+  const layers = [
+    { n: 18, r0: 0.95, r1: 1.75, z0: 0.12, z1: -0.05, w: 0.5, t: 0.85 },
+    { n: 22, r0: 1.35, r1: 2.3, z0: -0.05, z1: -0.25, w: 0.55, t: 0.6 },
+    { n: 26, r0: 1.85, r1: 2.8, z0: -0.25, z1: -0.5, w: 0.55, t: 0.35 },
+    { n: 30, r0: 2.3, r1: 3.15, z0: -0.5, z1: -0.75, w: 0.5, t: 0.08 },
+  ];
+  layers.forEach((L, li) => {
+    for (let i = 0; i < L.n; i++) {
+      // offset each ring by half a spike so the layers interleave like fur
+      const a = ((i + (li % 2) * 0.5) / L.n) * Math.PI * 2 + Math.PI / 2;
+      spike(a, L.r0, L.r1 * (0.92 + rnd() * 0.16), L.z0, L.z1, L.w, ramp(L.t + (rnd() - 0.5) * 0.15));
+    }
+  });
   return tris;
 }
 
@@ -310,12 +320,12 @@ function boot(canvas) {
   const rig = new THREE.Group();
   scene.add(rig);
 
-  /* ---- facets: pair every eagle facet with a hexagon slot ---- */
+  /* ---- facets: pair every eagle facet with a slot in the lion ---- */
   seed = 1337;
   const eagle = buildEagle();
-  const hex = buildHexagon();
-  // spare eagle facets become fragments orbiting the finished hexagon
-  const targets = hex.map((t) => ({ ...t, frag: false }));
+  const lion = buildLion();
+  // spare eagle facets become fragments orbiting the finished lion
+  const targets = lion.map((t) => ({ ...t, frag: false }));
   while (targets.length < eagle.length) {
     const a = rnd() * Math.PI * 2, r = 2.9 + rnd() * 0.9, z = (rnd() - 0.5) * 1.6, s = 0.07 + rnd() * 0.06;
     const c = new THREE.Vector3(Math.cos(a) * r, Math.sin(a) * r, z);
@@ -324,7 +334,7 @@ function boot(canvas) {
       color: facet(ramp(rnd())), frag: true, orbit: { a, r, z, speed: 0.1 + rnd() * 0.2 },
     });
   }
-  // sort both by x so the left wing folds into the left of the hexagon
+  // sort both by x so the left wing folds into the left of the mane
   const cx = (t) => (t.v[0].x + t.v[1].x + t.v[2].x) / 3 + ((t.v[0].y + t.v[1].y + t.v[2].y) / 3) * 0.15;
   eagle.sort((a, b) => cx(a) - cx(b));
   targets.sort((a, b) => cx(a) - cx(b));
@@ -384,6 +394,18 @@ function boot(canvas) {
     halo.scale.setScalar(0.32);
     g.add(halo);
     g.userData = { local: new THREE.Vector3(s * 0.14, 0.15, 1.1), halo };
+    rig.add(g);
+    return g;
+  });
+  // the lion's eyes: they ignite only once the face has folded together
+  const lionEyeMat = eyeMat.clone();
+  const lionEyes = [-1, 1].map((s) => {
+    const g = new THREE.Group();
+    g.add(new THREE.Mesh(new THREE.OctahedronGeometry(0.07), lionEyeMat));
+    const halo = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, blending: THREE.AdditiveBlending, depthWrite: false, transparent: true }));
+    halo.scale.setScalar(0.55);
+    g.add(halo);
+    g.userData = { local: new THREE.Vector3(s * 0.37, 0.27, 0.64), halo };
     rig.add(g);
     return g;
   });
@@ -462,7 +484,10 @@ function boot(canvas) {
       const r = slotEl.getBoundingClientRect();
       target.x = ((r.left + r.width / 2) / W - 0.5) * visW;
       target.y = -((r.top + r.height / 2) / H - 0.5) * VIS_H;
-      target.s = Math.max(0.2, ((Math.min(r.width * (W < 700 ? 1.02 : 1.25), r.height) / H) * VIS_H) / 2 / OUTER);
+      // a phone is too narrow for the full boost: the wings would leave the screen
+      const boost = Math.min(parseFloat(slotEl.getAttribute("data-core-scale")) || 1, W < 700 ? 1.05 : 9);
+      target.s = boost * Math.max(0.2, ((Math.min(r.width * (W < 700 ? 1.02 : 1.25), r.height) / H) * VIS_H) / 2 / OUTER);
+      target.s *= lerp(1, 0.74, smooth(pCur));
       target.glow = 1;
       docked = true;
     } else {
@@ -473,15 +498,16 @@ function boot(canvas) {
       docked = false;
     }
   }
-  // p: how far the eagle has turned into the hexagon
+  // p: how far the eagle has turned into the lion
   function morphTarget() {
     if (pinned != null) return pinned;
     // pages without a pinned hero still open on the eagle: it folds into the
-    // hexagon over the first screen of scrolling
-    if (!scrollEl) return clamp01(scrollY / Math.max(1, H * 0.9));
+    // lion over the first two screens of scrolling
+    if (!scrollEl) return clamp01(scrollY / Math.max(1, H * 2.2));
     const r = scrollEl.getBoundingClientRect();
     const pinnedSection = r.height > H * 1.5;
-    const span = pinnedSection ? r.height - H : r.height * 0.7;
+    // finish at 85% of the pin, so the lion holds before the page moves on
+    const span = pinnedSection ? (r.height - H) * 0.85 : r.height * 0.7;
     return clamp01(-r.top / Math.max(1, span));
   }
 
@@ -558,7 +584,7 @@ function boot(canvas) {
         const bm = bones[f.bone];
         for (let k = 0; k < 3; k++) vA[k].copy(f.bind[k]).applyMatrix4(bm).applyMatrix4(eagleRoot);
       }
-      // hexagon side
+      // lion side
       if (q > 0) {
         for (let k = 0; k < 3; k++) vB[k].copy(f.hexV[k]);
         if (f.frag && !reduced) {
@@ -653,10 +679,19 @@ function boot(canvas) {
       g.userData.halo.scale.setScalar(0.32 + kick * 0.2);
     });
     eyeMat.opacity = eyeOn;
+    const lionOn = smooth(clamp01((p - 0.82) / 0.16));
+    lionEyes.forEach((g) => {
+      g.position.copy(g.userData.local).applyMatrix4(hexRoot);
+      g.visible = lionOn > 0.01;
+      const flick = reduced ? 1 : 0.88 + 0.12 * Math.sin(t * 11 + g.position.x * 30);
+      g.userData.halo.material.opacity = lionOn * flick;
+      g.userData.halo.scale.setScalar(0.55 + kick * 0.25);
+    });
+    lionEyeMat.opacity = lionOn;
 
-    // glow builds as the hexagon forms
+    // glow builds as the lion forms
     kick = Math.max(0, kick - dt * 1.3);
-    glowU.value = (0.08 + smooth(p) * 0.28 + kick * 0.3) * (0.4 + cur.glow * 0.6);
+    glowU.value = (0.06 + smooth(p) * 0.1 + kick * 0.3) * (0.4 + cur.glow * 0.6);
 
     // sparks burst mid-transformation
     const burst = Math.sin(p * Math.PI);
@@ -691,7 +726,7 @@ function boot(canvas) {
     }
 
     if (composer) {
-      bloom.strength = 0.35 + cur.glow * 0.3 + smooth(p) * 0.35;
+      bloom.strength = 0.3 + cur.glow * 0.25 + smooth(p) * 0.08;
       composer.render();
     } else renderer.render(scene, camera);
     if (!root.classList.contains("core-on")) root.classList.add("core-on");

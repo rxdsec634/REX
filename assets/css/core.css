@@ -289,8 +289,31 @@ html.core-on #core { opacity: 1; }
 
 /* The home hero pins while the eagle folds itself into the hexagon: the
    extra height is the scroll distance the transformation plays over. */
-.hero-scroll { position: relative; height: 230vh; }
+.hero-scroll { position: relative; height: 450vh; }
 .hero-scroll > .hero { position: sticky; top: 0; }
+
+/* Centre stage: the eagle takes the middle of the screen, big, and the copy
+   sits at the bottom over a fade so it stays readable across the wings. */
+.hero-center { align-items: flex-end; }
+.hero-center .hero-grid { grid-template-columns: 1fr; }
+.hero-center .hero-stage {
+  position: absolute; left: 0; right: 0; top: var(--nav-h); bottom: 26%;
+  aspect-ratio: auto; width: auto; margin: 0; order: 0;
+}
+.hero-center::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 40%; z-index: 1; pointer-events: none;
+  background: linear-gradient(180deg, transparent, rgba(5, 4, 6, 0.7) 50%, rgba(5, 4, 6, 0.9));
+}
+.hero-center .hero-copy { z-index: 2; text-align: center; justify-items: center; gap: 18px; min-width: 0; }
+.hero-center .hero-grid > * { min-width: 0; }
+/* the creature is the hero here: the copy is cut to tagline, headline and
+   the two actions, so it keeps to a band along the bottom */
+.hero-center .hero-copy .lede, .hero-center .ticker { display: none; }
+.hero-center .hero-actions { justify-content: center; }
+.hero-center .display { font-size: clamp(30px, 4.2vw, 64px); }
+.hero-center .core-fallback { inset: 22% 38%; }
+.hero-center .display .l2 { display: inline; }
+.hero-center .hero-foot { z-index: 2; }
 
 /* SVG sigil: the no-WebGL / loading fallback, and it fades once the 3D is live */
 .core-fallback {
@@ -674,10 +697,11 @@ html .drawer-in { border-radius: 18px 0 0 18px; }
 @media (max-width: 900px) {
   :root { --nav-h: 58px; }
   .hero { padding-bottom: 140px; }
-  /* one column is taller than a phone screen, so it can't pin; the morph
-     plays over the hero's own scroll instead */
-  .hero-scroll { height: auto; }
-  .hero-scroll > .hero { position: relative; }
+  /* centre-stage hero on phones: the eagle fills the top half and the copy
+     the bottom, which fits one screen — so it pins here too */
+  .hero-center .hero-stage { top: var(--nav-h); bottom: 46%; width: auto; margin: 0; }
+  .hero-center .hero-copy { text-align: center; min-width: 0; width: 100%; }
+  .hero-center .hero-actions .btn { padding: 0 16px; }
   .hero-grid { grid-template-columns: 1fr; gap: 0; }
   .hero-stage { order: -1; width: min(100%, 440px); margin: -10px auto -30px; }
   .hero-copy { text-align: center; justify-items: center; }
@@ -734,6 +758,7 @@ html .drawer-in { border-radius: 18px 0 0 18px; }
   .layer { grid-template-columns: 28px minmax(0, 1fr); }
   .layer .d { display: none; }
   .hero-foot .hide-sm { display: none; }
+  .hero-center .ticker { display: none; }
   .readout { padding: 7px 10px; }
   .readout b { font-size: 16px; }
   .app-body { height: 480px; }
