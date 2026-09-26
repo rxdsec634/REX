@@ -14,7 +14,7 @@
    drives p from 0 to 1: each facet breaks off on its own delay, spins
    along a curved path and re-folds into its place in the hexagon.
    Facets the hexagon has no slot for become floating fragments.
-   Pages without a scroll section show the hexagon.
+   Pages without one fold it over their first screen of scrolling.
 
    Placement: data-core="slot" docks the scene into that section's
    .core-slot; other sections dim it so copy stays readable.
@@ -476,7 +476,9 @@ function boot(canvas) {
   // p: how far the eagle has turned into the hexagon
   function morphTarget() {
     if (pinned != null) return pinned;
-    if (!scrollEl) return 1;
+    // pages without a pinned hero still open on the eagle: it folds into the
+    // hexagon over the first screen of scrolling
+    if (!scrollEl) return clamp01(scrollY / Math.max(1, H * 0.9));
     const r = scrollEl.getBoundingClientRect();
     const pinnedSection = r.height > H * 1.5;
     const span = pinnedSection ? r.height - H : r.height * 0.7;
