@@ -130,6 +130,8 @@ code, .mono { font-family: var(--mono); }
   opacity: 0; transition: opacity 1.2s var(--ease);
 }
 html.core-on #core { opacity: 1; }
+/* behind copy (every section that isn't a docking slot) the scene recedes */
+html.core-on.core-dim #core { opacity: 0.42; transition-duration: 0.6s; }
 
 /* ================= nav ================= */
 
@@ -542,6 +544,11 @@ html.core-on .core-fallback { opacity: 0; }
 .page-head .wrap { display: grid; gap: 22px; }
 .page-head .h1 { max-width: 16ch; }
 .page-head.split-head .wrap { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); align-items: center; }
+/* centred heading over the scene in the background — the Plans layout */
+.page-head.center .wrap, .page-head.center .wrap > div { justify-items: center; text-align: center; }
+.page-head.center .h1 { max-width: 18ch; }
+.page-head.center .lede { margin-inline: auto; }
+.page-head.center .hero-actions, .page-head.center .tags { justify-content: center; }
 .page-head .core-slot { aspect-ratio: 1; width: 100%; max-width: 420px; justify-self: end; }
 
 /* ================= downloads (rendered by downloads.js) ================= */

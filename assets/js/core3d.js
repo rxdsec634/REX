@@ -745,6 +745,9 @@ function boot(canvas) {
       composer.render();
     } else renderer.render(scene, camera);
     if (!root.classList.contains("core-on")) root.classList.add("core-on");
+    // behind copy the whole scene steps back, not just its glow: lit paper
+    // stays bright under text otherwise
+    if (root.classList.contains("core-dim") === docked) root.classList.toggle("core-dim", !docked);
   }
 
   resize();
