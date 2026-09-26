@@ -11,11 +11,11 @@
        red eyes, caramel muzzle, and a mane of folded paper spikes in four
        interleaved rings, caramel at the face to dark chocolate at the edge
 
-   Every facet has a slot in both. Scrolling through [data-core-scroll]
-   drives p from 0 to 1: each facet breaks off on its own delay, spins
-   along a curved path and re-folds into its place in the lion.
-   Facets the lion has no slot for become floating fragments.
-   Pages without one fold it over their first two screens of scrolling.
+   Every facet has a slot in both. Scrolling down the page drives p from
+   0 at the top to 1 near the bottom, the same on every page: each facet
+   breaks off on its own delay, spins along a curved path and re-folds
+   into its place in the lion. Facets the lion has no slot for become
+   floating fragments.
 
    Placement: data-core="slot" docks the scene into that section's
    .core-slot; other sections dim it so copy stays readable.
@@ -482,7 +482,6 @@ function boot(canvas) {
   const cur = { x: 0, y: 0, s: 0.5, glow: 0 };
   let docked = false, slotEl = null;
   const sections = Array.prototype.slice.call(document.querySelectorAll("[data-core]"));
-  const scrollEl = document.querySelector("[data-core-scroll]");
 
   function pickSection() {
     const mid = H * 0.5;
@@ -516,14 +515,11 @@ function boot(canvas) {
   // p: how far the eagle has turned into the lion
   function morphTarget() {
     if (pinned != null) return pinned;
-    // pages without a pinned hero still open on the eagle: it folds into the
-    // lion over the first two screens of scrolling
-    if (!scrollEl) return clamp01(scrollY / Math.max(1, H * 2.2));
-    const r = scrollEl.getBoundingClientRect();
-    const pinnedSection = r.height > H * 1.5;
-    // finish at 85% of the pin, so the lion holds before the page moves on
-    const span = pinnedSection ? (r.height - H) * 0.85 : r.height * 0.7;
-    return clamp01(-r.top / Math.max(1, span));
+    // One rule on every page: eagle at the top, lion at the bottom, folding
+    // across the whole scroll. It completes at 90% so the finished lion is
+    // there before the footer, and a short page still reaches it.
+    const max = document.documentElement.scrollHeight - H;
+    return clamp01(scrollY / Math.max(1, max * 0.9));
   }
 
   let ticking = false;

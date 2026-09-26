@@ -289,11 +289,6 @@ html.core-on.core-dim #core { opacity: 0.42; transition-duration: 0.6s; }
 .hero-copy .display .l2 { display: block; }
 .hero-stage { position: relative; aspect-ratio: 1; }
 
-/* The home hero pins while the eagle folds itself into the hexagon: the
-   extra height is the scroll distance the transformation plays over. */
-.hero-scroll { position: relative; height: 450vh; }
-.hero-scroll > .hero { position: sticky; top: 0; }
-
 /* Centre stage: the eagle takes the middle of the screen, big, and the copy
    sits at the bottom over a fade so it stays readable across the wings. */
 .hero-center { align-items: flex-end; }
@@ -705,7 +700,7 @@ html .drawer-in { border-radius: 18px 0 0 18px; }
   :root { --nav-h: 58px; }
   .hero { padding-bottom: 140px; }
   /* centre-stage hero on phones: the eagle fills the top half and the copy
-     the bottom, which fits one screen — so it pins here too */
+     the bottom, within one screen */
   .hero-center .hero-stage { top: var(--nav-h); bottom: 46%; width: auto; margin: 0; }
   .hero-center .hero-copy { text-align: center; min-width: 0; width: 100%; }
   .hero-center .hero-actions .btn { padding: 0 16px; }
