@@ -1,29 +1,28 @@
 /* ==================================================================
-   REX — the agent, in 3D
+   REX — origami eagle → hexagon gate
    ------------------------------------------------------------------
-   Not a logo. A picture of what REX does:
+   One mesh of loose paper facets that holds two shapes:
 
-     · the MIND — a particle sphere whose surface ripples with noise.
-       It churns harder while REX is thinking.
-     · the GATE — two hexagon rings (the sigil's shape) around the mind.
-       This is the permission gate.
-     · the TOOLS — labelled tiles orbiting outside the gate.
-     · a THOUGHT — a pulse that leaves the mind along a curved synapse
-       toward a tool. Safe tools (read, grep, search) pass straight
-       through. Risky ones (edit, shell, desktop…) stop AT the gate,
-       which flares red — "waiting for approval" — then turns white and
-       lets the pulse through.
+     · an origami EAGLE flying at the viewer — faceted body, hooked
+       gold beak, angry brow, glowing red eyes, and wings built feather
+       by feather (leading edge, two covert rows, secondaries, fingered
+       primaries) that flap from the shoulder with the hand lagging
+     · a massive origami HEXAGON — pleated frame, inner ring, and the
+       REX bolt at its centre, glowing
 
-   The page hears each phase as a `rex:tool` event
-   ({ name, phase: "call" | "gate" | "approved" | "done" }).
+   Every facet has a slot in both. Scrolling through [data-core-scroll]
+   drives p from 0 to 1: each facet breaks off on its own delay, spins
+   along a curved path and re-folds into its place in the hexagon.
+   Facets the hexagon has no slot for become floating fragments.
+   Pages without a scroll section show the hexagon.
 
-   Sections steer the scene: data-core="slot" docks it into that
-   section's .core-slot; anything else is ambient (small, low, dim,
-   labels hidden so no text ever sits under body copy).
+   Placement: data-core="slot" docks the scene into that section's
+   .core-slot; other sections dim it so copy stays readable.
 
-   Performance: 60fps docked / 30fps ambient, paused when hidden, DPR
-   capped, bloom desktop-only, and a governor that sheds bloom then
-   resolution if frames run long. Reduced motion: no clock.
+   Performance: ~600 facets posed on the CPU (cheap), 60fps docked /
+   30fps dimmed, paused when hidden, DPR capped, bloom desktop-only,
+   and a governor that sheds bloom then resolution on long frames.
+   Debug: ?pose=0.5 pins the morph.
    ================================================================== */
 import * as THREE from "three";
 import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
@@ -31,321 +30,409 @@ import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
 import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
 import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
 
-/* Ashima 3D simplex noise — the ripple on the mind's surface */
-const NOISE = `
-vec3 mod289(vec3 x){return x-floor(x*(1.0/289.0))*289.0;}
-vec4 mod289(vec4 x){return x-floor(x*(1.0/289.0))*289.0;}
-vec4 permute(vec4 x){return mod289(((x*34.0)+1.0)*x);}
-vec4 taylorInvSqrt(vec4 r){return 1.79284291400159-0.85373472095314*r;}
-float snoise(vec3 v){
-  const vec2 C=vec2(1.0/6.0,1.0/3.0);const vec4 D=vec4(0.0,0.5,1.0,2.0);
-  vec3 i=floor(v+dot(v,C.yyy));vec3 x0=v-i+dot(i,C.xxx);
-  vec3 g=step(x0.yzx,x0.xyz);vec3 l=1.0-g;vec3 i1=min(g.xyz,l.zxy);vec3 i2=max(g.xyz,l.zxy);
-  vec3 x1=x0-i1+C.xxx;vec3 x2=x0-i2+C.yyy;vec3 x3=x0-D.yyy;
-  i=mod289(i);
-  vec4 p=permute(permute(permute(i.z+vec4(0.0,i1.z,i2.z,1.0))+i.y+vec4(0.0,i1.y,i2.y,1.0))+i.x+vec4(0.0,i1.x,i2.x,1.0));
-  float n_=0.142857142857;vec3 ns=n_*D.wyz-D.xzx;
-  vec4 j=p-49.0*floor(p*ns.z*ns.z);vec4 x_=floor(j*ns.z);vec4 y_=floor(j-7.0*x_);
-  vec4 x=x_*ns.x+ns.yyyy;vec4 y=y_*ns.x+ns.yyyy;vec4 h=1.0-abs(x)-abs(y);
-  vec4 b0=vec4(x.xy,y.xy);vec4 b1=vec4(x.zw,y.zw);
-  vec4 s0=floor(b0)*2.0+1.0;vec4 s1=floor(b1)*2.0+1.0;vec4 sh=-step(h,vec4(0.0));
-  vec4 a0=b0.xzyw+s0.xzyw*sh.xxyy;vec4 a1=b1.xzyw+s1.xzyw*sh.zzww;
-  vec3 p0=vec3(a0.xy,h.x);vec3 p1=vec3(a0.zw,h.y);vec3 p2=vec3(a1.xy,h.z);vec3 p3=vec3(a1.zw,h.w);
-  vec4 norm=taylorInvSqrt(vec4(dot(p0,p0),dot(p1,p1),dot(p2,p2),dot(p3,p3)));
-  p0*=norm.x;p1*=norm.y;p2*=norm.z;p3*=norm.w;
-  vec4 m=max(0.6-vec4(dot(x0,x0),dot(x1,x1),dot(x2,x2),dot(x3,x3)),0.0);m=m*m;
-  return 42.0*dot(m*m,vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3)));
-}`;
+/* ---------------- small deterministic random ---------------- */
+let seed = 1337;
+const rnd = () => ((seed = (seed * 16807) % 2147483647) - 1) / 2147483646;
+const lerp = (a, b, t) => a + (b - a) * t;
+const clamp01 = (x) => Math.max(0, Math.min(1, x));
+const smooth = (x) => x * x * (3 - 2 * x);
+
+/* ---------------- palette: fire and sunlight ---------------- */
+const C = {
+  deep: new THREE.Color(0x4a060c),
+  crimson: new THREE.Color(0xa80f1c),
+  red: new THREE.Color(0xe0232e),
+  orange: new THREE.Color(0xff6418),
+  gold: new THREE.Color(0xffbe32),
+  pale: new THREE.Color(0xffe6a8),
+};
+function ramp(t) {
+  // crimson → red → orange → gold along t
+  const stops = [C.crimson, C.red, C.orange, C.gold];
+  const x = clamp01(t) * (stops.length - 1);
+  const i = Math.min(stops.length - 2, Math.floor(x));
+  return stops[i].clone().lerp(stops[i + 1], x - i);
+}
+// paper: every facet catches light a little differently
+const facet = (c, amt = 0.1) => c.clone().multiplyScalar(1 - amt / 2 + rnd() * amt);
+
+/* ================================================================
+   Geometry builders — each pushes triangles as
+   { v: [x,y,z ×3], color: THREE.Color, bone: n }
+   ================================================================ */
+const BONE = { body: 0, armL: 1, handL: 2, armR: 3, handR: 4, tail: 5 };
+
+function buildEagle() {
+  const tris = [];
+  const V = (x, y, z) => new THREE.Vector3(x, y, z);
+  const tri = (a, b, c, color, bone = BONE.body) => tris.push({ v: [a, b, c], color, bone });
+
+  /* ---- body: rings along z, the head toward the viewer (+z) ---- */
+  const rings = [
+    { z: 1.25, y: 0.06, rx: 0.12, ry: 0.11, t: 0.25 },
+    { z: 1.0, y: 0.1, rx: 0.23, ry: 0.2, t: 0.2 },
+    { z: 0.7, y: 0.03, rx: 0.21, ry: 0.2, t: 0.35 },
+    { z: 0.35, y: -0.02, rx: 0.4, ry: 0.31, t: 0.7 },
+    { z: -0.2, y: -0.03, rx: 0.37, ry: 0.28, t: 0.45 },
+    { z: -0.72, y: 0.02, rx: 0.2, ry: 0.14, t: 0.3 },
+    { z: -0.98, y: 0.03, rx: 0.1, ry: 0.06, t: 0.35 },
+  ];
+  const K = 8;
+  const ringPts = rings.map((r) => {
+    const pts = [];
+    for (let k = 0; k < K; k++) {
+      const a = (k / K) * Math.PI * 2 + Math.PI / 2;
+      const j = 0.92 + rnd() * 0.16; // paper is never perfectly round
+      pts.push(V(Math.cos(a) * r.rx * j, r.y + Math.sin(a) * r.ry * j, r.z + (rnd() - 0.5) * 0.04));
+    }
+    return pts;
+  });
+  for (let r = 0; r < rings.length - 1; r++) {
+    for (let k = 0; k < K; k++) {
+      const a = ringPts[r][k], b = ringPts[r][(k + 1) % K], c = ringPts[r + 1][(k + 1) % K], d = ringPts[r + 1][k];
+      // belly facets lean gold (the eagle's breast), back facets stay deep red
+      const under = Math.sin(((k + 0.5) / K) * Math.PI * 2 + Math.PI / 2) < 0;
+      const base = under ? ramp(0.55 + rings[r].t * 0.4) : ramp(rings[r].t * 0.5);
+      if ((r + k) % 2) { tri(a, b, c, facet(base)); tri(a, c, d, facet(base)); }
+      else { tri(a, b, d, facet(base)); tri(b, c, d, facet(base)); }
+    }
+  }
+  // tail cap
+  const tailTip = V(0, 0.04, -1.05);
+  for (let k = 0; k < K; k++) tri(ringPts[6][k], tailTip, ringPts[6][(k + 1) % K], facet(C.crimson));
+
+  /* ---- beak: hooked, gold ---- */
+  const top = V(0, 0.15, 1.2), L = V(-0.1, 0.02, 1.22), R = V(0.1, 0.02, 1.22);
+  const tip = V(0, 0.0, 1.58), hook = V(0, -0.17, 1.5), chin = V(0, -0.07, 1.28);
+  [[top, L, tip], [top, tip, R], [L, hook, tip], [R, tip, hook], [L, chin, hook], [R, hook, chin]].forEach((t) =>
+    tri(t[0], t[1], t[2], facet(C.gold, 0.14))
+  );
+  // face plate around the beak root
+  for (let k = 0; k < K; k++) tri(ringPts[0][k], ringPts[0][(k + 1) % K], V(0, 0.05, 1.3), facet(C.red));
+
+  /* ---- brow: angled down toward the beak — the scowl ---- */
+  for (const s of [-1, 1]) {
+    tri(V(s * 0.04, 0.24, 1.14), V(s * 0.25, 0.2, 0.96), V(s * 0.1, 0.3, 0.9), facet(C.deep, 0.05));
+    tri(V(s * 0.04, 0.24, 1.14), V(s * 0.19, 0.13, 1.06), V(s * 0.25, 0.2, 0.96), facet(C.crimson, 0.05));
+  }
+
+  /* ---- one folded feather: 4 facets around a raised crease ---- */
+  function feather(root, dir, len, width, color, bone, fold = 0.045) {
+    const d = dir.clone().normalize();
+    const side = new THREE.Vector3().crossVectors(d, V(0, 1, 0)).normalize();
+    const up = new THREE.Vector3().crossVectors(side, d).normalize();
+    const v0 = root.clone();
+    const v1 = root.clone().addScaledVector(d, len * 0.35).addScaledVector(side, width / 2).addScaledVector(up, -fold * 0.4);
+    const v3 = root.clone().addScaledVector(d, len * 0.35).addScaledVector(side, -width / 2).addScaledVector(up, -fold * 0.4);
+    const v2 = root.clone().addScaledVector(d, len);
+    const c1 = root.clone().addScaledVector(d, len * 0.5).addScaledVector(up, fold);
+    const tipC = ramp(0.75).lerp(C.gold, 0.5);
+    tri(v0, v1, c1, facet(color), bone);
+    tri(c1, v1, v2, facet(color.clone().lerp(tipC, 0.5)), bone);
+    tri(v0, c1, v3, facet(color.clone().multiplyScalar(0.82)), bone);
+    tri(c1, v2, v3, facet(color.clone().lerp(tipC, 0.5).multiplyScalar(0.85)), bone);
+  }
+
+  /* ---- wings ---- */
+  for (const s of [-1, 1]) {
+    const arm = s < 0 ? BONE.armL : BONE.armR;
+    const hand = s < 0 ? BONE.handL : BONE.handR;
+    const WRIST = 1.85;
+    const lead = [V(0.28, 0.1, 0.3), V(1.0, 0.17, 0.44), V(WRIST, 0.15, 0.3), V(2.7, 0.08, 0.0)];
+    const leadAt = (x) => {
+      for (let i = 0; i < lead.length - 1; i++) {
+        if (x <= lead[i + 1].x || i === lead.length - 2) {
+          const t = clamp01((x - lead[i].x) / (lead[i + 1].x - lead[i].x));
+          return lead[i].clone().lerp(lead[i + 1], t);
+        }
+      }
+    };
+    const boneAt = (x) => (x < WRIST ? arm : hand);
+    const S = (p) => V(p.x * s, p.y, p.z);
+
+    // leading edge: a pleated strip with a raised ridge
+    const N = 12;
+    let prev = null;
+    for (let k = 0; k <= N; k++) {
+      const x = lerp(0.28, 2.7, k / N);
+      const P = leadAt(x);
+      const chord = lerp(0.3, 0.16, k / N);
+      const Rg = P.clone().add(V(0, 0.05, -chord * 0.5));
+      const B = P.clone().add(V(0, -0.01, -chord));
+      if (prev) {
+        const col = ramp(0.1 + (k / N) * 0.5);
+        const b = boneAt((x + prev.x) / 2);
+        tri(S(prev.P), S(P), S(Rg), facet(col), b); tri(S(prev.P), S(Rg), S(prev.R), facet(col), b);
+        tri(S(prev.R), S(Rg), S(B), facet(col.clone().multiplyScalar(0.8)), b); tri(S(prev.R), S(B), S(prev.B), facet(col.clone().multiplyScalar(0.8)), b);
+      }
+      prev = { P, R: Rg, B, x };
+    }
+
+    // lesser and greater coverts
+    const rows = [{ n: 11, back: 0.22, len: 0.45, w: 0.22, from: 0.35, to: 2.35 }, { n: 10, back: 0.42, len: 0.55, w: 0.25, from: 0.35, to: 2.2 }];
+    rows.forEach((row, ri) => {
+      for (let i = 0; i < row.n; i++) {
+        const x = lerp(row.from, row.to, i / (row.n - 1));
+        const root = leadAt(x).add(V(0, 0.02 - ri * 0.02, -row.back));
+        const dir = V(0.12 + (x / 2.7) * 0.25, -0.05, -1);
+        feather(S(root), V(dir.x * s, dir.y, dir.z), row.len, row.w, ramp(0.15 + (x / 2.7) * 0.45 + ri * 0.08), boneAt(x));
+      }
+    });
+
+    // secondaries along the arm
+    for (let i = 0; i < 10; i++) {
+      const x = lerp(0.35, 1.8, i / 9);
+      const root = leadAt(x).add(V(0, -0.02, -0.62));
+      const dir = V(0.05 + (i / 9) * 0.2, -0.04, -1);
+      feather(S(root), V(dir.x * s, dir.y, dir.z), lerp(1.0, 0.92, i / 9), 0.22, ramp(0.35 + (i / 9) * 0.3), arm, 0.05);
+    }
+
+    // primaries: the fingered wingtip, fanning outward
+    for (let j = 0; j < 9; j++) {
+      const x = lerp(1.75, 2.62, j / 8);
+      const root = leadAt(x).add(V(0, -0.02, -0.22));
+      const ang = 0.25 + j * 0.15;
+      const dir = V(Math.sin(ang), -0.03, -Math.cos(ang));
+      feather(S(root), V(dir.x * s, dir.y, dir.z), 1.12 + j * 0.06, lerp(0.21, 0.16, j / 8), ramp(0.55 + (j / 8) * 0.45), hand, 0.05);
+    }
+  }
+
+  /* ---- tail fan ---- */
+  for (let i = 0; i < 7; i++) {
+    const a = lerp(-0.45, 0.45, i / 6);
+    feather(V(a * 0.35, 0.03, -0.95), V(Math.sin(a), -0.02, -Math.cos(a)), 0.85, 0.22, ramp(0.4 + Math.abs(a) * 0.6), BONE.tail, 0.04);
+  }
+
+  return tris;
+}
+
+function buildHexagon() {
+  const tris = [];
+  const V = (x, y, z) => new THREE.Vector3(x, y, z);
+  const tri = (a, b, c, color) => tris.push({ v: [a, b, c], color });
+  const corner = (r, k) => {
+    const a = Math.PI / 2 + (k * Math.PI) / 3;
+    return [Math.cos(a) * r, Math.sin(a) * r];
+  };
+
+  // outer frame: pleated front, outer and inner walls
+  const Ro = 2.5, Ri = 1.86, Rm = (Ro + Ri) / 2, M = 8, DEPTH = 0.36;
+  for (let k = 0; k < 6; k++) {
+    const o0 = corner(Ro, k), o1 = corner(Ro, k + 1), i0 = corner(Ri, k), i1 = corner(Ri, k + 1), m0 = corner(Rm, k), m1 = corner(Rm, k + 1);
+    for (let s = 0; s < M; s++) {
+      const t0 = s / M, t1 = (s + 1) / M;
+      const at = (a, b, t, z) => V(lerp(a[0], b[0], t), lerp(a[1], b[1], t), z);
+      const zr0 = s % 2 ? 0.14 : 0.24, zr1 = s % 2 ? 0.24 : 0.14; // alternating pleat
+      const O0 = at(o0, o1, t0, 0), O1 = at(o0, o1, t1, 0);
+      const I0 = at(i0, i1, t0, 0.02), I1 = at(i0, i1, t1, 0.02);
+      const R0 = at(m0, m1, t0, zr0), R1 = at(m0, m1, t1, zr1);
+      const hue = ((k + t0) / 6 + 0.08) % 1; // gradient runs round the ring
+      const col = ramp(0.2 + 0.7 * Math.abs(Math.sin(hue * Math.PI)));
+      tri(O0, O1, R1, facet(col)); tri(O0, R1, R0, facet(col.clone().multiplyScalar(0.85)));
+      tri(R0, R1, I1, facet(col.clone().lerp(C.gold, 0.25))); tri(R0, I1, I0, facet(col.clone().lerp(C.gold, 0.25).multiplyScalar(0.85)));
+      const Ob0 = O0.clone().setZ(-DEPTH), Ob1 = O1.clone().setZ(-DEPTH);
+      tri(O0, Ob0, Ob1, facet(C.crimson)); tri(O0, Ob1, O1, facet(C.crimson));
+      const Ib0 = I0.clone().setZ(-DEPTH), Ib1 = I1.clone().setZ(-DEPTH);
+      tri(I0, I1, Ib1, facet(C.deep, 0.2)); tri(I0, Ib1, Ib0, facet(C.deep, 0.2));
+    }
+  }
+
+  // inner ring: thinner pleats, brighter
+  const r2o = 1.58, r2i = 1.38, M2 = 4;
+  for (let k = 0; k < 6; k++) {
+    const o0 = corner(r2o, k), o1 = corner(r2o, k + 1), i0 = corner(r2i, k), i1 = corner(r2i, k + 1);
+    for (let s = 0; s < M2; s++) {
+      const t0 = s / M2, t1 = (s + 1) / M2, tm = (t0 + t1) / 2;
+      const at = (a, b, t, z) => V(lerp(a[0], b[0], t), lerp(a[1], b[1], t), z);
+      const O0 = at(o0, o1, t0, 0.05), O1 = at(o0, o1, t1, 0.05), I0 = at(i0, i1, t0, 0.05), I1 = at(i0, i1, t1, 0.05);
+      const Cn = V(lerp(lerp(o0[0], o1[0], tm), lerp(i0[0], i1[0], tm), 0.5), lerp(lerp(o0[1], o1[1], tm), lerp(i0[1], i1[1], tm), 0.5), 0.13);
+      const col = ramp(0.7 + rnd() * 0.3);
+      tri(O0, O1, Cn, facet(col)); tri(O1, I1, Cn, facet(col.clone().multiplyScalar(0.85)));
+      tri(I1, I0, Cn, facet(col)); tri(I0, O0, Cn, facet(col.clone().multiplyScalar(0.85)));
+    }
+  }
+
+  // the REX bolt at the centre, each facet split around a raised centre
+  const P = (x, y) => new THREE.Vector2(((x - 50) / 42) * 1.2, ((50 - y) / 42) * 1.2);
+  const bolt = [P(56, 20), P(38, 50), P(50, 50), P(44, 78), P(62, 48), P(50, 48)];
+  const faces = THREE.ShapeUtils.triangulateShape(bolt, []);
+  faces.forEach(([a, b, c]) => {
+    const A = V(bolt[a].x, bolt[a].y, 0.18), B = V(bolt[b].x, bolt[b].y, 0.18), Cc = V(bolt[c].x, bolt[c].y, 0.18);
+    const mid = A.clone().add(B).add(Cc).divideScalar(3).setZ(0.3);
+    [[A, B], [B, Cc], [Cc, A]].forEach(([p, q]) => tri(p, q, mid, facet(C.pale.clone().lerp(C.gold, 0.4), 0.12)));
+  });
+  for (let i = 0; i < bolt.length; i++) {
+    const a = bolt[i], b = bolt[(i + 1) % bolt.length];
+    tri(V(a.x, a.y, 0.18), V(b.x, b.y, 0.18), V(b.x, b.y, -0.1), facet(C.orange));
+    tri(V(a.x, a.y, 0.18), V(b.x, b.y, -0.1), V(a.x, a.y, -0.1), facet(C.orange));
+  }
+  return tris;
+}
+
+/* ================================================================ */
 
 function boot(canvas) {
   const root = document.documentElement;
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const coarse = !matchMedia("(pointer: fine)").matches || innerWidth < 820;
+  const pinned = (() => {
+    const v = new URLSearchParams(location.search).get("pose");
+    return v == null ? null : clamp01(parseFloat(v) || 0);
+  })();
 
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: !coarse, powerPreference: "high-performance" });
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: "high-performance" });
   let dprCap = coarse ? 1.25 : 1.5;
   renderer.setPixelRatio(Math.min(devicePixelRatio, dprCap));
   renderer.setClearColor(0x050406, 1);
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.05;
 
   const scene = new THREE.Scene();
-  scene.fog = new THREE.FogExp2(0x050406, 0.045);
-  const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 120);
-  camera.position.set(0, 0, 9);
-  const VIS_H = 2 * 9 * Math.tan(THREE.MathUtils.degToRad(19));
-  const OUTER = 3.7; // radius of the whole rig, used to fit it into a slot
+  scene.fog = new THREE.Fog(0x050406, 12, 24);
+  const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 80);
+  camera.position.set(0, 0.4, 10);
+  camera.lookAt(0, 0, 0);
+  const VIS_H = 2 * 10 * Math.tan(THREE.MathUtils.degToRad(17.5));
+  const OUTER = 2.95;
+
+  /* ---- light: warm key, red rim, soft fill ---- */
+  scene.add(new THREE.HemisphereLight(0xffd9b0, 0x1a0508, 0.75));
+  const key = new THREE.DirectionalLight(0xffc27a, 2.6);
+  key.position.set(-3, 5, 6);
+  scene.add(key);
+  const rim = new THREE.PointLight(0xff2030, 90, 18, 1.6);
+  rim.position.set(0, 1.5, -4);
+  scene.add(rim);
+  const fill = new THREE.PointLight(0xff7a2a, 25, 14, 1.6);
+  fill.position.set(4, -2, 4);
+  scene.add(fill);
 
   const rig = new THREE.Group();
   scene.add(rig);
 
-  /* ================= the mind ================= */
-  const MIND_R = 1.15;
-  const PN = coarse ? 2600 : 7000;
-  const mPos = new Float32Array(PN * 3);
-  const mSeed = new Float32Array(PN);
-  const golden = Math.PI * (3 - Math.sqrt(5));
-  for (let i = 0; i < PN; i++) {
-    const y = 1 - (i / (PN - 1)) * 2;
-    const r = Math.sqrt(1 - y * y);
-    const th = golden * i;
-    mPos[i * 3] = Math.cos(th) * r * MIND_R;
-    mPos[i * 3 + 1] = y * MIND_R;
-    mPos[i * 3 + 2] = Math.sin(th) * r * MIND_R;
-    mSeed[i] = Math.random();
-  }
-  const mindGeo = new THREE.BufferGeometry();
-  mindGeo.setAttribute("position", new THREE.BufferAttribute(mPos, 3));
-  mindGeo.setAttribute("seed", new THREE.BufferAttribute(mSeed, 1));
-
-  const mindU = {
-    uTime: { value: 0 },
-    uAmp: { value: 0.18 },
-    uGlow: { value: 1 },
-    uSize: { value: coarse ? 3.2 : 2.6 },
-    uDpr: { value: renderer.getPixelRatio() },
-  };
-  const mind = new THREE.Points(
-    mindGeo,
-    new THREE.ShaderMaterial({
-      uniforms: mindU,
-      transparent: true,
-      depthWrite: false,
-      blending: THREE.AdditiveBlending,
-      vertexShader: `
-        ${NOISE}
-        uniform float uTime, uAmp, uSize, uDpr;
-        attribute float seed;
-        varying float vN;
-        varying float vSeed;
-        void main(){
-          vec3 p = position;
-          float n = snoise(p * 1.6 + vec3(0.0, uTime * 0.35, uTime * 0.2));
-          float n2 = snoise(p * 4.0 - uTime * 0.6) * 0.35;
-          float d = (n + n2) * uAmp;
-          p *= 1.0 + d;
-          vN = n;
-          vSeed = seed;
-          vec4 mv = modelViewMatrix * vec4(p, 1.0);
-          gl_Position = projectionMatrix * mv;
-          gl_PointSize = uSize * uDpr * (0.55 + 0.9 * max(n, 0.0) + seed * 0.4) * (7.0 / -mv.z);
-        }`,
-      fragmentShader: `
-        uniform float uGlow;
-        varying float vN;
-        varying float vSeed;
-        void main(){
-          vec2 c = gl_PointCoord - 0.5;
-          float d = length(c);
-          if (d > 0.5) discard;
-          float soft = smoothstep(0.5, 0.0, d);
-          vec3 deep = vec3(0.55, 0.03, 0.07);
-          vec3 red  = vec3(1.0, 0.18, 0.24);
-          vec3 hot  = vec3(1.0, 0.86, 0.82);
-          vec3 col = mix(deep, red, smoothstep(-0.4, 0.2, vN));
-          col = mix(col, hot, smoothstep(0.35, 0.85, vN));
-          gl_FragColor = vec4(col, soft * (0.35 + 0.65 * uGlow) * (0.55 + 0.45 * vSeed));
-        }`,
-    })
-  );
-  rig.add(mind);
-
-  // a hot point at the centre of the mind
-  const glowTex = (() => {
-    const c = document.createElement("canvas");
-    c.width = c.height = 128;
-    const g = c.getContext("2d");
-    const grd = g.createRadialGradient(64, 64, 0, 64, 64, 64);
-    grd.addColorStop(0, "rgba(255,230,225,1)");
-    grd.addColorStop(0.18, "rgba(255,70,85,0.7)");
-    grd.addColorStop(0.5, "rgba(255,30,50,0.15)");
-    grd.addColorStop(1, "rgba(255,30,50,0)");
-    g.fillStyle = grd;
-    g.fillRect(0, 0, 128, 128);
-    return new THREE.CanvasTexture(c);
-  })();
-  const heart = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, blending: THREE.AdditiveBlending, depthWrite: false, transparent: true }));
-  heart.scale.setScalar(1.9);
-  rig.add(heart);
-
-  // two fast "iris" rings: attention sweeping around the mind
-  const iris = [];
-  for (let k = 0; k < 2; k++) {
-    const pts = [];
-    for (let i = 0; i <= 96; i++) {
-      const a = (i / 96) * Math.PI * 2;
-      pts.push(new THREE.Vector3(Math.cos(a), Math.sin(a), 0).multiplyScalar(MIND_R * (1.32 + k * 0.1)));
-    }
-    const ring = new THREE.Line(
-      new THREE.BufferGeometry().setFromPoints(pts),
-      new THREE.LineDashedMaterial({ color: 0xff5a66, dashSize: 0.12, gapSize: 0.18, transparent: true, opacity: 0.55, blending: THREE.AdditiveBlending, depthWrite: false })
-    );
-    ring.computeLineDistances();
-    ring.rotation.x = k ? 1.2 : -0.5;
-    ring.rotation.y = k ? 0.4 : -0.3;
-    rig.add(ring);
-    iris.push(ring);
-  }
-
-  /* ================= the gate ================= */
-  const GATE_R = 2.15;
-  const hexLoop = (r) => {
-    const pts = [];
-    for (let i = 0; i <= 6; i++) {
-      const a = (i / 6) * Math.PI * 2 + Math.PI / 2;
-      pts.push(new THREE.Vector3(Math.cos(a) * r, Math.sin(a) * r, 0));
-    }
-    return new THREE.BufferGeometry().setFromPoints(pts);
-  };
-  const gateMat = new THREE.LineBasicMaterial({ color: 0xff2d3d, transparent: true, opacity: 0.55, blending: THREE.AdditiveBlending, depthWrite: false });
-  const gate = new THREE.Group();
-  const gateA = new THREE.Line(hexLoop(GATE_R), gateMat);
-  const gateB = new THREE.Line(hexLoop(GATE_R * 1.04), gateMat);
-  gateB.rotation.y = Math.PI / 2;
-  gate.add(gateA, gateB);
-  // a translucent hex "shield" plane that flares when the gate holds a call
-  const shieldMat = new THREE.MeshBasicMaterial({ color: 0xff2d3d, transparent: true, opacity: 0, side: THREE.DoubleSide, blending: THREE.AdditiveBlending, depthWrite: false });
-  const shield = new THREE.Mesh(new THREE.CircleGeometry(GATE_R, 6, Math.PI / 2), shieldMat);
-  gate.add(shield);
-  rig.add(gate);
-
-  /* ================= tools ================= */
-  const TOOLS = [
-    { name: "read", risk: false }, { name: "grep", risk: false }, { name: "edit", risk: true },
-    { name: "shell", risk: true }, { name: "browser", risk: false }, { name: "git", risk: true },
-    { name: "web_fetch", risk: false }, { name: "memory", risk: false }, { name: "write", risk: true },
-    { name: "desktop", risk: true }, { name: "search", risk: false }, { name: "plan", risk: false },
-  ];
-  const TOOL_R = 3.35;
-
-  function tileTexture(label, risk) {
-    const c = document.createElement("canvas");
-    c.width = 256;
-    c.height = 72;
-    const g = c.getContext("2d");
-    const r = 16;
-    g.beginPath();
-    g.moveTo(r, 2); g.arcTo(254, 2, 254, 70, r); g.arcTo(254, 70, 2, 70, r); g.arcTo(2, 70, 2, 2, r); g.arcTo(2, 2, 254, 2, r);
-    g.closePath();
-    g.fillStyle = "rgba(14,9,11,0.92)";
-    g.fill();
-    g.lineWidth = 2.5;
-    g.strokeStyle = risk ? "rgba(255,70,85,0.95)" : "rgba(255,220,215,0.45)";
-    g.stroke();
-    g.fillStyle = risk ? "#ff4b58" : "#3ee0a1";
-    g.beginPath(); g.arc(30, 36, 6, 0, Math.PI * 2); g.fill();
-    g.fillStyle = "#f5efef";
-    g.font = "500 30px 'JetBrains Mono', ui-monospace, Consolas, monospace";
-    g.textBaseline = "middle";
-    g.fillText(label, 50, 38);
-    const t = new THREE.CanvasTexture(c);
-    t.colorSpace = THREE.SRGBColorSpace;
-    t.anisotropy = 4;
-    return t;
-  }
-
-  const toolRing = new THREE.Group();
-  toolRing.rotation.x = 0.32;
-  rig.add(toolRing);
-  const tiles = TOOLS.map((tool, i) => {
-    const a = (i / TOOLS.length) * Math.PI * 2;
-    const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: tileTexture(tool.name, tool.risk), transparent: true, depthWrite: false }));
-    s.position.set(Math.cos(a) * TOOL_R, Math.sin(a * 2) * 0.35, Math.sin(a) * TOOL_R);
-    s.scale.set(1.5, 0.42, 1);
-    s.userData = { tool, flash: 0, base: s.position.clone() };
-    toolRing.add(s);
-    return s;
-  });
-  // relabel once the mono web font is ready, so the tiles use it
-  if (document.fonts && document.fonts.ready) {
-    document.fonts.ready.then(() => {
-      tiles.forEach((s) => {
-        s.material.map.dispose();
-        s.material.map = tileTexture(s.userData.tool.name, s.userData.tool.risk);
-        s.material.needsUpdate = true;
-      });
+  /* ---- facets: pair every eagle facet with a hexagon slot ---- */
+  seed = 1337;
+  const eagle = buildEagle();
+  const hex = buildHexagon();
+  // spare eagle facets become fragments orbiting the finished hexagon
+  const targets = hex.map((t) => ({ ...t, frag: false }));
+  while (targets.length < eagle.length) {
+    const a = rnd() * Math.PI * 2, r = 2.9 + rnd() * 0.9, z = (rnd() - 0.5) * 1.6, s = 0.07 + rnd() * 0.06;
+    const c = new THREE.Vector3(Math.cos(a) * r, Math.sin(a) * r, z);
+    targets.push({
+      v: [c.clone().add(new THREE.Vector3(s, 0, 0)), c.clone().add(new THREE.Vector3(-s / 2, s, 0)), c.clone().add(new THREE.Vector3(0, -s, s / 2))],
+      color: facet(ramp(rnd())), frag: true, orbit: { a, r, z, speed: 0.1 + rnd() * 0.2 },
     });
   }
+  // sort both by x so the left wing folds into the left of the hexagon
+  const cx = (t) => (t.v[0].x + t.v[1].x + t.v[2].x) / 3 + ((t.v[0].y + t.v[1].y + t.v[2].y) / 3) * 0.15;
+  eagle.sort((a, b) => cx(a) - cx(b));
+  targets.sort((a, b) => cx(a) - cx(b));
 
-  /* ================= thought: synapse + pulse ================= */
-  const SEG = 48;
-  const synGeo = new THREE.BufferGeometry().setFromPoints(new Array(SEG + 1).fill(0).map(() => new THREE.Vector3()));
-  const synMat = new THREE.LineBasicMaterial({ color: 0xff7a84, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false });
-  const synapse = new THREE.Line(synGeo, synMat);
-  rig.add(synapse);
-  const pulse = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, blending: THREE.AdditiveBlending, depthWrite: false, transparent: true, opacity: 0 }));
-  pulse.scale.setScalar(0.55);
-  rig.add(pulse);
+  const N = eagle.length;
+  const pos = new Float32Array(N * 9);
+  const col = new Float32Array(N * 9);
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute("position", new THREE.BufferAttribute(pos, 3).setUsage(THREE.DynamicDrawUsage));
+  geo.setAttribute("color", new THREE.BufferAttribute(col, 3).setUsage(THREE.DynamicDrawUsage));
 
-  // one thought at a time: call → (gate → approved) → done → rest
-  const thought = { active: false, phase: "rest", t: 0, hold: 0, tile: null, curve: null, gateT: 0, restUntil: 0 };
-  const tmp = new THREE.Vector3();
+  const F = eagle.map((e, i) => {
+    const t = targets[i];
+    const eDist = Math.abs(cx(e)) / 3; // wingtips break off first
+    return {
+      bind: e.v, bone: e.bone, cA: e.color, cB: t.color, hexV: t.v, frag: t.frag, orbit: t.orbit,
+      delay: 0.02 + (1 - eDist) * 0.22 + rnd() * 0.12,
+      scatter: new THREE.Vector3(rnd() - 0.5, rnd() - 0.3, rnd() * 0.6).normalize().multiplyScalar(1.2 + rnd() * 1.6),
+      axis: new THREE.Vector3(rnd() - 0.5, rnd() - 0.5, rnd() - 0.5).normalize(),
+      spin: (rnd() > 0.5 ? 1 : -1) * (Math.PI * (1 + rnd() * 2)),
+    };
+  });
 
-  function emit(name, phase) {
-    dispatchEvent(new CustomEvent("rex:tool", { detail: { name, phase } }));
+  const glowU = { value: 0.12 };
+  const mat = new THREE.MeshStandardMaterial({
+    vertexColors: true, flatShading: true, side: THREE.DoubleSide, roughness: 0.62, metalness: 0.05,
+  });
+  // paper that glows: emissive follows each facet's own colour
+  mat.onBeforeCompile = (sh) => {
+    sh.uniforms.uGlow = glowU;
+    sh.fragmentShader = "uniform float uGlow;\n" + sh.fragmentShader.replace(
+      "#include <emissivemap_fragment>",
+      "#include <emissivemap_fragment>\n totalEmissiveRadiance += vColor.rgb * uGlow;"
+    );
+  };
+  const paper = new THREE.Mesh(geo, mat);
+  rig.add(paper);
+
+  /* ---- eyes ---- */
+  const glowTex = (() => {
+    const c = document.createElement("canvas");
+    c.width = c.height = 64;
+    const g = c.getContext("2d");
+    const grd = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+    grd.addColorStop(0, "rgba(255,235,225,1)");
+    grd.addColorStop(0.25, "rgba(255,40,50,0.85)");
+    grd.addColorStop(1, "rgba(255,20,30,0)");
+    g.fillStyle = grd;
+    g.fillRect(0, 0, 64, 64);
+    return new THREE.CanvasTexture(c);
+  })();
+  const eyeMat = new THREE.MeshStandardMaterial({ color: 0xff1a28, emissive: 0xff1020, emissiveIntensity: 4, flatShading: true, transparent: true });
+  const eyes = [-1, 1].map((s) => {
+    const g = new THREE.Group();
+    g.add(new THREE.Mesh(new THREE.OctahedronGeometry(0.045), eyeMat));
+    const halo = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, blending: THREE.AdditiveBlending, depthWrite: false, transparent: true }));
+    halo.scale.setScalar(0.32);
+    g.add(halo);
+    g.userData = { local: new THREE.Vector3(s * 0.14, 0.15, 1.1), halo };
+    rig.add(g);
+    return g;
+  });
+
+  /* ---- sparks (the break-apart burst) and floating shards ---- */
+  const SP = coarse ? 220 : 520;
+  const spBase = new Float32Array(SP * 3);
+  for (let i = 0; i < SP; i++) {
+    const v = new THREE.Vector3(rnd() - 0.5, rnd() - 0.5, rnd() - 0.5).normalize().multiplyScalar(0.6 + rnd() * 2.6);
+    spBase.set([v.x, v.y, v.z], i * 3);
   }
+  const spPos = new Float32Array(spBase);
+  const spGeo = new THREE.BufferGeometry();
+  spGeo.setAttribute("position", new THREE.BufferAttribute(spPos, 3).setUsage(THREE.DynamicDrawUsage));
+  const sparks = new THREE.Points(spGeo, new THREE.PointsMaterial({ color: 0xffb03a, size: 0.045, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false }));
+  rig.add(sparks);
 
-  function think(now, forceTile) {
-    const tile = forceTile || tiles[(Math.random() * tiles.length) | 0];
-    tile.updateWorldMatrix(true, false);
-    const end = tile.getWorldPosition(new THREE.Vector3());
-    rig.worldToLocal(end);
-    const dir = end.clone().normalize();
-    const start = dir.clone().multiplyScalar(MIND_R * 1.05);
-    const ctrl = dir.clone().multiplyScalar(2.4).add(new THREE.Vector3(0, 0.9, 0));
-    const curve = new THREE.QuadraticBezierCurve3(start, ctrl, end);
-    const pts = curve.getPoints(SEG);
-    const p = synGeo.attributes.position;
-    for (let i = 0; i <= SEG; i++) p.setXYZ(i, pts[i].x, pts[i].y, pts[i].z);
-    p.needsUpdate = true;
-    // where along the curve it crosses the gate
-    let gateT = 0.5;
-    for (let i = 0; i <= SEG; i++) if (pts[i].length() >= GATE_R) { gateT = i / SEG; break; }
-    Object.assign(thought, { active: true, phase: "call", t: 0, tile, curve, gateT, hold: 0 });
-    emit(tile.userData.tool.name, "call");
+  const SH = coarse ? 22 : 45;
+  const shards = new THREE.InstancedMesh(new THREE.TetrahedronGeometry(0.05), new THREE.MeshStandardMaterial({ flatShading: true, roughness: 0.7, color: 0x8a3a2a }), SH);
+  const shardInfo = [];
+  for (let i = 0; i < SH; i++) {
+    shardInfo.push({ a: rnd() * Math.PI * 2, r: 5 + rnd() * 6, y: (rnd() - 0.5) * 7, z: -4 - rnd() * 8, s: 0.5 + rnd() * 1.4, spd: 0.03 + rnd() * 0.08, rot: rnd() * 6 });
+    shards.setColorAt(i, facet(ramp(rnd()), 0.3));
   }
+  scene.add(shards);
 
-  /* ================= surroundings ================= */
-  const grid = new THREE.GridHelper(80, 80, 0x4a0a12, 0x170b0f);
-  grid.position.y = -4.4;
+  const grid = new THREE.GridHelper(90, 90, 0x4a0a12, 0x170b0f);
+  grid.position.y = -4.6;
   grid.material.transparent = true;
-  grid.material.opacity = 0.45;
+  grid.material.opacity = 0.4;
   scene.add(grid);
 
-  const DN = coarse ? 350 : 1000;
-  const dPos = new Float32Array(DN * 3);
-  for (let i = 0; i < DN; i++) {
-    const r = 5 + Math.random() * 9;
-    const th = Math.random() * Math.PI * 2;
-    const ph = Math.acos(2 * Math.random() - 1);
-    dPos[i * 3] = r * Math.sin(ph) * Math.cos(th);
-    dPos[i * 3 + 1] = r * Math.cos(ph) * 0.7;
-    dPos[i * 3 + 2] = r * Math.sin(ph) * Math.sin(th) - 2;
-  }
-  const dGeo = new THREE.BufferGeometry();
-  dGeo.setAttribute("position", new THREE.BufferAttribute(dPos, 3));
-  const dust = new THREE.Points(dGeo, new THREE.PointsMaterial({ color: 0xff6b76, size: 0.03, transparent: true, opacity: 0.55, blending: THREE.AdditiveBlending, depthWrite: false }));
-  scene.add(dust);
-
-  /* ================= post ================= */
-  let composer = null;
-  let bloom = null;
+  /* ---- post ---- */
+  let composer = null, bloom = null;
   if (!coarse) {
     composer = new EffectComposer(renderer);
     composer.addPass(new RenderPass(scene, camera));
-    bloom = new UnrealBloomPass(new THREE.Vector2(512, 512), 0.6, 0.35, 0.4);
+    bloom = new UnrealBloomPass(new THREE.Vector2(512, 512), 0.55, 0.45, 0.62);
     composer.addPass(bloom);
     composer.addPass(new OutputPass());
   }
 
-  /* ================= sizing + steering ================= */
-  let W = 0, H = 0;
-  let dirty = true;
+  /* ---- sizing + steering ---- */
+  let W = 0, H = 0, dirty = true;
   function resize() {
-    W = innerWidth;
-    H = innerHeight;
+    W = innerWidth; H = innerHeight;
     renderer.setSize(W, H, false);
     camera.aspect = W / H;
     camera.updateProjectionMatrix();
-    mindU.uDpr.value = renderer.getPixelRatio();
     if (composer) {
       composer.setPixelRatio(Math.min(devicePixelRatio, dprCap));
       composer.setSize(W, H);
@@ -354,11 +441,11 @@ function boot(canvas) {
     dirty = true;
   }
 
-  const target = { x: 0, y: 0, s: 1, glow: 1, labels: 1 };
-  const cur = { x: 0, y: 0, s: 0.5, glow: 0, labels: 0 };
-  let docked = false;
-  let slotEl = null;
+  const target = { x: 0, y: 0, s: 1, glow: 1 };
+  const cur = { x: 0, y: 0, s: 0.5, glow: 0 };
+  let docked = false, slotEl = null;
   const sections = Array.prototype.slice.call(document.querySelectorAll("[data-core]"));
+  const scrollEl = document.querySelector("[data-core-scroll]");
 
   function pickSection() {
     const mid = H * 0.5;
@@ -369,25 +456,31 @@ function boot(canvas) {
     }
     slotEl = found && found.getAttribute("data-core") === "slot" ? found.querySelector(".core-slot") : null;
   }
-
   function steer() {
     const visW = VIS_H * camera.aspect;
     if (slotEl) {
       const r = slotEl.getBoundingClientRect();
       target.x = ((r.left + r.width / 2) / W - 0.5) * visW;
       target.y = -((r.top + r.height / 2) / H - 0.5) * VIS_H;
-      target.s = Math.max(0.25, ((Math.min(r.width, r.height) / H) * VIS_H) / 2 / OUTER);
+      target.s = Math.max(0.2, ((Math.min(r.width * (W < 700 ? 1.02 : 1.25), r.height) / H) * VIS_H) / 2 / OUTER);
       target.glow = 1;
-      target.labels = 1;
       docked = true;
     } else {
       target.x = 0;
-      target.y = -VIS_H * 0.18;
+      target.y = -VIS_H * 0.12;
       target.s = (Math.min(visW, VIS_H) * 0.5) / OUTER;
-      target.glow = 0.2;
-      target.labels = 0;
+      target.glow = 0.22;
       docked = false;
     }
+  }
+  // p: how far the eagle has turned into the hexagon
+  function morphTarget() {
+    if (pinned != null) return pinned;
+    if (!scrollEl) return 1;
+    const r = scrollEl.getBoundingClientRect();
+    const pinnedSection = r.height > H * 1.5;
+    const span = pinnedSection ? r.height - H : r.height * 0.7;
+    return clamp01(-r.top / Math.max(1, span));
   }
 
   let ticking = false;
@@ -400,29 +493,115 @@ function boot(canvas) {
 
   const tilt = { x: 0, y: 0 }, tiltT = { x: 0, y: 0 };
   addEventListener("pointermove", (e) => {
-    tiltT.x = (e.clientY / H - 0.5) * 0.45;
-    tiltT.y = (e.clientX / W - 0.5) * 0.6;
+    tiltT.x = (e.clientY / H - 0.5) * 0.3;
+    tiltT.y = (e.clientX / W - 0.5) * 0.5;
   }, { passive: true });
-
-  // a click on the stage makes REX reach for a risky tool, so the gate is shown on demand
   let kick = 0;
-  addEventListener("rex:pulse", () => {
-    kick = 1;
-    if (!thought.active) {
-      const risky = tiles.filter((s) => s.userData.tool.risk);
-      think(performance.now(), risky[(Math.random() * risky.length) | 0]);
-    }
-  });
+  addEventListener("rex:pulse", () => { kick = 1; });
 
-  /* ================= loop ================= */
+  /* ---- bones: flapping from the shoulder, hand lagging ---- */
+  const bones = new Array(6).fill(0).map(() => new THREE.Matrix4());
+  const tmpA = new THREE.Matrix4(), tmpB = new THREE.Matrix4();
+  const SHOULDER = 0.28, WRIST = 1.85;
+  function hinge(out, pivotX, pivotY, angle, twist) {
+    // rotate about the z axis through (pivotX, pivotY), with a slight twist about x
+    out.makeTranslation(pivotX, pivotY, 0)
+      .multiply(tmpA.makeRotationZ(angle))
+      .multiply(tmpB.makeRotationX(twist))
+      .multiply(new THREE.Matrix4().makeTranslation(-pivotX, -pivotY, 0));
+    return out;
+  }
+  const eagleRoot = new THREE.Matrix4();
+  const hexRoot = new THREE.Matrix4();
+
+  function poseBones(t) {
+    const w = t * 3.2; // wingbeat
+    const beat = reduced ? 0.25 : Math.sin(w);
+    const lag = reduced ? 0.1 : Math.sin(w - 0.7);
+    const a1 = 0.1 + beat * 0.48, a2 = 0.05 + lag * 0.42, tw = beat * 0.08;
+    bones[BONE.body].identity();
+    hinge(bones[BONE.armR], SHOULDER, 0.1, a1, tw);
+    bones[BONE.handR].copy(bones[BONE.armR]).multiply(hinge(new THREE.Matrix4(), WRIST, 0.15, a2, tw));
+    hinge(bones[BONE.armL], -SHOULDER, 0.1, -a1, tw);
+    bones[BONE.handL].copy(bones[BONE.armL]).multiply(hinge(new THREE.Matrix4(), -WRIST, 0.15, -a2, tw));
+    bones[BONE.tail].makeRotationX(reduced ? 0 : Math.sin(w + 1) * 0.08);
+    // the whole bird: bobs against the beat and looks slightly down at you
+    eagleRoot.makeTranslation(0, reduced ? 0 : -beat * 0.12, 0)
+      .multiply(tmpA.makeRotationX(0.62))
+      .multiply(new THREE.Matrix4().makeRotationZ(reduced ? 0 : Math.sin(t * 0.55) * 0.08))
+      .multiply(tmpB.makeRotationY(reduced ? 0 : Math.sin(t * 0.4) * 0.12));
+    return beat;
+  }
+
+  /* ---- per-facet morph ---- */
+  const vA = [new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()];
+  const vB = [new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()];
+  const cA = new THREE.Vector3(), cB = new THREE.Vector3(), cP = new THREE.Vector3(), mid = new THREE.Vector3(), off = new THREE.Vector3(), tmpV = new THREE.Vector3();
+  const tmpC = new THREE.Color();
+  function rotate(v, axis, ang) {
+    // Rodrigues: cheap enough for ~600 facets a frame
+    const c = Math.cos(ang), s = Math.sin(ang);
+    tmpV.crossVectors(axis, v);
+    const d = axis.dot(v) * (1 - c);
+    return v.multiplyScalar(c).addScaledVector(tmpV, s).addScaledVector(axis, d);
+  }
+
+  function writeFacets(p, t) {
+    hexRoot.makeRotationY(reduced ? 0 : Math.sin(t * 0.35) * 0.35).multiply(tmpA.makeRotationX(reduced ? 0 : Math.sin(t * 0.27) * 0.12));
+    for (let i = 0; i < N; i++) {
+      const f = F[i];
+      const q = smooth(clamp01((p - f.delay) / 0.62));
+      // eagle side (skipped entirely once this facet has left the bird)
+      if (q < 1) {
+        const bm = bones[f.bone];
+        for (let k = 0; k < 3; k++) vA[k].copy(f.bind[k]).applyMatrix4(bm).applyMatrix4(eagleRoot);
+      }
+      // hexagon side
+      if (q > 0) {
+        for (let k = 0; k < 3; k++) vB[k].copy(f.hexV[k]);
+        if (f.frag && !reduced) {
+          const o = f.orbit, a = o.a + t * o.speed;
+          const shift = new THREE.Vector3(Math.cos(a) * o.r, Math.sin(a) * o.r, o.z).sub(vB[0]);
+          for (let k = 0; k < 3; k++) vB[k].add(shift);
+        }
+        for (let k = 0; k < 3; k++) vB[k].applyMatrix4(hexRoot);
+      }
+      let out;
+      if (q <= 0) out = vA;
+      else if (q >= 1) out = vB;
+      else {
+        cA.copy(vA[0]).add(vA[1]).add(vA[2]).divideScalar(3);
+        cB.copy(vB[0]).add(vB[1]).add(vB[2]).divideScalar(3);
+        mid.copy(cA).lerp(cB, 0.5).add(f.scatter);
+        // quadratic path A → scatter → B: the facet breaks away, then lands
+        cP.copy(cA).multiplyScalar((1 - q) * (1 - q)).addScaledVector(mid, 2 * (1 - q) * q).addScaledVector(cB, q * q);
+        const ang = f.spin * Math.sin(q * Math.PI);
+        for (let k = 0; k < 3; k++) {
+          off.copy(vA[k]).sub(cA).lerp(tmpV.copy(vB[k]).sub(cB), q);
+          rotate(off, f.axis, ang);
+          vA[k].copy(cP).add(off);
+        }
+        out = vA;
+      }
+      for (let k = 0; k < 3; k++) pos.set([out[k].x, out[k].y, out[k].z], i * 9 + k * 3);
+      tmpC.copy(f.cA).lerp(f.cB, q);
+      for (let k = 0; k < 3; k++) col.set([tmpC.r, tmpC.g, tmpC.b], i * 9 + k * 3);
+    }
+    geo.attributes.position.needsUpdate = true;
+    geo.attributes.color.needsUpdate = true;
+    geo.computeVertexNormals(); // non-indexed: one normal per facet — the paper look
+    geo.computeBoundingSphere();
+  }
+
+  /* ---- ticker: keep the hero's live tool readout alive ---- */
+  const TOOLS = ["read", "grep", "edit", "shell", "browser_navigate", "git", "web_fetch", "memory_read", "codebase_search", "update_plan"];
+  let nextTool = performance.now() + 1500;
+
+  /* ---- loop ---- */
   let visible = !document.hidden;
   document.addEventListener("visibilitychange", () => { visible = !document.hidden; last = performance.now(); });
   const clock0 = performance.now();
-  let last = clock0;
-  let slowFrames = 0;
-  thought.restUntil = clock0 + 900;
-  const gateRed = new THREE.Color(0xff2d3d);
-  const gateHot = new THREE.Color(0xffe2dc);
+  let last = clock0, slowFrames = 0, pCur = morphTarget();
 
   function frame(now) {
     requestAnimationFrame(frame);
@@ -433,9 +612,8 @@ function boot(canvas) {
     if (reduced && !dirty) return;
     last = now;
     dirty = false;
-
     const dt = Math.min(elapsed / 1000, 0.1);
-    const t = reduced ? 8 : (now - clock0) / 1000;
+    const t = (now - clock0) / 1000;
     const k = 1 - Math.pow(0.001, dt);
 
     if (!reduced) {
@@ -444,7 +622,7 @@ function boot(canvas) {
       if (slowFrames > 40) {
         slowFrames = 0;
         if (composer) composer = null;
-        else if (dprCap > 0.75) { dprCap -= 0.25; renderer.setPixelRatio(Math.min(devicePixelRatio, dprCap)); mindU.uDpr.value = renderer.getPixelRatio(); }
+        else if (dprCap > 0.75) { dprCap -= 0.25; renderer.setPixelRatio(Math.min(devicePixelRatio, dprCap)); }
       }
     }
 
@@ -454,93 +632,66 @@ function boot(canvas) {
     rig.scale.setScalar(cur.s);
     tilt.x += (tiltT.x - tilt.x) * k;
     tilt.y += (tiltT.y - tilt.y) * k;
-    rig.rotation.set(tilt.x, tilt.y + Math.sin(t * 0.15) * 0.2, 0);
+    rig.rotation.set(tilt.x, tilt.y, 0);
 
-    /* ---- thought state machine ---- */
-    let gateHeat = 0; // 0 idle, 1 holding (red), -1 just approved (white)
-    if (!thought.active && now > thought.restUntil) think(now);
-    if (thought.active) {
-      const risk = thought.tile.userData.tool.risk;
-      const speed = 0.9;
-      if (thought.phase === "call") {
-        thought.t += dt * speed;
-        if (risk && thought.t >= thought.gateT) {
-          thought.t = thought.gateT;
-          thought.phase = "gate";
-          thought.hold = 0;
-          emit(thought.tile.userData.tool.name, "gate");
-        } else if (thought.t >= 1) thought.phase = "arrive";
-      } else if (thought.phase === "gate") {
-        thought.hold += dt;
-        gateHeat = 1;
-        if (thought.hold > (reduced ? 0 : 1.3)) {
-          thought.phase = "pass";
-          thought.hold = 0;
-          emit(thought.tile.userData.tool.name, "approved");
-        }
-      } else if (thought.phase === "pass") {
-        thought.hold += dt;
-        gateHeat = -1;
-        thought.t += dt * speed;
-        if (thought.t >= 1) thought.phase = "arrive";
-      }
-      if (thought.phase === "arrive") {
-        thought.tile.userData.flash = 1;
-        emit(thought.tile.userData.tool.name, "done");
-        thought.active = false;
-        thought.phase = "rest";
-        thought.restUntil = now + (reduced ? 1e9 : 900 + Math.random() * 1100);
-      }
-      thought.curve.getPoint(Math.min(1, thought.t), tmp);
-      pulse.position.copy(tmp);
-    }
-    const on = thought.active ? 1 : 0;
-    synMat.opacity += ((on ? 0.55 : 0) * (0.4 + cur.glow * 0.6) - synMat.opacity) * Math.min(1, dt * 8);
-    pulse.material.opacity += ((on ? 1 : 0) * (0.3 + cur.glow * 0.7) - pulse.material.opacity) * Math.min(1, dt * 10);
+    const pT = morphTarget();
+    pCur += (pT - pCur) * (reduced ? 1 : Math.min(1, dt * 6));
+    const p = pCur;
 
-    /* ---- mind ---- */
-    kick = Math.max(0, kick - dt * 1.2);
-    const busy = thought.active ? 1 : 0;
-    mindU.uTime.value = t;
-    mindU.uAmp.value += ((0.14 + busy * 0.1 + kick * 0.2) - mindU.uAmp.value) * Math.min(1, dt * 3);
-    mindU.uGlow.value = 0.3 + cur.glow * 0.7;
-    mind.rotation.y = t * 0.12;
-    heart.material.opacity = (0.55 + 0.25 * Math.sin(t * 2.2) + busy * 0.2) * (0.35 + cur.glow * 0.65);
-    iris[0].rotation.z = t * 0.9;
-    iris[1].rotation.z = -t * 0.6;
-    iris.forEach((r) => (r.material.opacity = 0.2 + cur.glow * 0.4));
+    poseBones(t);
+    writeFacets(p, t);
 
-    /* ---- gate ---- */
-    gate.rotation.y = t * 0.12;
-    gate.rotation.z = Math.sin(t * 0.3) * 0.1;
-    const holding = gateHeat === 1;
-    gateMat.color.copy(gateHeat === -1 ? gateHot : gateRed);
-    const gateOp = (holding ? 0.8 + 0.2 * Math.sin(t * 18) : gateHeat === -1 ? 0.9 : 0.4) * (0.35 + cur.glow * 0.65);
-    gateMat.opacity += (gateOp - gateMat.opacity) * Math.min(1, dt * 10);
-    shieldMat.opacity += ((holding ? 0.14 : 0) - shieldMat.opacity) * Math.min(1, dt * 8);
-    gate.scale.setScalar(holding ? 1 + 0.015 * Math.sin(t * 18) : 1);
-
-    /* ---- tools ---- */
-    toolRing.rotation.y = t * 0.08;
-    tiles.forEach((s) => {
-      const u = s.userData;
-      u.flash = Math.max(0, u.flash - dt * 1.4);
-      const lit = thought.active && thought.tile === s ? 0.35 : 0;
-      const g = 1 + u.flash * 0.25 + lit * 0.3;
-      s.scale.set(1.5 * g, 0.42 * g, 1);
-      s.material.opacity = cur.labels * (0.78 + u.flash * 0.22 + lit);
-      s.position.y = u.base.y + Math.sin(t * 0.8 + u.base.x) * 0.06;
+    // eyes ride the head and go dark as the bird comes apart
+    const eyeOn = 1 - smooth(clamp01((p - 0.03) / 0.2));
+    eyes.forEach((g) => {
+      g.position.copy(g.userData.local).applyMatrix4(eagleRoot);
+      g.visible = eyeOn > 0.01;
+      const flick = reduced ? 1 : 0.85 + 0.15 * Math.sin(t * 13 + g.position.x * 40);
+      g.userData.halo.material.opacity = eyeOn * flick;
+      g.userData.halo.scale.setScalar(0.32 + kick * 0.2);
     });
+    eyeMat.opacity = eyeOn;
 
-    dust.rotation.y = t * 0.01;
-    grid.position.z = (t * 0.5) % 1;
+    // glow builds as the hexagon forms
+    kick = Math.max(0, kick - dt * 1.3);
+    glowU.value = (0.08 + smooth(p) * 0.28 + kick * 0.3) * (0.4 + cur.glow * 0.6);
+
+    // sparks burst mid-transformation
+    const burst = Math.sin(p * Math.PI);
+    sparks.material.opacity = burst * 0.9 * (0.4 + cur.glow * 0.6);
+    if (burst > 0.01) {
+      const sc = 0.7 + burst * 1.3;
+      for (let i = 0; i < SP * 3; i += 3) {
+        spPos[i] = spBase[i] * sc + Math.sin(t * 2 + i) * 0.03;
+        spPos[i + 1] = spBase[i + 1] * sc + (reduced ? 0 : ((t * 0.3 + i * 0.013) % 1) * 0.4);
+        spPos[i + 2] = spBase[i + 2] * sc;
+      }
+      spGeo.attributes.position.needsUpdate = true;
+    }
+
+    // drifting shards in the depth of the scene
+    const m = new THREE.Matrix4(), q4 = new THREE.Quaternion(), e = new THREE.Euler(), sv = new THREE.Vector3(), pv = new THREE.Vector3();
+    for (let i = 0; i < SH; i++) {
+      const s = shardInfo[i];
+      const a = s.a + (reduced ? 0 : t * s.spd);
+      pv.set(Math.cos(a) * s.r, s.y + Math.sin(t * 0.3 + i) * 0.2, s.z + Math.sin(a) * 1.5);
+      e.set(s.rot + t * 0.4, s.rot * 2 + t * 0.3, 0);
+      q4.setFromEuler(e);
+      sv.setScalar(s.s);
+      shards.setMatrixAt(i, m.compose(pv, q4, sv));
+    }
+    shards.instanceMatrix.needsUpdate = true;
+    grid.position.z = (t * 0.6) % 1;
+
+    if (now > nextTool && !reduced) {
+      dispatchEvent(new CustomEvent("rex:tool", { detail: { name: TOOLS[(Math.random() * TOOLS.length) | 0], phase: "call" } }));
+      nextTool = now + 1800 + Math.random() * 1400;
+    }
 
     if (composer) {
-      bloom.strength = 0.25 + cur.glow * 0.5 + kick * 0.4;
+      bloom.strength = 0.35 + cur.glow * 0.3 + smooth(p) * 0.35;
       composer.render();
-    } else {
-      renderer.render(scene, camera);
-    }
+    } else renderer.render(scene, camera);
     if (!root.classList.contains("core-on")) root.classList.add("core-on");
   }
 
@@ -549,8 +700,7 @@ function boot(canvas) {
   requestAnimationFrame((n) => { last = n - 100; frame(n); });
 }
 
-// Started last: boot() reads NOISE, which a top-level `const` only
-// defines once the module body reaches it.
+// Started last, after every top-level const above is initialised.
 const canvas = document.getElementById("core");
 if (canvas) {
   try {

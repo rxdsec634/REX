@@ -287,6 +287,11 @@ html.core-on #core { opacity: 1; }
 .hero-copy .display .l2 { display: block; }
 .hero-stage { position: relative; aspect-ratio: 1; }
 
+/* The home hero pins while the eagle folds itself into the hexagon: the
+   extra height is the scroll distance the transformation plays over. */
+.hero-scroll { position: relative; height: 230vh; }
+.hero-scroll > .hero { position: sticky; top: 0; }
+
 /* SVG sigil: the no-WebGL / loading fallback, and it fades once the 3D is live */
 .core-fallback {
   position: absolute; inset: 18%; color: var(--red);
@@ -669,6 +674,10 @@ html .drawer-in { border-radius: 18px 0 0 18px; }
 @media (max-width: 900px) {
   :root { --nav-h: 58px; }
   .hero { padding-bottom: 140px; }
+  /* one column is taller than a phone screen, so it can't pin; the morph
+     plays over the hero's own scroll instead */
+  .hero-scroll { height: auto; }
+  .hero-scroll > .hero { position: relative; }
   .hero-grid { grid-template-columns: 1fr; gap: 0; }
   .hero-stage { order: -1; width: min(100%, 440px); margin: -10px auto -30px; }
   .hero-copy { text-align: center; justify-items: center; }
