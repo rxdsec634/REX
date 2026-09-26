@@ -8,8 +8,8 @@
        by feather (leading edge, two covert rows, secondaries, fingered
        primaries) that flap from the shoulder with the hand lagging
      · an origami LION head facing the viewer — scowling brow, glowing
-       red eyes, gold muzzle, and a mane of folded paper spikes in four
-       interleaved rings, gold at the face to crimson at the edge
+       red eyes, caramel muzzle, and a mane of folded paper spikes in four
+       interleaved rings, caramel at the face to dark chocolate at the edge
 
    Every facet has a slot in both. Scrolling through [data-core-scroll]
    drives p from 0 to 1: each facet breaks off on its own delay, spins
@@ -207,6 +207,21 @@ function buildEagle() {
   return tris;
 }
 
+/* a lion is brown: dark chocolate at the edge of the mane, caramel at the face */
+const CHOC = {
+  dark: new THREE.Color(0x24140b),
+  choc: new THREE.Color(0x4a2c18),
+  milk: new THREE.Color(0x7a4a28),
+  caramel: new THREE.Color(0xa8703f),
+  tan: new THREE.Color(0xc99a66),
+};
+function chocRamp(t) {
+  const stops = [CHOC.dark, CHOC.choc, CHOC.milk, CHOC.caramel];
+  const x = clamp01(t) * (stops.length - 1);
+  const i = Math.min(stops.length - 2, Math.floor(x));
+  return stops[i].clone().lerp(stops[i + 1], x - i);
+}
+
 function buildLion() {
   const tris = [];
   const V = (x, y, z) => new THREE.Vector3(x, y, z);
@@ -224,7 +239,7 @@ function buildLion() {
     corner: V(0.34, -0.82, 0.72), jaw: V(0.72, -0.78, 0.35), cheekLow: V(0.99, -0.38, 0.15),
     earIn: V(0.55, 1.1, 0.2), earTip: V(0.98, 1.52, 0.02), earOut: V(1.13, 0.98, 0.02),
   };
-  const gold = C.gold.clone().lerp(C.orange, 0.35), pale = C.gold.clone(), orange = C.orange.clone().lerp(C.red, 0.2), deep = C.deep, crimson = C.crimson;
+  const gold = CHOC.caramel, pale = CHOC.tan, orange = CHOC.milk, deep = new THREE.Color(0x140a05), crimson = CHOC.choc;
   // [a, b, c, colour] with names from R, or centre points
   const face = [
     [Ct, "fore", Cb, gold], ["fore", "brow", Cb, orange], ["fore", "temple", "brow", orange],
@@ -244,7 +259,7 @@ function buildLion() {
     tri(mirror(A), mirror(Cp), mirror(B), facet(col, 0.14));
   });
 
-  /* ---- mane: rings of folded paper spikes, gold at the face to crimson at the edge ---- */
+  /* ---- mane: rings of folded paper spikes, caramel at the face to dark chocolate at the edge ---- */
   function spike(a, r0, r1, z0, z1, width, color) {
     const jit = (rnd() - 0.5) * 0.12;
     const root = V(Math.cos(a) * r0, Math.sin(a) * r0 * 1.06 - 0.05, z0);
@@ -257,7 +272,7 @@ function buildLion() {
     const v1 = root.clone().addScaledVector(d, len * 0.35).addScaledVector(side, width / 2).addScaledVector(up, -0.05);
     const v3 = root.clone().addScaledVector(d, len * 0.35).addScaledVector(side, -width / 2).addScaledVector(up, -0.05);
     const c1 = root.clone().addScaledVector(d, len * 0.5).addScaledVector(up, 0.09); // the raised fold
-    const tipC = color.clone().lerp(C.gold, 0.35);
+    const tipC = color.clone().lerp(CHOC.caramel, 0.3);
     tri(root, v1, c1, facet(color));
     tri(c1, v1, tip, facet(tipC));
     tri(root, c1, v3, facet(color.clone().multiplyScalar(0.8)));
@@ -273,7 +288,7 @@ function buildLion() {
     for (let i = 0; i < L.n; i++) {
       // offset each ring by half a spike so the layers interleave like fur
       const a = ((i + (li % 2) * 0.5) / L.n) * Math.PI * 2 + Math.PI / 2;
-      spike(a, L.r0, L.r1 * (0.92 + rnd() * 0.16), L.z0, L.z1, L.w, ramp(L.t + (rnd() - 0.5) * 0.15));
+      spike(a, L.r0, L.r1 * (0.92 + rnd() * 0.16), L.z0, L.z1, L.w, chocRamp(L.t + (rnd() - 0.5) * 0.15));
     }
   });
   return tris;
@@ -331,7 +346,7 @@ function boot(canvas) {
     const c = new THREE.Vector3(Math.cos(a) * r, Math.sin(a) * r, z);
     targets.push({
       v: [c.clone().add(new THREE.Vector3(s, 0, 0)), c.clone().add(new THREE.Vector3(-s / 2, s, 0)), c.clone().add(new THREE.Vector3(0, -s, s / 2))],
-      color: facet(ramp(rnd())), frag: true, orbit: { a, r, z, speed: 0.1 + rnd() * 0.2 },
+      color: facet(chocRamp(0.3 + rnd() * 0.7)), frag: true, orbit: { a, r, z, speed: 0.1 + rnd() * 0.2 },
     });
   }
   // sort both by x so the left wing folds into the left of the mane
@@ -487,7 +502,7 @@ function boot(canvas) {
       // a phone is too narrow for the full boost: the wings would leave the screen
       const boost = Math.min(parseFloat(slotEl.getAttribute("data-core-scale")) || 1, W < 700 ? 1.05 : 9);
       target.s = boost * Math.max(0.2, ((Math.min(r.width * (W < 700 ? 1.02 : 1.25), r.height) / H) * VIS_H) / 2 / OUTER);
-      target.s *= lerp(1, 0.74, smooth(pCur));
+      target.s *= lerp(1, 0.58, smooth(pCur));
       target.glow = 1;
       docked = true;
     } else {
