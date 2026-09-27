@@ -51,6 +51,11 @@ const base = `${repo.replace(/\/$/, "")}/releases/download/v${version}/`;
 const TARGETS = [
   { file: `REX Setup ${version}.exe`, asset: `REX.Setup.${version}.exe`, platform: "win32", arch: "x64" },
   { file: `rex_${version}_amd64.deb`, asset: `rex_${version}_amd64.deb`, platform: "linux", arch: "x64" },
+  // After the .deb on purpose: clients before 0.2.9 take the FIRST linux asset,
+  // and they only know how to handle a .deb. Newer clients pick by how they
+  // were installed (see linuxInstallKind in the updater), so a tarball install
+  // updates from the tarball instead of being handed a package.
+  { file: `rex-${version}-linux-x64.tar.gz`, asset: `rex-${version}-linux-x64.tar.gz`, platform: "linux", arch: "x64" },
 ];
 
 /**
