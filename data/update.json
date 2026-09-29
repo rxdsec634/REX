@@ -3,8 +3,8 @@
   "channels": {
     "stable": [
       {
-        "version": "0.2.9",
-        "releasedAt": "2026-09-27",
+        "version": "0.3.0",
+        "releasedAt": "2026-09-29",
         "mandatory": false,
         "draft": false,
         "notes": "",
@@ -12,23 +12,23 @@
           {
             "platform": "win32",
             "arch": "x64",
-            "url": "https://github.com/rxdsec634/REX/releases/download/rex/REX.Setup.0.2.9.exe",
-            "size": 90626629,
-            "sha256": "5fb2939470b6705f292e052ac419812dfec01d117ca70801e55d9df30358624d"
+            "url": "https://github.com/rxdsec634/REX/releases/download/rex/REX.Setup.0.3.0.exe",
+            "size": 90677221,
+            "sha256": "b56cd17a4faa1f743550acd8a44895c42481f1a80a6eb496614b3268d3f7a938"
           },
           {
             "platform": "linux",
             "arch": "x64",
-            "url": "https://github.com/rxdsec634/REX/releases/download/rex/rex_0.2.9_amd64.deb",
-            "size": 122162208,
-            "sha256": "fdb7fa44db630b2950dc56a20faba124e681ae8c7790094297bdabcc86a52381"
+            "url": "https://github.com/rxdsec634/REX/releases/download/rex/rex_0.3.0_amd64.deb",
+            "size": 122240070,
+            "sha256": "cdff35b9668e77330794b53b642290ed98d960b7b0d82c64bc7270923874bbeb"
           },
           {
             "platform": "linux",
             "arch": "x64",
-            "url": "https://github.com/rxdsec634/REX/releases/download/rex/rex-0.2.9-linux-x64.tar.gz",
-            "size": 122146156,
-            "sha256": "78d4b301e9622c699bab3fdb2c51420ca045110014d1b311e2a2f04e590bced7"
+            "url": "https://github.com/rxdsec634/REX/releases/download/rex/rex-0.3.0-linux-x64.tar.gz",
+            "size": 122223560,
+            "sha256": "8c807137adeb3e3fe8384fb30912858c3e4135c13fad1915e17cc4db998fb2b9"
           }
         ]
       }

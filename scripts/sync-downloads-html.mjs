@@ -33,21 +33,33 @@ function locate(...parts) {
 const HTML = locate("downloads.html");
 const JSON_FILE = locate("data", "downloads.json");
 
-/* rex.html carries the version in prose, which is the kind of copy nobody
-   thinks to update — it still read v0.1.0 four releases later. Stamping it from
-   the same manifest keeps the two from disagreeing, which is the only reason
-   this file exists at all. */
-const REX_HTML = locate("rex.html");
-const REX_VERSION_RE = /(<span data-rex-version>)([^<]*)(<\/span>)/;
+/* Pages carry the version in prose, which is the kind of copy nobody thinks
+   to update — rex.html still read v0.1.0 four releases later, and when only
+   rex.html was stamped the home page's hero sat at 0.2.8 while 0.3.0 shipped.
+   So stamp every top-level page that marks its version with
+   <span data-rex-version>, not a list of pages someone has to remember. */
+const SITE_DIR = path.dirname(HTML);
+const REX_VERSION_RE = /(<span data-rex-version>)([^<]*)(<\/span>)/g;
 
+/** Returns the pages whose version was stale (and, unless dryRun, fixes them). */
 function stampRexVersion(version, { check: dryRun } = {}) {
-  if (!fs.existsSync(REX_HTML)) return null;
-  const html = fs.readFileSync(REX_HTML, "utf8");
-  const m = REX_VERSION_RE.exec(html);
-  if (!m) return null;                 // marker removed: nothing to keep in sync
-  if (m[2] === version) return false;  // already correct
-  if (!dryRun) fs.writeFileSync(REX_HTML, html.replace(REX_VERSION_RE, `$1${version}$3`));
-  return true;                         // was stale
+  const stale = [];
+  if (!version) return stale;
+  for (const name of fs.readdirSync(SITE_DIR)) {
+    if (!name.endsWith(".html")) continue;
+    const file = path.join(SITE_DIR, name);
+    const html = fs.readFileSync(file, "utf8");
+    let wrong = false;
+    const fixed = html.replace(REX_VERSION_RE, (all, open, v, close) => {
+      if (v === version) return all;
+      wrong = true;
+      return open + version + close;
+    });
+    if (!wrong) continue;
+    stale.push(name);
+    if (!dryRun) fs.writeFileSync(file, fixed);
+  }
+  return stale;
 }
 
 const check = process.argv.includes("--check");
@@ -81,8 +93,9 @@ if (check) {
     console.error("Run: node scripts/sync-downloads-html.mjs");
     process.exit(1);
   }
-  if (stampRexVersion(manifest.release?.version, { check: true })) {
-    console.error("rex.html advertises a different version to downloads.json.");
+  const stale = stampRexVersion(manifest.release?.version, { check: true });
+  if (stale.length) {
+    console.error(`${stale.join(", ")}: advertises a different version to downloads.json.`);
     console.error("Run: node scripts/sync-downloads-html.mjs");
     process.exit(1);
   }
@@ -118,6 +131,7 @@ if (version) {
 fs.writeFileSync(HTML, out);
 console.log(`Synced web/downloads.html from downloads.json (version ${version}).`);
 
-if (stampRexVersion(version)) {
-  console.log(`Also corrected the version on rex.html to ${version}.`);
+const restamped = stampRexVersion(version);
+if (restamped.length) {
+  console.log(`Also corrected the version to ${version} on: ${restamped.join(", ")}.`);
 }
