@@ -446,6 +446,27 @@
     paintDetail();
   })();
 
+  /* ---------------- version badge ----------------
+     Keep every [data-rex-version] in step with the release the download page
+     shows. Both read data/downloads.json (release.version), so the hero badge
+     can never again lag behind the downloads list after a version bump. The
+     static text in the HTML is the fallback when the fetch can't run. */
+  (function () {
+    var slots = document.querySelectorAll("[data-rex-version]");
+    if (!slots.length) return;
+    var setAll = function (v) {
+      if (!v) return;
+      slots.forEach(function (el) { el.textContent = String(v); });
+    };
+    var fromManifest = function (m) { return m && m.release && m.release.version; };
+    // file:// can't fetch — use the inline copy the downloads page also ships.
+    if (location.protocol === "file:") { setAll(fromManifest(window.__DOWNLOADS__)); return; }
+    fetch("data/downloads.json", { cache: "no-cache" })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (m) { setAll(fromManifest(m)); })
+      .catch(function () { setAll(fromManifest(window.__DOWNLOADS__)); });
+  })();
+
   /* ---------------- service worker ---------------- */
   if ("serviceWorker" in navigator && location.protocol !== "file:") {
     addEventListener("load", function () { navigator.serviceWorker.register("sw.js").catch(function () {}); });
