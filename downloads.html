@@ -89,15 +89,15 @@
         <h3 class="h3">Compare the hash</h3>
         <p style="margin-bottom:16px">If the printed hash differs from the one on the build, don't run it.</p>
         <div class="code"><span class="c"># Windows</span>
-certutil -hashfile "REX Setup 0.3.1.exe" SHA256
+certutil -hashfile "REX Setup 0.3.2.exe" SHA256
 <span class="c"># Linux / macOS</span>
-sha256sum rex_0.3.1_amd64.deb</div>
+sha256sum rex_0.3.2_amd64.deb</div>
       </article>
       <article class="hud reveal d1">
         <span class="panel-n">Debian family</span>
         <h3 class="h3">Install with apt</h3>
         <p style="margin-bottom:16px">Use <code>apt</code>, not <code>dpkg -i</code> — it pulls the dependencies for you.</p>
-        <div class="code">sudo apt install ./rex_0.3.1_amd64.deb
+        <div class="code">sudo apt install ./rex_0.3.2_amd64.deb
 rex
 <span class="c"># desktop tools need xdotool (X11)</span>
 <span class="c"># or ydotool under Wayland</span></div>
@@ -160,7 +160,7 @@ window.__DOWNLOADS__ = {
   "$comment": "Addresses and checksums are resolved live: the releases table in Supabase first, then the GitHub release. This file is the fallback and the source of everything those two have no opinion about — wording, install commands, ordering. Regenerate the inline copy in downloads.html with scripts/sync-downloads-html.mjs.",
   "release": {
     "product": "REX",
-    "version": "0.3.1",
+    "version": "0.3.2",
     "date": "2026-09-30",
     "license": "MIT",
     "repo": "https://github.com/rxdsec634/REX",
@@ -177,75 +177,75 @@ window.__DOWNLOADS__ = {
       "id": "win32-portable",
       "os": "windows",
       "osLabel": "Windows",
-      "title": "REX 0.3.1.exe",
+      "title": "REX 0.3.2.exe",
       "subtitle": "Portable single file. No install, no registry writes — run it from a USB stick.",
       "icon": "power",
-      "size": 91126123,
-      "sha256": "5a2ffeb36cf902c173e1190b2de844bbf660ad1b0efd2c7191d8318552ee9104",
-      "url": "https://github.com/rxdsec634/REX/releases/download/rex/REX.0.3.1.exe",
+      "size": 90631117,
+      "sha256": "b94ce431702dd84ae2781c0bf624acf75346e6229aaf2b581d111c15cb275bd3",
+      "url": "https://github.com/rxdsec634/REX/releases/download/rex/REX.0.3.2.exe",
       "tags": [
         "x64",
         "portable"
       ],
-      "verify": "certutil -hashfile \"REX 0.3.1.exe\" SHA256"
+      "verify": "certutil -hashfile \"REX 0.3.2.exe\" SHA256"
     },
     {
       "id": "win32-installer",
       "os": "windows",
       "osLabel": "Windows",
-      "title": "REX Setup 0.3.1.exe",
+      "title": "REX Setup 0.3.2.exe",
       "subtitle": "NSIS installer — Windows 10/11, x64. Adds a Start-menu entry and file associations.",
       "icon": "window",
       "primary": true,
-      "size": 91353066,
-      "sha256": "9335d1ed876ce8a99d191a59b8f934cb2e1286f0ca9582d61a009020af1a366b",
-      "url": "https://github.com/rxdsec634/REX/releases/download/rex/REX.Setup.0.3.1.exe",
+      "size": 90858006,
+      "sha256": "5854dde3dea7db5980c22819603f3e4a8e277a8f49b181d9ca43c920ec2aa88d",
+      "url": "https://github.com/rxdsec634/REX/releases/download/rex/REX.Setup.0.3.2.exe",
       "tags": [
         "x64",
         "recommended"
       ],
-      "verify": "certutil -hashfile \"REX Setup 0.3.1.exe\" SHA256"
+      "verify": "certutil -hashfile \"REX Setup 0.3.2.exe\" SHA256"
     },
     {
       "id": "linux-tarball",
       "os": "linux",
       "osLabel": "Linux",
-      "title": "rex-0.3.1-linux-x64.tar.gz",
+      "title": "rex-0.3.2-linux-x64.tar.gz",
       "subtitle": "Distro-agnostic tarball. Extract anywhere and run ./rex — no package manager involved.",
       "icon": "archive",
-      "size": 123192297,
-      "sha256": "2219661bb98cd40106eb24e8b4f9841c890d7ffe584bf8c6ac2ad1d5ca50aaae",
-      "url": "https://github.com/rxdsec634/REX/releases/download/rex/rex-0.3.1-linux-x64.tar.gz",
+      "size": 122495879,
+      "sha256": "c9f04289e26e9e77b326818e1ab70f617ea1996a629095c61b192bfe92b08d0c",
+      "url": "https://github.com/rxdsec634/REX/releases/download/rex/rex-0.3.2-linux-x64.tar.gz",
       "tags": [
         "x64",
         "no-root"
       ],
-      "install": "tar -xzf rex-0.3.1-linux-x64.tar.gz && ./rex/rex",
-      "verify": "sha256sum rex-0.3.1-linux-x64.tar.gz"
+      "install": "tar -xzf rex-0.3.2-linux-x64.tar.gz && ./rex/rex",
+      "verify": "sha256sum rex-0.3.2-linux-x64.tar.gz"
     },
     {
       "id": "linux-deb",
       "os": "linux",
       "osLabel": "Linux",
-      "title": "rex_0.3.1_amd64.deb",
+      "title": "rex_0.3.2_amd64.deb",
       "subtitle": "Debian / Ubuntu / Kali. Installs to /opt/REX, puts rex on your PATH, registers a desktop entry.",
       "icon": "terminal",
       "primary": true,
-      "size": 123207728,
-      "sha256": "6568d13d16ae4618211ff015622eccd22e6b11d87775390ce2084f135ab4707a",
-      "url": "https://github.com/rxdsec634/REX/releases/download/rex/rex_0.3.1_amd64.deb",
+      "size": 122511146,
+      "sha256": "485055898147824fe6ad05bccca044464a6fcf62f98eccd5eb374cc7fd6ab82b",
+      "url": "https://github.com/rxdsec634/REX/releases/download/rex/rex_0.3.2_amd64.deb",
       "tags": [
         "amd64",
         "kali-ready"
       ],
-      "install": "sudo apt install ./rex_0.3.1_amd64.deb",
-      "verify": "sha256sum rex_0.3.1_amd64.deb"
+      "install": "sudo apt install ./rex_0.3.2_amd64.deb",
+      "verify": "sha256sum rex_0.3.2_amd64.deb"
     },
     {
       "id": "macos",
       "os": "macos",
       "osLabel": "macOS",
-      "title": "REX-0.3.1.dmg",
+      "title": "REX-0.3.2.dmg",
       "subtitle": "Apple silicon and Intel. Build target is configured; a signed artifact has not been published yet.",
       "icon": "monitor",
       "size": 0,
