@@ -3,32 +3,32 @@
   "channels": {
     "stable": [
       {
-        "version": "0.3.3",
-        "releasedAt": "2026-10-01",
+        "version": "0.3.6",
+        "releasedAt": "2026-10-07",
         "mandatory": false,
         "draft": false,
-        "notes": "",
+        "notes": "- Reading a directory now returns a real recursive tree (depth, per-file sizes and kinds, totals) instead of a flat name list; truncation and skipped dirs like node_modules are declared rather than silently hidden. - Settings redesigned: provider cards became rows in one list, the active tab is weight plus an accent bar, machine identities are mono, and every section gained one line saying what it is for. - Tool rows set to 32px with a 10px gutter, matching the new design.",
         "assets": [
           {
             "platform": "win32",
             "arch": "x64",
-            "url": "https://github.com/rxdsec634/REX/releases/download/rex/REX.Setup.0.3.3.exe",
-            "size": 90861161,
-            "sha256": "751677deb8417e5e1fcf145d9bd94d54cad74017b7c9903aebe1e3a8d28d1b2c"
+            "url": "https://github.com/rxdsec634/REX/releases/download/rex/REX.Setup.0.3.6.exe",
+            "size": 90886346,
+            "sha256": "f71775d7840be0d712efcd4c002aee44cbf6e794bc1d645f0c82d0f785e197dc"
           },
           {
             "platform": "linux",
             "arch": "x64",
-            "url": "https://github.com/rxdsec634/REX/releases/download/rex/rex_0.3.3_amd64.deb",
-            "size": 122515224,
-            "sha256": "85fceb2754a17a5656b66dd4b53ad258fb025f23c113f0a131d834e167ac9d6f"
+            "url": "https://github.com/rxdsec634/REX/releases/download/rex/rex_0.3.6_amd64.deb",
+            "size": 122555190,
+            "sha256": "c20dec13172ebd0b64296d3b4b57bdf955589f423de3dcc07185f29b89eab0be"
           },
           {
             "platform": "linux",
             "arch": "x64",
-            "url": "https://github.com/rxdsec634/REX/releases/download/rex/rex-0.3.3-linux-x64.tar.gz",
-            "size": 122499686,
-            "sha256": "e0b58cffb3ddf3b3d7d4916af65f908a10d57e89fb37bc2d34010bcb45ccee72"
+            "url": "https://github.com/rxdsec634/REX/releases/download/rex/rex-0.3.6-linux-x64.tar.gz",
+            "size": 122539766,
+            "sha256": "77d6aca13ad163b0f61ac916f544ea9d66af62e51af9133cc7f14cbd9780f611"
           }
         ]
       }
