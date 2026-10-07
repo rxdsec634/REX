@@ -164,7 +164,7 @@
           var isAnchor = href.charAt(0) === "#";
           return (
             '<a class="irow" href="' + esc(href) + '"' +
-            (ext ? ' target="_blank" rel="noopener"' : isAnchor ? "" : " download") + ">" +
+            (ext ? ' target="_blank" rel="noopener"' : (isAnchor || /\.html?([?#]|$)/i.test(href)) ? "" : " download") + ">" +
             '<span class="irow-n">' + String(n).padStart(3, "0") + "</span>" +
             "<span><span class=\"irow-t\">" + esc(p.name) + "</span>" +
             '<span class="irow-tags">' +
