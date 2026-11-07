@@ -71,13 +71,14 @@
       return groups[o] && groups[o].length;
     });
 
-    var active = detectOS();
+    var previous = tabsEl.querySelector('.os-tab[aria-selected="true"]');
+    var active = previous ? previous.getAttribute("data-os") : detectOS();
     if (present.indexOf(active) === -1) active = present[0];
 
     tabsEl.innerHTML = present
       .map(function (os) {
         return (
-          '<button class="os-tab" role="tab" data-os="' + os + '" aria-selected="' + (os === active) + '">' +
+          '<button type="button" class="os-tab" role="tab" id="os-tab-' + os + '" aria-controls="dl-list" tabindex="' + (os === active ? '0' : '-1') + '" data-os="' + os + '" aria-selected="' + (os === active) + '">' +
           svg(OS_ICON[os] || "download", 15) +
           "<span>" + esc(groups[os][0].osLabel || os) + "</span>" +
           '<span class="cnt">' + groups[os].length + "</span></button>"
@@ -140,17 +141,33 @@
 
     function paint(os) {
       listEl.innerHTML = (groups[os] || []).map(row).join("");
+      listEl.setAttribute("role", "tabpanel");
+      listEl.setAttribute("aria-labelledby", "os-tab-" + os);
       Array.prototype.forEach.call(tabsEl.querySelectorAll(".os-tab"), function (t) {
         t.setAttribute("aria-selected", String(t.getAttribute("data-os") === os));
+        t.tabIndex = t.getAttribute("data-os") === os ? 0 : -1;
       });
     }
 
     paint(active);
 
-    tabsEl.addEventListener("click", function (e) {
+    tabsEl.onclick = function (e) {
       var t = e.target.closest(".os-tab");
       if (t) paint(t.getAttribute("data-os"));
-    });
+    };
+    tabsEl.onkeydown = function (e) {
+      var tab = e.target.closest(".os-tab");
+      if (!tab) return;
+      var index = present.indexOf(tab.getAttribute("data-os"));
+      if (e.key === "ArrowRight") index = (index + 1) % present.length;
+      else if (e.key === "ArrowLeft") index = (index + present.length - 1) % present.length;
+      else if (e.key === "Home") index = 0;
+      else if (e.key === "End") index = present.length - 1;
+      else return;
+      e.preventDefault();
+      paint(present[index]);
+      document.getElementById("os-tab-" + present[index]).focus();
+    };
 
     /* ---------- projects, as index rows ---------- */
     if (projEl) {
@@ -403,6 +420,9 @@
       return r.json();
     })
     .then(function (data) {
+      // Show the local manifest immediately. Optional release sources must
+      // never leave visitors staring at a spinner while the network stalls.
+      boot(data);
       return withSupabase(data).then(function (r) {
         // Only ask GitHub when the table had nothing to say. Two sources
         // racing to set the same field is how they end up disagreeing.

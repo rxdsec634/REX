@@ -16,26 +16,32 @@
        hundreds of megabytes and have no business in a browser cache.
    ================================================================== */
 
-// v7: the Core redesign — new stylesheet and scripts, and the About page.
-var VERSION = "rxdsec-v7";
+// v9: cinematic redesign; only the current public shell is precached.
+var VERSION = "rxdsec-cinematic-v9";
 
 var SHELL = [
   "index.html",
   "rex.html",
+  "rex-browser.html",
   "about.html",
   "downloads.html",
   "pricing.html",
-  "assets/css/core.css",
+  "assets/css/studio.css",
+  "assets/css/cinema.css",
+  "assets/css/portfolio.css",
   "assets/css/forms.css",
   "assets/js/icons.js",
-  "assets/js/site.js",
-  "assets/js/core3d.js",
+  "assets/js/studio.js",
+  "assets/js/cinema-motion.js",
+  "assets/js/cinema-core.js",
+  "assets/vendor/three/three.module.min.js",
   "assets/js/downloads.js",
   "assets/js/supabase.js",
   "assets/js/nav-auth.js",
-  "assets/img/mark.svg",
+  "assets/img/rex-mark-editorial.svg",
+  "assets/img/rex-core-fallback.svg",
   "data/downloads.json",
-  "data/profile.json",
+  "manifest.webmanifest",
 ];
 
 self.addEventListener("install", function (e) {

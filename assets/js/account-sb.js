@@ -45,13 +45,12 @@
 
   function signedOut(err) {
     render(
-      '<div class="grid grid-2">' +
-        '<div class="panel">' +
-          '<span class="panel-n">Sign in</span>' +
+      '<div class="account-login">' +
+          '<h2 class="account-login-title">A good place to begin.</h2>' +
           (err ? note("bad", "alert", esc(err)) : "") +
-          '<p class="field-hint" style="margin:-4px 0 20px">' +
-            "Use the account you already have. REX checks it to know the agent is " +
-            "entitled to run." +
+          '<p class="field-hint">' +
+            "Continue with your existing identity. Your account shows your " +
+            "approval, trial and access status." +
           "</p>" +
           '<div class="hero-actions" style="flex-direction:column;align-items:stretch;gap:12px">' +
             '<button class="btn" type="button" data-p="google">' + svg("globe", 15) +
@@ -59,14 +58,13 @@
             '<button class="btn" type="button" data-p="github">' + svg("github", 15) +
               "<span>Continue with GitHub</span></button>" +
           "</div>" +
-        "</div>" +
-        '<div class="panel">' +
-          '<span class="panel-n">What the account is for</span>' +
-          '<h3 class="h3">REX will not run without one</h3>' +
-          "<p>Signing in is what tells the agent it may run and which permissions it has. " +
-          "Access is granted by hand, so a new account waits for approval before REX will start.</p>" +
+        '<div class="account-access-note">' +
+          '<span class="panel-n">A connected workspace</span>' +
+          '<h3 class="h3">One identity. More possibility.</h3>' +
+          "<p>Your account connects supported REX experiences. Some access requires " +
+          "approval; you can check your status here after signing in.</p>" +
           '<p class="small" style="margin-top:16px">We store the email, display name and avatar the ' +
-          "provider gives us. Nothing else leaves your machine.</p>" +
+          "identity provider shares. Model-provider settings are managed separately inside the agent.</p>" +
         "</div>" +
       "</div>"
     );

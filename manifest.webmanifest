@@ -1,19 +1,33 @@
 {
-  "name": "RXDSEC — AI Security Engineer",
-  "short_name": "RXDSEC",
-  "description": "Offensive tooling, agent infrastructure and desktop software by rxdsec. Home of REX, a local-first coding agent.",
+  "name": "REX — Real work. Unleashed.",
+  "short_name": "REX",
+  "description": "A local-first AI agent for code, browser and terminal. Built by rxdsec.",
   "start_url": "index.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "any",
-  "background_color": "#0b0b0c",
-  "theme_color": "#0b0b0c",
+  "background_color": "#070707",
+  "theme_color": "#070707",
   "icons": [
-    { "src": "assets/img/mark.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
-    { "src": "assets/img/mark.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+    {
+      "src": "assets/img/rex-mark-editorial.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
   ],
   "shortcuts": [
-    { "name": "Downloads", "url": "downloads.html" },
-    { "name": "REX", "url": "rex.html" }
+    {
+      "name": "Downloads",
+      "url": "downloads.html"
+    },
+    {
+      "name": "REX",
+      "url": "rex.html"
+    },
+    {
+      "name": "Install CLI",
+      "url": "downloads.html#cli"
+    }
   ]
 }

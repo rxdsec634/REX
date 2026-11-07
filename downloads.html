@@ -1,176 +1,24 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Download REX — Windows, Linux, macOS</title>
-<meta name="description" content="Download REX for Windows and Linux with SHA-256 checksums and install commands. macOS in progress.">
-<meta name="author" content="rxdsec">
-<meta name="theme-color" content="#050406">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Download REX">
-<link rel="icon" href="assets/img/mark.svg" type="image/svg+xml">
-<link rel="manifest" href="manifest.webmanifest">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/core.css">
-<noscript><style>.reveal,.split .ch{opacity:1!important;transform:none!important}</style></noscript>
-</head>
-<body>
-<script src="assets/js/icons.js"></script>
-<canvas id="core" aria-hidden="true"></canvas>
-<div class="backdrop" aria-hidden="true"></div>
-
-<nav class="nav">
-  <div class="wrap">
-    <a class="logo" href="index.html" aria-label="REX home">
-      <svg viewBox="0 0 100 100" fill="none" aria-hidden="true"><path d="M50 5 L88 27 L88 73 L50 95 L12 73 L12 27 Z" stroke="currentColor" stroke-width="7"/><path d="M56 20 L38 50 L50 50 L44 78 L62 48 L50 48 Z" fill="currentColor"/></svg>
-      REX <small>by rxdsec</small>
-    </a>
-    <div class="nav-links" id="nav-links">
-      <a href="index.html#interface">Interface</a>
-      <a href="rex.html">Capabilities</a>
-      <a href="rex-browser.html">Rex Browser</a>
-      <a href="index.html#safety">Safety</a>
-      <a href="downloads.html" class="current">Download</a>
-      <a href="pricing.html">Plans</a>
-      <a href="about.html">About</a>
-    </div>
-    <div class="nav-tools">
-      <a class="btn btn-sm btn-primary" href="account.html" data-auth-cta><svg class="icon" width="14" height="14"><use href="#i-key"/></svg><span data-auth-label>Login</span></a>
-      <button class="nav-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Menu"><svg class="icon" width="18" height="18"><use href="#i-menu"/></svg></button>
-    </div>
-  </div>
-</nav>
-
-<main>
-
-<header class="page-head center" data-core="ambient">
-  <div class="wrap">
-    <div style="display:grid; gap:22px">
-      <span class="eyebrow">Download</span>
-      <h1 class="h1" data-split>Get REX <span class="grad">on your machine.</span></h1>
-      <p class="lede reveal d1">
-        Every build lists its SHA-256 — check it before you run it. That's true
-        of software from anyone, including me. 14 days free, no card.
-      </p>
-      <div class="tags reveal d2" id="dl-release"></div>
-    </div>
-  </div>
-</header>
-
-<section class="section" id="builds" style="padding-top:10px" data-core="ambient">
-  <div class="wrap">
-    <div class="notice" id="dl-mobile" hidden>
-      <svg class="icon" width="18" height="18"><use href="#i-monitor"/></svg>
-      <div>
-        <b>You're on a phone.</b> REX is a desktop agent for Windows, Linux and
-        (soon) macOS. Send this page to your computer and install it there.
-        <div class="hero-actions" style="margin-top:12px"><button class="btn btn-sm" type="button" data-share-link hidden><span>Send link to my computer</span></button></div>
-      </div>
-    </div>
-
-    <div id="dl-tabs" class="os-tabs" role="tablist" aria-label="Platform"></div>
-    <div id="dl-list" class="dl-list">
-      <div class="slot"><b>Loading builds…</b>Reading the release manifest.</div>
-    </div>
-  </div>
-</section>
-
-<section class="section" data-core="ambient">
-  <div class="wrap">
-    <div class="section-head">
-      <span class="eyebrow reveal">Verify and install</span>
-      <h2 class="h2 reveal d1">Check what you downloaded.</h2>
-    </div>
-    <div class="grid grid-2">
-      <article class="hud reveal">
-        <span class="panel-n">Checksum</span>
-        <h3 class="h3">Compare the hash</h3>
-        <p style="margin-bottom:16px">If the printed hash differs from the one on the build, don't run it.</p>
-        <div class="code"><span class="c"># Windows</span>
-certutil -hashfile "REX Setup 0.3.6.exe" SHA256
-<span class="c"># Linux / macOS</span>
-sha256sum rex_0.3.6_amd64.deb</div>
-      </article>
-      <article class="hud reveal d1">
-        <span class="panel-n">Debian family</span>
-        <h3 class="h3">Install with apt</h3>
-        <p style="margin-bottom:16px">Use <code>apt</code>, not <code>dpkg -i</code> — it pulls the dependencies for you.</p>
-        <div class="code">sudo apt install ./rex_0.3.6_amd64.deb
-rex
-<span class="c"># desktop tools need xdotool (X11)</span>
-<span class="c"># or ydotool under Wayland</span></div>
-      </article>
-    </div>
-  </div>
-</section>
-
-<section class="section" id="first-run" data-core="ambient">
-  <div class="wrap">
-    <div class="section-head">
-      <span class="eyebrow reveal">First run</span>
-      <h2 class="h2 reveal d1">Three steps and <span class="grad">you're working.</span></h2>
-    </div>
-    <div class="steps">
-      <div class="step reveal"><div class="step-w">STEP 01</div><h4 class="h4">Add a provider</h4><p>Settings → Providers. Paste a key — it's sealed in the OS credential store. Or skip it: if Ollama is running, REX finds it on its own.</p></div>
-      <div class="step reveal d1"><div class="step-w">STEP 02</div><h4 class="h4">Open a project</h4><p>New session, then pick a folder. Every file and shell operation is scoped to it, and the status bar shows which folder is live.</p></div>
-      <div class="step reveal d2"><div class="step-w">STEP 03</div><h4 class="h4">Ask for something real</h4><p>"Find where we verify JWTs and fix anything unsafe." REX searches, reads, proposes a diff — and waits for you.</p></div>
-    </div>
-  </div>
-</section>
-
-<section class="section" id="releases" data-core="ambient">
-  <div class="wrap">
-    <div class="section-head">
-      <span class="eyebrow reveal">Releases</span>
-      <h2 class="h2 reveal d1">Everything else I've shipped.</h2>
-    </div>
-    <div class="ilist" id="dl-projects"></div>
-    <div class="slot" id="dl-slot" style="margin-top:16px"></div>
-  </div>
-</section>
-
-</main>
-
-<footer class="foot">
-  <div class="wrap">
-    <div class="foot-big grad">GET REX</div>
-    <div class="foot-cols">
-      <div><h5>Download</h5><a href="#builds">All builds</a><a href="#first-run">First run</a><a href="#releases">Releases</a></div>
-      <div><h5>Product</h5><a href="index.html">REX</a><a href="rex.html">Capabilities</a><a href="pricing.html">Plans</a></div>
-      <div><h5>Account</h5><a href="account.html">Sign in</a><a href="about.html">About rxdsec</a></div>
-      <div><h5>Source</h5><a href="https://github.com/rxdsec634" target="_blank" rel="noopener">GitHub</a></div>
-    </div>
-    <div class="foot-end"><span>© <span data-year>2026</span> rxdsec · MIT</span><span>Always verify the checksum</span></div>
-  </div>
-</footer>
-
-<nav class="tabbar" aria-label="Quick actions">
-  <a href="index.html"><svg class="icon" width="18" height="18"><use href="#i-sparkle"/></svg>Home</a>
-  <a href="index.html#interface"><svg class="icon" width="18" height="18"><use href="#i-play"/></svg>Demo</a>
-  <a class="hot" href="#builds"><svg class="icon" width="18" height="18"><use href="#i-download"/></svg>Builds</a>
-  <a href="account.html" data-auth-cta><svg class="icon" width="18" height="18"><use href="#i-key"/></svg><span data-auth-label>Login</span></a>
-</nav>
-
-<!-- Inline copy of data/downloads.json so the page also works over file://,
-     where fetch() of a local file is blocked. Keep the two in sync. -->
-<script id="dl-fallback">
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Get REX — Desktop, CLI & Browser</title><meta name="description" content="Download the REX desktop agent, install REX CLI from npm, or explore Rex Browser. Platform builds, checksums and clear installation instructions."><meta name="author" content="rxdsec"><meta name="theme-color" content="#070707"><meta property="og:type" content="website"><meta property="og:title" content="Get REX — Desktop, CLI & Browser"><meta property="og:description" content="Download the REX desktop agent, install REX CLI from npm, or explore Rex Browser. Platform builds, checksums and clear installation instructions."><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="assets/img/rex-mark-editorial.svg" type="image/svg+xml"><link rel="manifest" href="manifest.webmanifest"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"><link rel="stylesheet" href="assets/css/studio.css"><link rel="stylesheet" href="assets/css/cinema.css"><script type="importmap">{"imports":{"three":"./assets/vendor/three/three.module.min.js","three/addons/":"./assets/vendor/three/examples/jsm/"}}</script></head><body class="cinematic" data-page="downloads"><script src="assets/js/icons.js"></script><a class="skip-link" href="#main">Skip to content</a><nav class="site-nav" aria-label="Main navigation"><div class="site-wrap nav-inner"><a class="brand" href="index.html" aria-label="REX home"><img src="assets/img/rex-mark-editorial.svg" alt="" width="29" height="29"><strong>REX</strong><span>by rxdsec</span></a><div class="site-links" id="site-links"><a href="rex.html" >Product</a><a href="rex-browser.html" >Browser</a><a href="downloads.html" aria-current="page">Downloads</a><a href="downloads.html#cli" class="nav-cli-link">CLI <span aria-hidden="true">↗</span></a><a href="pricing.html" >Plans</a><a href="about.html" >About</a></div><div class="nav-actions"><a class="login-link" href="account.html" data-auth-cta><span data-auth-label>Sign in</span><span aria-hidden="true">↗</span></a><a class="button button-small button-dark nav-get" href="downloads.html">Get REX <span aria-hidden="true">↗</span></a><button class="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-links"><span></span><span></span></button></div></div></nav><main id="main">
+<header class="page-intro cinema-intro site-wrap"><div class="intro-copy"><span class="kicker"><i></i>Make room for what’s next</span><h1 data-reveal>CHOOSE YOUR<br><em>ENTRY POINT.</em></h1><div class="intro-bottom"><p class="large-copy" data-reveal>A dedicated desktop workspace, a familiar terminal, or an agent alongside the web. Choose where you want to begin.</p></div></div><div class="core-visual core-downloads" data-core-visual="downloads" data-core-static><div class="core-grid" aria-hidden="true"></div><img class="core-fallback" src="assets/img/rex-core-fallback.svg" alt="" aria-hidden="true"><canvas class="core-canvas" aria-hidden="true"></canvas><div class="core-reticle reticle-a" aria-hidden="true"></div><div class="core-reticle reticle-b" aria-hidden="true"></div><span class="core-coord coord-top">REX / DOWNLOADS</span><span class="core-coord coord-bottom">DESIGNED FOR HUMAN INTENT</span></div></header>
+<nav class="download-jump site-wrap" aria-label="Download formats"><a href="#desktop">01 &nbsp; Desktop <span aria-hidden="true">↗</span></a><a href="#cli">02 &nbsp; Terminal CLI <span aria-hidden="true">↗</span></a><a href="#browser-download">03 &nbsp; Browser <span aria-hidden="true">↗</span></a></nav>
+<section class="editorial-section site-wrap" id="desktop"><div class="section-heading"><span class="kicker"><i></i>01 / REX desktop</span><h2>Your dedicated<br><em>workspace.</em></h2><div id="dl-release" class="release-meta"></div></div><div class="notice" id="dl-mobile" hidden><b>On a phone?</b><p>Desktop builds need a computer. Rex Browser also offers an Android release below.</p></div><div id="dl-tabs" class="os-tabs" role="tablist" aria-label="Desktop platform"></div><div id="dl-list" class="dl-list"><div class="slot"><b>Finding the right build…</b><span>Loading the release manifest.</span></div></div><p class="fine-print">Live release metadata takes precedence. macOS desktop builds may be pending; availability is shown per build.</p></section>
+<section class="cli-download-section" id="cli"><div class="site-wrap terminal-section"><div><span class="kicker"><i></i>02 / REX CLI</span><h2>A whole agent.<br><em>One command away.</em></h2><p class="large-copy">Install REX CLI globally, open your project, and start with <code>rex</code>. Works wherever you have a supported Node.js environment.</p><div class="cli-tags"><span>npm package</span><span>Windows / macOS / Linux</span><span>Automatic updates</span></div><a class="text-link" href="https://www.npmjs.com/package/@rxdsec/rexcli" target="_blank" rel="noopener">View @rxdsec/rexcli on npm <span aria-hidden="true">↗</span></a></div><div class="install-panel"><div class="install-step"><span>01 / INSTALL</span><div class="install-command"><code>npm install -g @rxdsec/rexcli</code><button type="button" data-copy-command="npm install -g @rxdsec/rexcli" aria-label="Copy CLI install command"><svg class="icon" width="19" height="19" aria-hidden="true"><use href="#i-copy"/></svg></button></div></div><div class="install-step"><span>02 / OPEN YOUR PROJECT & START</span><div class="install-command"><code>cd your-project<br>rex</code><button type="button" data-copy-command="rex" aria-label="Copy rex launch command"><svg class="icon" width="19" height="19" aria-hidden="true"><use href="#i-copy"/></svg></button></div></div><div class="install-requirements"><b>Before you begin</b><p>Node.js 22.22.2+, 24.15.0+, or 26+. Connect a model with <code>/key</code> and <code>/model</code>. Use <code>/login</code> for your REX account.</p></div></div></div><div class="site-wrap cli-update-note"><span>↻</span><div><h3>Stays current, without stopping your work.</h3><p>From CLI 0.3.11, global npm installs check on startup and hourly. Compatible updates install on normal exit and apply on your next launch. Use <code>/update</code> for controls. Existing 0.3.10 users need one manual npm upgrade.</p></div></div></section>
+<section class="editorial-section site-wrap" id="browser-download"><div class="split-note"><div><span class="kicker"><i></i>03 / Rex Browser</span><h2>A different way<br>to <em>explore.</em></h2></div><div><p class="large-copy">Your agent, alongside the page. Find the Windows, Linux, and Android browser releases on the product page.</p><a class="button button-dark" href="rex-browser.html#download">Explore browser downloads<span aria-hidden="true">↗</span></a></div></div></section>
+<section class="verify-section site-wrap"><div><span class="kicker"><i></i>A considered install</span><h2>Verify.<br><em>Then begin.</em></h2></div><div><p>Desktop downloads list SHA-256 checksums where available. Compare the published checksum with your downloaded file before running it.</p><div class="light-code"><span>WINDOWS</span><code>Get-FileHash "your-download.exe" -Algorithm SHA256</code><span>LINUX</span><code>sha256sum your-download.tar.gz</code></div></div></section></main><footer class="site-footer"><div class="site-wrap"><div class="footer-top"><div><a class="brand" href="index.html"><img src="assets/img/rex-mark-editorial.svg" alt="" width="29" height="29"><strong>REX</strong></a><p>Human intent.<br>Machine momentum.</p></div><div class="footer-links"><div><h3>Explore</h3><a href="rex.html">The agent</a><a href="rex-browser.html">Rex Browser</a><a href="downloads.html#cli">REX CLI</a><a href="pricing.html">Plans & access</a></div><div><h3>Get started</h3><a href="downloads.html">Downloads</a><a href="account.html">Your account</a><a href="about.html#contact">Contact</a><a href="https://github.com/rxdsec634" target="_blank" rel="noopener">GitHub ↗</a></div><div><h3>Follow the work</h3><a href="https://www.youtube.com/@RXDSEC" target="_blank" rel="noopener">YouTube ↗</a><a href="https://www.linkedin.com/in/redweb-sec-2a4077240/" target="_blank" rel="noopener">LinkedIn ↗</a><a href="https://www.instagram.com/rxdsec/" target="_blank" rel="noopener">Instagram ↗</a></div></div></div><div class="footer-word" aria-hidden="true">REX<span>↗</span></div><div class="footer-bottom"><span>© <span data-year>2026</span> rxdsec</span><span>Built with intent. Used with permission.</span><a href="about.html">Meet the builder <span aria-hidden="true">↗</span></a></div></div></footer><script src="assets/js/studio.js"></script><script src="assets/js/supabase.js"></script><script src="assets/js/nav-auth.js"></script><script id="dl-fallback">
 window.__DOWNLOADS__ = {
   "$comment": "Addresses and checksums are resolved live: the releases table in Supabase first, then the GitHub release. This file is the fallback and the source of everything those two have no opinion about — wording, install commands, ordering. Regenerate the inline copy in downloads.html with scripts/sync-downloads-html.mjs.",
   "release": {
     "product": "REX",
-    "version": "0.3.6",
-    "date": "2026-10-07",
+    "version": "0.3.8",
+    "date": "2026-09-15",
     "license": "MIT",
     "repo": "https://github.com/rxdsec634/REX",
     "highlights": [
-      "Offensive-security loop: fingerprint, taint-trace, payload, prove, patch",
-      "Agentic loop with streaming, native tool calling and append-only session history",
+      "Reasoning loop: falsifiable hypotheses, predictions checked against observation, explicit fact / inference / hypothesis labels",
+      "Senior-Engineer Standards: understand the system before changing it, think in blast radius, trace the full path to failure modes",
+      "Coding mode runs one Build Lens — the offensive posture loads only when security mode is enabled in settings",
       "42 model providers — cloud, local and fully custom OpenAI-compatible endpoints",
-      "Permission gate with a hard safety denylist that no rule can override",
-      "Desktop control, browser automation and a managed local GGUF engine"
+      "Permission gate with a hard safety denylist that no rule can override"
     ]
   },
   "builds": [
@@ -178,75 +26,75 @@ window.__DOWNLOADS__ = {
       "id": "win32-portable",
       "os": "windows",
       "osLabel": "Windows",
-      "title": "REX 0.3.6.exe",
+      "title": "REX.0.3.8.exe",
       "subtitle": "Portable single file. No install, no registry writes — run it from a USB stick.",
       "icon": "power",
-      "size": 90659457,
-      "sha256": "66e5a0bea06494503e14543f3d2dc2c6e10551fd4eaf2b9391048a551d588104",
-      "url": "https://github.com/rxdsec634/REX/releases/download/rex/REX.0.3.6.exe",
+      "size": 118698663,
+      "sha256": "319c5bfd7fe1c0dd83a20119362d8fb063546d41896eeef092d0de692f036161",
+      "url": "https://github.com/rxdsec634/REX/releases/download/rex/REX.0.3.8.exe",
       "tags": [
         "x64",
         "portable"
       ],
-      "verify": "certutil -hashfile \"REX 0.3.6.exe\" SHA256"
+      "verify": "certutil -hashfile \"REX.0.3.8.exe\" SHA256"
     },
     {
       "id": "win32-installer",
       "os": "windows",
       "osLabel": "Windows",
-      "title": "REX Setup 0.3.6.exe",
+      "title": "REX.Setup.0.3.8.exe",
       "subtitle": "NSIS installer — Windows 10/11, x64. Adds a Start-menu entry and file associations.",
       "icon": "window",
       "primary": true,
-      "size": 90886346,
-      "sha256": "f71775d7840be0d712efcd4c002aee44cbf6e794bc1d645f0c82d0f785e197dc",
-      "url": "https://github.com/rxdsec634/REX/releases/download/rex/REX.Setup.0.3.6.exe",
+      "size": 131763258,
+      "sha256": "e6fbadc54cb0c35b02f7bf922dd96b08491e192ded472c746a85bb9965b76f78",
+      "url": "https://github.com/rxdsec634/REX/releases/download/rex/REX.Setup.0.3.8.exe",
       "tags": [
         "x64",
         "recommended"
       ],
-      "verify": "certutil -hashfile \"REX Setup 0.3.6.exe\" SHA256"
+      "verify": "certutil -hashfile \"REX.Setup.0.3.8.exe\" SHA256"
     },
     {
       "id": "linux-tarball",
       "os": "linux",
       "osLabel": "Linux",
-      "title": "rex-0.3.6-linux-x64.tar.gz",
+      "title": "rex-0.3.8-linux-x64.tar.gz",
       "subtitle": "Distro-agnostic tarball. Extract anywhere and run ./rex — no package manager involved.",
       "icon": "archive",
-      "size": 122539766,
-      "sha256": "77d6aca13ad163b0f61ac916f544ea9d66af62e51af9133cc7f14cbd9780f611",
-      "url": "https://github.com/rxdsec634/REX/releases/download/rex/rex-0.3.6-linux-x64.tar.gz",
+      "size": 141620345,
+      "sha256": "c39975abd3a841ff8d33419ec4e865f3fa3b8eb61bd8a369ef38d69b40b1b738",
+      "url": "https://github.com/rxdsec634/REX/releases/download/rex/rex-0.3.8-linux-x64.tar.gz",
       "tags": [
         "x64",
         "no-root"
       ],
-      "install": "tar -xzf rex-0.3.6-linux-x64.tar.gz && ./rex/rex",
-      "verify": "sha256sum rex-0.3.6-linux-x64.tar.gz"
+      "install": "tar -xzf rex-0.3.8-linux-x64.tar.gz && ./rex/rex",
+      "verify": "sha256sum rex-0.3.8-linux-x64.tar.gz"
     },
     {
       "id": "linux-deb",
       "os": "linux",
       "osLabel": "Linux",
-      "title": "rex_0.3.6_amd64.deb",
+      "title": "rex_0.3.8_amd64.deb",
       "subtitle": "Debian / Ubuntu / Kali. Installs to /opt/REX, puts rex on your PATH, registers a desktop entry.",
       "icon": "terminal",
       "primary": true,
-      "size": 122555190,
-      "sha256": "c20dec13172ebd0b64296d3b4b57bdf955589f423de3dcc07185f29b89eab0be",
-      "url": "https://github.com/rxdsec634/REX/releases/download/rex/rex_0.3.6_amd64.deb",
+      "size": 141636588,
+      "sha256": "138a40535390ffc3bf51d89816bd5ca2f14c4debd96535483ab166b9e59ebf56",
+      "url": "https://github.com/rxdsec634/REX/releases/download/rex/rex_0.3.8_amd64.deb",
       "tags": [
         "amd64",
         "kali-ready"
       ],
-      "install": "sudo apt install ./rex_0.3.6_amd64.deb",
-      "verify": "sha256sum rex_0.3.6_amd64.deb"
+      "install": "sudo apt install ./rex_0.3.8_amd64.deb",
+      "verify": "sha256sum rex_0.3.8_amd64.deb"
     },
     {
       "id": "macos",
       "os": "macos",
       "osLabel": "macOS",
-      "title": "REX-0.3.3.dmg",
+      "title": "REX-0.3.7.dmg",
       "subtitle": "Apple silicon and Intel. Build target is configured; a signed artifact has not been published yet.",
       "icon": "monitor",
       "size": 0,
@@ -308,18 +156,4 @@ window.__DOWNLOADS__ = {
     }
   ]
 };
-</script>
-
-<script type="importmap">
-{ "imports": {
-    "three": "./assets/vendor/three/three.module.min.js",
-    "three/addons/": "./assets/vendor/three/examples/jsm/"
-} }
-</script>
-<script type="module" src="assets/js/core3d.js"></script>
-<script src="assets/js/site.js"></script>
-<script src="assets/js/supabase.js"></script>
-<script src="assets/js/nav-auth.js"></script>
-<script src="assets/js/downloads.js"></script>
-</body>
-</html>
+</script><script src="assets/js/downloads.js"></script><script type="module" src="assets/js/cinema-core.js"></script><script src="assets/js/cinema-motion.js"></script></body></html>
